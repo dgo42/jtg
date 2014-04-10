@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.edgo.jtg"
+      label="Java Template Generator Feature"
+      version="1.0.10.qualifier"
+      provider-name="edgo.org">
+
+   <description url="http://edgo.org">
+      Java Template Generator
+   </description>
+
+   <copyright url="http://edgo.org/jtg">
+      Copyright (c) 2003-2014, Dimitrij Goldstein
+   </copyright>
+
+   <license url="http://edgo.org/jtg">
+      Copyright (c) 2003-2014, Dimitrij Goldstein
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+1. Redistributions of source code must retain the above copyright
+   notice, this list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright
+   notice, this list of conditions and the following disclaimer in the
+   documentation and/or other materials provided with the distribution.
+3. All advertising materials mentioning features or use of this software
+   must display the following acknowledgement:
+   This product includes software developed by the Dimitrij Goldstein.
+4. Neither the name of the Dimitrij Goldstein nor the
+   names of its contributors may be used to endorse or promote products
+   derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY DIMITRIJ GOLDSTEIN &apos;&apos;AS IS&apos;&apos; AND ANY
+EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL DIMITRIJ GOLDSTEIN BE LIABLE FOR ANY
+DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+   </license>
+
+   <url>
+      <discovery label="Java Template generator" url="http://edgo.org/jtg"/>
+   </url>
+
+   <requires>
+      <import plugin="org.edgo.jtg.basics.bundle" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="org.edgo.jtg.core.bundle" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="org.edgo.jtg.ui" version="1.0.0" match="greaterOrEqual"/>
+   </requires>
+
+   <plugin
+         id="org.edgo.jtg.basics.bundle"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.edgo.jtg.core.bundle"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.edgo.jtg.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>

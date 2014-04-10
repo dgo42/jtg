@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <description name="Java Template Generator Site" url="http://edgo.org/jtg/update">
+      This is a java template generator based on the three elefants XML schema as the model description, XML project file based on the schema and JSP similar templates. 
+In Templates is used java for macroses. It&apos;s possible to define members and helps functions in a template, control generation with macroses and use place holder.
+It&apos;s also possible to run other templates.
+This construct makes possible to realise different complex projects.
+   </description>
+   <feature url="features/org.edgo.jtg_1.0.10.201404061116.jar" id="org.edgo.jtg" version="1.0.10.201404061116">
+      <category name="Java Template Generator"/>
+   </feature>
+   <feature url="features/org.edgo.jtg.colorer_1.0.10.201404061116.jar" id="org.edgo.jtg.colorer" version="1.0.10.201404061116">
+      <category name="Eclipse Colorer JTG"/>
+   </feature>
+   <category-def name="Java Template Generator" label="Java Template Generator"/>
+   <category-def name="Eclipse Colorer JTG" label="Eclipse Colorer JTG"/>
+</site>

@@ -1,0 +1,16 @@
+﻿<#@ codeTemplate language="java" targetLanguage="java" #>
+<#@ property name="employee" type="EmployeeElement" #>
+<#script#>
+	public int x = 7;
+<#/script#>
+
+<#= employee.firstName #>
+-------------------------
+Sehr geehrte(r) <#= employee.firstName #> <#= employee.lastName #>,
+
+Ihre ID ist <#= employee.id #>.
+
+Mit freundlichen Grüßen
+йцукенгшщзх
+ЙЦУКЕНГШЩЗХ
+------------------------

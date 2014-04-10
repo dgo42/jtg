@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tns:DirectUseElement xmlns="http://edgo.org"
+	xmlns:tns="http://edgo.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://edgo.org schema.xsd">
+	<EmployeeElement ID="0">
+		<FirstName>Max</FirstName>
+		<LastName>Mustermann</LastName>
+		<Title>Herr</Title>
+	</EmployeeElement>
+	<EmployeeElement ID="1">
+		<FirstName>Michael</FirstName>
+		<LastName>Schumacher</LastName>
+		<Title>Herr</Title>
+	</EmployeeElement>
+	<EmployeeElement ID="2">
+		<FirstName>John</FirstName>
+		<LastName>Smidth</LastName>
+		<Title>Herr</Title>
+	</EmployeeElement>
+</tns:DirectUseElement>

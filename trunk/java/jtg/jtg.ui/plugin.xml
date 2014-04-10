@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         id="jtgBuilder"
+         name="Java Template Project Builder"
+         point="org.eclipse.core.resources.builders">
+      <builder 
+            hasNature="true">
+         <run
+               class="org.edgo.jtg.ui.builder.JtgBuilder">
+         </run>
+      </builder>
+   </extension>
+   <extension
+         id="jtgNature"
+         name="Java Template Project Nature"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run
+               class="org.edgo.jtg.ui.builder.JtgNature">
+         </run>
+      </runtime>
+      <builder
+            id="org.edgo.jtg.ui.jtgBuilder">
+      </builder>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <category
+            name="Java Template Project Nature commands"
+            id="org.edgo.jtg.ui.jtgNature.category">
+      </category>
+      <command
+            name="Add/RemoveJava Template Project Nature"
+            defaultHandler="org.edgo.jtg.ui.builder.AddRemoveJtgNatureHandler"
+            categoryId="org.edgo.jtg.ui.jtgNature.category"
+            id="org.edgo.jtg.ui.addRemoveJtgNature">
+      </command>
+   </extension>
+   <extension point="org.eclipse.ui.menus">
+      <menuContribution locationURI="popup:org.eclipse.ui.projectConfigure?after=additions">
+         <command
+               commandId="org.edgo.jtg.ui.addRemoveJtgNature"
+               label="Disable JTG builder"
+               style="push">
+            <visibleWhen checkEnabled="false">
+               <with variable="selection">
+                  <count value="1">
+                  </count>
+                  <iterate>
+					<adapt type="org.eclipse.core.resources.IProject">
+	         			<test property="org.eclipse.core.resources.projectNature" value="org.edgo.jtg.ui.jtgNature"/>
+	         		</adapt>
+                  </iterate>
+               </with>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="org.edgo.jtg.ui.addRemoveJtgNature"
+               label="Enable JTG builder"
+               style="push">
+            <visibleWhen checkEnabled="false">
+               <with variable="selection">
+                  <count value="1">
+                  </count>
+                  <iterate>
+					<adapt type="org.eclipse.core.resources.IProject">
+					  <not>
+	         			<test property="org.eclipse.core.resources.projectNature" value="org.edgo.jtg.ui.jtgNature"/>
+					  </not>
+	         		</adapt>
+                  </iterate>
+               </with>
+            </visibleWhen>
+         </command>
+      </menuContribution>
+   </extension>
+   <extension
+         id="org.edgo.jtg.ui.jtgProblem"
+         name="JTG Problem"
+         point="org.eclipse.core.resources.markers">
+      <super
+            type="org.eclipse.core.resources.problemmarker">
+      </super>
+      <persistent
+            value="true">
+      </persistent>
+   </extension>
+   <extension point = "org.eclipse.ui.propertyPages">
+      <page
+           id="org.edgo.jtg.ui.ConfigPropertyPage"
+           name="JTG config"
+           class="org.edgo.jtg.ui.dialogs.ConfigPropertyPage">
+         <enabledWhen>
+		     <adapt type="org.eclipse.core.resources.IProject">
+		          <test property="org.eclipse.core.resources.projectNature" value="org.edgo.jtg.ui.jtgNature"/>
+		     </adapt>         
+         </enabledWhen>
+      </page>
+   </extension>
+</plugin>
