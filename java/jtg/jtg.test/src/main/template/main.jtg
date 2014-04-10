@@ -1,0 +1,27 @@
+<#@ codeTemplate language="java" targetLanguage="java" #>
+<#@ import name="java.util.Date" #>
+<#@ property name="mainElement" type="DirectUseElement" description="Test" #>
+<#script#>
+	// private member, can be used between main generator function and other functions
+    private int test;
+
+	/*
+	 * Private function, which can be called from template
+	 */
+	private void title(PrintWriter output) {
+		output.println("edgo.org Java Template Generator (JTG) (c) 2005-2014.");
+		output.println("generated on " + new Date().toLocaleString() + "");
+	}
+<#/script#>
+<#
+	title(output);
+    // 3. Variante
+    output.println("Found " + mainElement.employeeElement.size() + " employee(s)");
+    for (EmployeeElement employee : mainElement.employeeElement) {
+    	output.println("Process \"" + employee.lastName + "\"");
+        RunTemplate ("details\\Message.txt.jtg", 
+	        "src\\main\\resources\\details\\Employee_" + employee.lastName + ".txt", 
+    	    GeneratorMode.OVEWRITE, new Object[] { employee });
+    	output.println("Process \"" + employee.lastName + "\"");
+    }
+#>

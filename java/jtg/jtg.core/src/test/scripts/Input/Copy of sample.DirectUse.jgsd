@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://edgo.org" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://edgo.org" elementFormDefault="qualified">
+  <xs:element name="DirectUseElement" type="tns:DirectUseElement" />
+  <xs:complexType name="DirectUseElement">
+    <xs:all>
+      <xs:element name="EmployeeElements" type="tns:ArrayOfEmployeeElements" minOccurs="0" />
+    </xs:all>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfEmployeeElements">
+    <xs:sequence>
+      <xs:element name="EmployeeElement" type="tns:EmployeeElement" nillable="true" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="EmployeeElement">
+    <xs:sequence>
+      <xs:element name="FirstName" type="xs:string" minOccurs="0" />
+      <xs:element name="LastName" type="xs:string" minOccurs="0" />
+      <xs:element name="Title" type="xs:string" minOccurs="0" />
+    </xs:sequence>
+    <xs:attribute name="ID" type="xs:int" />
+    <xs:attribute name="nullable" type="xs:boolean" />
+  </xs:complexType>
+</xs:schema>

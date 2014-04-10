@@ -1,0 +1,11 @@
+eclipse.preferences.version=1
+org.edgo.jtg.cache.using=true
+org.edgo.jtg.jar.output.dir=target/gen-jar
+org.edgo.jtg.project.file=project.xml
+org.edgo.jtg.schema.dir=src/main/schema
+org.edgo.jtg.schema.file=schema.xsd
+org.edgo.jtg.schema.package=org.edgo.jtg.schema
+org.edgo.jtg.source.output.dir=target/gen-jtg-sources
+org.edgo.jtg.template.dir=src/main/template
+org.edgo.jtg.template.file=main.jtg
+org.edgo.jtg.template.package=org.edgo.jtg.template

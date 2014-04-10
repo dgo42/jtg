@@ -1,0 +1,27 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Java Template Generator Core Bundle
+Bundle-SymbolicName: org.edgo.jtg.core.bundle;singleton:=true
+Bundle-Version: 1.0.10.qualifier
+Bundle-ClassPath: lib/jchardet-1.0.jar,
+ lib/antlr-2.7.7.jar,
+ lib/FastInfoset-1.2.12.jar,
+ lib/jaxb-api-2.2.11.jar,
+ lib/jaxb-core-2.2.7.jar,
+ lib/jaxb-impl-2.2.7.jar,
+ lib/jaxb-xjc-2.2.7.jar,
+ lib/jsr173-api-1.0.jar,
+ jtg.core.jar
+Bundle-Vendor: edgo.org
+Export-Package: org.edgo.jtg.core,
+ org.edgo.jtg.core.compiler,
+ org.edgo.jtg.core.config,
+ org.edgo.jtg.core.grammar,
+ org.edgo.jtg.core.model,
+ org.edgo.jtg.core.xjc,
+ org.mozilla.intl.chardet
+Require-Bundle: org.edgo.jtg.basics.bundle,
+ org.eclipse.jdt,
+ org.eclipse.jdt.apt.core,
+ org.eclipse.jdt.core 
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
