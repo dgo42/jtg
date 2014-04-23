@@ -245,6 +245,12 @@
     </parameters>
   </prototype>
   
+  <prototype name="codesis" group="cgt" description="codesis">
+    <location link="jar:common.jar!jtg/codesis.hrc"/>
+    <filename>/\.(cgt)$/i</filename>
+    <firstline weight="5">/^(&lt;\#\@ \s* CodeTemplate)/</firstline>
+  </prototype>
+
   <prototype name="php" group="inet" description="php">
     <location link="jar:common.jar!inet/php.hrc"/>
     <filename>/\.(php\d?|phtml|thtml|inc)$/i</filename>
