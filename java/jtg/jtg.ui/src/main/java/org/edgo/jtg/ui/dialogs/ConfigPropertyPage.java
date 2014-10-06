@@ -372,11 +372,11 @@ public class ConfigPropertyPage extends PropertyPage {
 		IProject[] allProjects = workspaceRoot.getProjects();
 		ArrayList<IResource> rejectedElements = new ArrayList<IResource>(allProjects.length);
 		IProject currProject = getProject();
-		for (int i = 0; i < allProjects.length; i++) {
+		/*for (int i = 0; i < allProjects.length; i++) {
 			if (!allProjects[i].equals(currProject)) {
 				rejectedElements.add(allProjects[i]);
 			}
-		}
+		}*/
 		ViewerFilter filter = new TypedViewerFilter(acceptedViewClasses, rejectedElements.toArray(), null);
 
 		FolderSelectionDialog dialog = new FolderSelectionDialog(getShell(), lp, cp);

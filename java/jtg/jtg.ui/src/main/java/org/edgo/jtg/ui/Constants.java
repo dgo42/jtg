@@ -29,9 +29,9 @@ public final class Constants {
 	public static final String	TEMPLATE_PACKAGE_DEFAULT	= "org.edgo.jtg.template";
 	public static final boolean	USING_CACHE_DEFAULT			= true;
 
-	public final static Pattern	SCHEMA_FILE_MASK			= Pattern.compile("^[^\\.]*project\\.xsd$");
+	public final static Pattern	SCHEMA_FILE_MASK			= Pattern.compile("^[^\\.]*schema\\.xsd$");
 
-	public final static Pattern	PROJECT_FILE_MASK			= Pattern.compile("^[^\\.]*schema\\.xml$");
+	public final static Pattern	PROJECT_FILE_MASK			= Pattern.compile("^[^\\.]*project\\.xml$");
 
 	public final static Pattern	TEMPLATE_FILE_MASK			= Pattern.compile("^[^\\.]+\\.jtg$");
 
