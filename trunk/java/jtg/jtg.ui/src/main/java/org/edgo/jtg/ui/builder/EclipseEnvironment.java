@@ -2,6 +2,8 @@ package org.edgo.jtg.ui.builder;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
@@ -34,7 +36,7 @@ public class EclipseEnvironment implements IEnvironment {
 			IFile file = project.getFile(fileName);
 			if (file.exists()) {
 				if (mode == GeneratorMode.ONLY_NEW) {
-					throw new EnvironmentException("File already exists");
+					return new PrintWriter(new NullOutputStream());
 				} else if (mode == GeneratorMode.MAKE_COPY) {
 					IContainer path = file.getParent();
 					String filenameStr = file.getName();
@@ -84,4 +86,11 @@ public class EclipseEnvironment implements IEnvironment {
 		JtgUIPlugin.logErrorMessage(message + "\r\n" + sw.toString());
 	}
 
+	public class NullOutputStream extends OutputStream {
+		public NullOutputStream() {
+		}
+
+		public void write(int i) throws IOException {
+		}
+	}
 }
