@@ -14,7 +14,7 @@
 	</EmployeeElement>
 	<EmployeeElement ID="2">
 		<FirstName>John</FirstName>
-		<LastName>Smidth</LastName>
+		<LastName>Smidth 2</LastName>
 		<Title>Herr</Title>
 	</EmployeeElement>
 </tns:DirectUseElement>
