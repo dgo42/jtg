@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<!DOCTYPE hrc PUBLIC "-//Cail Lomecb//DTD Colorer HRC take5//EN"
+  "http://colorer.sf.net/2003/hrc.dtd">
+<hrc version="take5" xmlns="http://colorer.sf.net/2003/hrc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://colorer.sf.net/2003/hrc http://colorer.sf.net/2003/hrc.xsd">
+
+	<type name="jtg.java">
+		<annotation>
+			<appinfo>
+				<prototype name="jtg.java" group="jtg" description="jtg - Java">
+					<location link="jtg/jtg.java.hrc" />
+					<filename>/\.(jtg)$/i</filename>
+					<firstline>/^(&lt;\#\@ \s* codeTemplate)/</firstline>
+					<firstline weight="2">/targetLanguage="java"/i</firstline>
+				</prototype>
+				<require>
+					<package name="jtg" />
+					<type name="embjava" />
+				</require>
+			</appinfo>
+		</annotation>
+
+		<import type="jtg" />
+		<import type="def" />
+		<import type="embjava" />
+
+		<scheme name="Comment">
+			<inherit scheme="jtg:Insertion">
+				<virtual scheme="jtg:targetLanguage" subst-scheme="embjava" />
+			</inherit>
+			<inherit scheme="def:Comment" />
+		</scheme>
+
+		<scheme name="JavaComments">
+			<inherit scheme="jtg:Insertion">
+				<virtual scheme="jtg:targetLanguage" subst-scheme="embjava" />
+			</inherit>
+			<block start="/\/\//" end="/($|&lt;?=)/" scheme="Comment" region="LineComment" />
+			<!--inherit scheme="embjava:JavaComments" /-->
+	       		<block start="/\/\//" end="/$/" scheme="Comment" region="LineComment"/>
+    	   		<block start="/\/\*\*/" end="/\*\//" scheme="DocumentationComment"
+        	      		region="CommentDoc" region00="PairStart" region10="PairEnd"/>
+	       		<block start="/\/\*/" end="/\*\//" scheme="Comment"
+    	          		region="Comment" region00="PairStart" region10="PairEnd"/>
+		</scheme>
+
+		<scheme name="TypeDeclaration">
+			<inherit scheme="jtg:Insertion">
+				<virtual scheme="jtg:targetLanguage" subst-scheme="TypeDeclaration" />
+			</inherit>
+			<inherit scheme="embjava:TypeDeclaration">
+				<virtual scheme="embjava:JavaComments" subst-scheme="JavaComments" />
+				<virtual scheme="embjava:StringContent" subst-scheme="StringContent" />
+				<virtual scheme="embjava:TypeDeclaration" subst-scheme="TypeDeclaration" />
+			</inherit>
+		</scheme>
+
+		<scheme name="TabsAsErrors">
+			<inherit scheme="jtg:Insertion">
+				<virtual scheme="jtg:targetLanguage" subst-scheme="embjava" />
+			</inherit>
+			<inherit scheme="embjava:TabsAsErrors" />
+		</scheme>
+
+		<scheme name="SpacesAsErrors">
+			<inherit scheme="jtg:Insertion">
+				<virtual scheme="jtg:targetLanguage" subst-scheme="embjava" />
+			</inherit>
+			<inherit scheme="embjava:SpacesAsErrors" />
+		</scheme>
+
+		<scheme name="package">
+			<inherit scheme="jtg:Insertion">
+				<virtual scheme="jtg:targetLanguage" subst-scheme="embjava" />
+			</inherit>
+			<inherit scheme="embjava:package">
+				<virtual scheme="embjava:TabsAsErrors" subst-scheme="TabsAsErrors" />
+				<virtual scheme="embjava:SpacesAsErrors" subst-scheme="SpacesAsErrors" />
+			</inherit>
+		</scheme>
+
+		<scheme name="import">
+			<inherit scheme="jtg:Insertion">
+				<virtual scheme="jtg:targetLanguage" subst-scheme="embjava" />
+			</inherit>
+			<inherit scheme="embjava:import">
+				<virtual scheme="embjava:TabsAsErrors" subst-scheme="TabsAsErrors" />
+				<virtual scheme="embjava:SpacesAsErrors" subst-scheme="SpacesAsErrors" />
+				<virtual scheme="embjava:package" subst-scheme="package" />
+			</inherit>
+		</scheme>
+
+		<scheme name="StringContent">
+			<inherit scheme="jtg:Insertion">
+				<virtual scheme="jtg:targetLanguage" subst-scheme="embjava" />
+			</inherit>
+			<inherit scheme="embjava:StringContent" />
+		</scheme>
+
+		<scheme name="DocumentationComment">
+			<inherit scheme="jtg:Insertion">
+				<virtual scheme="jtg:targetLanguage" subst-scheme="embjava" />
+			</inherit>
+			<inherit scheme="embjava:DocumentationComment">
+				<virtual scheme="embjava:TabsAsErrors" subst-scheme="TabsAsErrors" />
+				<virtual scheme="embjava:SpacesAsErrors" subst-scheme="SpacesAsErrors" />
+			</inherit>
+		</scheme>
+
+		<scheme name="embjava">
+			<inherit scheme="jtg:Insertion">
+				<virtual scheme="jtg:targetLanguage" subst-scheme="embjava" />
+			</inherit>
+			<inherit scheme="embjava:embjava">
+				<virtual scheme="embjava:JavaComments" subst-scheme="JavaComments" />
+				<virtual scheme="embjava:TypeDeclaration" subst-scheme="TypeDeclaration" />
+				<virtual scheme="embjava:TabsAsErrors" subst-scheme="TabsAsErrors" />
+				<virtual scheme="embjava:SpacesAsErrors" subst-scheme="SpacesAsErrors" />
+				<virtual scheme="embjava:package" subst-scheme="package" />
+				<virtual scheme="embjava:import" subst-scheme="import" />
+				<virtual scheme="embjava:StringContent" subst-scheme="StringContent" />
+				<virtual scheme="embjava:DocumentationComment" subst-scheme="DocumentationComment" />
+				<virtual scheme="embjava:embjava" subst-scheme="embjava" />
+			</inherit>
+		</scheme>
+
+		<scheme name="jtg.java">
+			<inherit scheme="jtg:jtg">
+				<virtual scheme="jtg:targetLanguage" subst-scheme="embjava" />
+			</inherit>
+		</scheme>
+	</type>
+</hrc>

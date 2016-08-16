@@ -28,11 +28,11 @@ public class CollapseCommentsAction extends ResourceAction implements IUpdate {
 				.getAdapter(ProjectionAnnotationModel.class);
 		if (model == null) return;
 
-		@SuppressWarnings("unchecked") Iterator<Object> iter = (Iterator<Object>) model.getAnnotationIterator();
+		Iterator<Annotation> iter = (Iterator<Annotation>) model.getAnnotationIterator();
 
-		List<Object> modified = new ArrayList<Object>();
+		List<Annotation> modified = new ArrayList<Annotation>();
 		while (iter.hasNext()) {
-			Object ann = iter.next();
+			Annotation ann = iter.next();
 			if (ann instanceof ColorerProjectionAnnotation) {
 				String schema = ((ColorerProjectionAnnotation) ann).getSchema();
 
