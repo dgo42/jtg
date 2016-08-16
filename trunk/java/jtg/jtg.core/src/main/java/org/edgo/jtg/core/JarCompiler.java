@@ -101,6 +101,7 @@ public class JarCompiler {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	public ClassLoader getClassLoader(String templatefile) throws TemplateException {
 		if (compilerClassLoader == null) {
 			if (jars.size() > 0) {

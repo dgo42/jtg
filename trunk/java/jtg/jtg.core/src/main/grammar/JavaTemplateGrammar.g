@@ -15,7 +15,7 @@ class JavaTemplateLexer extends Lexer;
 
 options {
     k=5; // Name vs. Namespace
-    charVocabulary = '\u0003'..'\uFFFF';
+	charVocabulary = '\u0003'..'\uFFFF';
     importVocab = Macrocode;
     exportVocab = JavaTemplate;
 }
@@ -66,6 +66,10 @@ DIRECTIVE_CMD_IMPORT
     :   "import"
     ;
 
+DIRECTIVE_CMD_INCLUDE
+    :   "include"
+    ;
+
 DIRECTIVE_CMD_EXTENDS
     :   "extends"
     ;
@@ -86,6 +90,18 @@ DIRECTIVE_ATTR_NAME
     :   "name"
     ;
 
+DIRECTIVE_ATTR_FILE
+    :   "file"
+    ;
+
+DIRECTIVE_ATTR_ARG
+    :   "arg"
+    ;
+
+DIRECTIVE_ATTR_FORMAT
+    :   "format"
+    ;
+
 DIRECTIVE_ATTR_PARENT
     :   "parent"
     ;
@@ -100,7 +116,7 @@ DIRECTIVE_ATTR_CATEGORY
     ;
 
 STRING_VALUE
-	: '"' (~('"'))* '"'
+	: '"' (~('"' | '\\' | '\r' | '\n') | '\\' ('"' | '\\'))* '"'
 	;
 
 WS  
@@ -135,6 +151,7 @@ template [ParsedUnit unit]
       )*
       ( script
 		| placeholder
+		| directive_include
         | macrocode
         | comment
         | { LA(1) != EOF }? targetcode
@@ -164,6 +181,18 @@ directive_import
     : DIRECTIVE_BEGIN v:DIRECTIVE_CMD_IMPORT ns=directive_attr_name MACROCODE_END (WS)? 
     {
 		unit.directiveImport(ns, v.getLine()); 
+	}
+    ;
+
+directive_include
+	{
+		String file;
+		String arg;
+		String format = null;
+	}
+    : DIRECTIVE_BEGIN v:DIRECTIVE_CMD_INCLUDE file=directive_attr_file arg=directive_attr_arg (format=directive_attr_format)? MACROCODE_END (WS)? 
+    {
+		unit.addInclude(v, file, arg, format); 
 	}
     ;
 
@@ -256,6 +285,27 @@ directive_attr_category
 		String attr;
 	}
 	: DIRECTIVE_ATTR_CATEGORY attr=directive_attr
+	;
+
+directive_attr_file returns[String file]
+	{
+		file = "";
+	}
+	: DIRECTIVE_ATTR_FILE file=directive_attr
+	;
+
+directive_attr_arg returns[String arg]
+	{
+		arg = "";
+	}
+	: DIRECTIVE_ATTR_ARG arg=directive_attr
+	;
+
+directive_attr_format returns[String format]
+	{
+		format = "";
+	}
+	: DIRECTIVE_ATTR_FORMAT format=directive_attr
 	;
 
 directive_attr returns[String value]

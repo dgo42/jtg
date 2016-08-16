@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Java Template Generator Core Bundle
 Bundle-SymbolicName: org.edgo.jtg.core.bundle;singleton:=true
-Bundle-Version: 1.0.10.qualifier
+Bundle-Version: 1.0.12.qualifier
 Bundle-ClassPath: lib/jchardet-1.0.jar,
  lib/antlr-2.7.7.jar,
  lib/FastInfoset-1.2.12.jar,
@@ -24,4 +24,4 @@ Require-Bundle: org.edgo.jtg.basics.bundle,
  org.eclipse.jdt,
  org.eclipse.jdt.apt.core,
  org.eclipse.jdt.core 
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7

@@ -93,12 +93,6 @@ tryAgain:
 					theRetToken=_returnToken;
 					break;
 				}
-				case 'i':
-				{
-					mDIRECTIVE_CMD_IMPORT(true);
-					theRetToken=_returnToken;
-					break;
-				}
 				case 'e':
 				{
 					mDIRECTIVE_CMD_EXTENDS(true);
@@ -123,6 +117,12 @@ tryAgain:
 					theRetToken=_returnToken;
 					break;
 				}
+				case 'a':
+				{
+					mDIRECTIVE_ATTR_ARG(true);
+					theRetToken=_returnToken;
+					break;
+				}
 				case '"':
 				{
 					mSTRING_VALUE(true);
@@ -144,8 +144,24 @@ tryAgain:
 						mDIRECTIVE_CMD_PROPERTY(true);
 						theRetToken=_returnToken;
 					}
+					else if ((LA(1)=='i') && (LA(2)=='m')) {
+						mDIRECTIVE_CMD_IMPORT(true);
+						theRetToken=_returnToken;
+					}
+					else if ((LA(1)=='i') && (LA(2)=='n')) {
+						mDIRECTIVE_CMD_INCLUDE(true);
+						theRetToken=_returnToken;
+					}
 					else if ((LA(1)=='t') && (LA(2)=='a')) {
 						mDIRECTIVE_ATTR_TARGET_LANGUAGE(true);
+						theRetToken=_returnToken;
+					}
+					else if ((LA(1)=='f') && (LA(2)=='i')) {
+						mDIRECTIVE_ATTR_FILE(true);
+						theRetToken=_returnToken;
+					}
+					else if ((LA(1)=='f') && (LA(2)=='o')) {
+						mDIRECTIVE_ATTR_FORMAT(true);
 						theRetToken=_returnToken;
 					}
 					else if ((LA(1)=='p') && (LA(2)=='a')) {
@@ -280,6 +296,19 @@ tryAgain:
 		_returnToken = _token;
 	}
 	
+	public final void mDIRECTIVE_CMD_INCLUDE(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
+		int _ttype; Token _token=null; int _begin=text.length();
+		_ttype = DIRECTIVE_CMD_INCLUDE;
+		int _saveIndex;
+		
+		match("include");
+		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
+			_token = makeToken(_ttype);
+			_token.setText(new String(text.getBuffer(), _begin, text.length()-_begin));
+		}
+		_returnToken = _token;
+	}
+	
 	public final void mDIRECTIVE_CMD_EXTENDS(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = DIRECTIVE_CMD_EXTENDS;
@@ -345,6 +374,45 @@ tryAgain:
 		_returnToken = _token;
 	}
 	
+	public final void mDIRECTIVE_ATTR_FILE(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
+		int _ttype; Token _token=null; int _begin=text.length();
+		_ttype = DIRECTIVE_ATTR_FILE;
+		int _saveIndex;
+		
+		match("file");
+		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
+			_token = makeToken(_ttype);
+			_token.setText(new String(text.getBuffer(), _begin, text.length()-_begin));
+		}
+		_returnToken = _token;
+	}
+	
+	public final void mDIRECTIVE_ATTR_ARG(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
+		int _ttype; Token _token=null; int _begin=text.length();
+		_ttype = DIRECTIVE_ATTR_ARG;
+		int _saveIndex;
+		
+		match("arg");
+		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
+			_token = makeToken(_ttype);
+			_token.setText(new String(text.getBuffer(), _begin, text.length()-_begin));
+		}
+		_returnToken = _token;
+	}
+	
+	public final void mDIRECTIVE_ATTR_FORMAT(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
+		int _ttype; Token _token=null; int _begin=text.length();
+		_ttype = DIRECTIVE_ATTR_FORMAT;
+		int _saveIndex;
+		
+		match("format");
+		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
+			_token = makeToken(_ttype);
+			_token.setText(new String(text.getBuffer(), _begin, text.length()-_begin));
+		}
+		_returnToken = _token;
+	}
+	
 	public final void mDIRECTIVE_ATTR_PARENT(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = DIRECTIVE_ATTR_PARENT;
@@ -391,15 +459,36 @@ tryAgain:
 		
 		match('"');
 		{
-		_loop19:
+		_loop24:
 		do {
 			if ((_tokenSet_0.member(LA(1)))) {
 				{
 				match(_tokenSet_0);
 				}
 			}
+			else if ((LA(1)=='\\')) {
+				match('\\');
+				{
+				switch ( LA(1)) {
+				case '"':
+				{
+					match('"');
+					break;
+				}
+				case '\\':
+				{
+					match('\\');
+					break;
+				}
+				default:
+				{
+					throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());
+				}
+				}
+				}
+			}
 			else {
-				break _loop19;
+				break _loop24;
 			}
 			
 		} while (true);
@@ -457,8 +546,9 @@ tryAgain:
 	
 	private static final long[] mk_tokenSet_0() {
 		long[] data = new long[2048];
-		data[0]=-17179869192L;
-		for (int i = 1; i<=1023; i++) { data[i]=-1L; }
+		data[0]=-17179878408L;
+		data[1]=-268435457L;
+		for (int i = 2; i<=1023; i++) { data[i]=-1L; }
 		return data;
 	}
 	public static final BitSet _tokenSet_0 = new BitSet(mk_tokenSet_0());

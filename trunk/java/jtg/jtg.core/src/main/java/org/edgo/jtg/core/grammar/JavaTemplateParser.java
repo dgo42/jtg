@@ -62,7 +62,7 @@ public JavaTemplateParser(ParserSharedInputState state) {
 			directive_template();
 			}
 			{
-			_loop29:
+			_loop34:
 			do {
 				if ((LA(1)==DIRECTIVE_BEGIN) && (LA(2)==DIRECTIVE_CMD_JAR)) {
 					{
@@ -85,19 +85,22 @@ public JavaTemplateParser(ParserSharedInputState state) {
 					}
 				}
 				else {
-					break _loop29;
+					break _loop34;
 				}
 				
 			} while (true);
 			}
 			{
-			_loop31:
+			_loop36:
 			do {
 				if ((LA(1)==SCRIPT_BEGIN) && (LA(2)==MACROCODE_END||LA(2)==RUNAT) && (_tokenSet_0.member(LA(3))) && (_tokenSet_1.member(LA(4)))) {
 					script();
 				}
 				else if ((LA(1)==PLACEHOLDER_BEGIN) && (LA(2)==MACROCODE) && (LA(3)==MACROCODE_END) && (_tokenSet_2.member(LA(4)))) {
 					placeholder();
+				}
+				else if ((LA(1)==DIRECTIVE_BEGIN) && (LA(2)==DIRECTIVE_CMD_INCLUDE) && (LA(3)==DIRECTIVE_ATTR_FILE) && (LA(4)==ASSIGN)) {
+					directive_include();
 				}
 				else if ((LA(1)==MACROCODE_BEGIN) && (LA(2)==MACROCODE||LA(2)==MACROCODE_END) && (_tokenSet_3.member(LA(3))) && (_tokenSet_4.member(LA(4)))) {
 					macrocode();
@@ -109,7 +112,7 @@ public JavaTemplateParser(ParserSharedInputState state) {
 					targetcode();
 				}
 				else {
-					break _loop31;
+					break _loop36;
 				}
 				
 			} while (true);
@@ -193,10 +196,10 @@ public JavaTemplateParser(ParserSharedInputState state) {
 			}
 			match(MACROCODE_END);
 			{
-			if ((LA(1)==WS) && (_tokenSet_8.member(LA(2))) && (_tokenSet_9.member(LA(3))) && (_tokenSet_10.member(LA(4)))) {
+			if ((LA(1)==WS) && (_tokenSet_2.member(LA(2))) && (_tokenSet_8.member(LA(3))) && (_tokenSet_9.member(LA(4)))) {
 				match(WS);
 			}
-			else if ((_tokenSet_8.member(LA(1))) && (_tokenSet_9.member(LA(2))) && (_tokenSet_10.member(LA(3))) && (_tokenSet_6.member(LA(4)))) {
+			else if ((_tokenSet_2.member(LA(1))) && (_tokenSet_8.member(LA(2))) && (_tokenSet_9.member(LA(3))) && (_tokenSet_6.member(LA(4)))) {
 			}
 			else {
 				throw new NoViableAltException(LT(1), getFilename());
@@ -209,7 +212,7 @@ public JavaTemplateParser(ParserSharedInputState state) {
 		}
 		catch (RecognitionException ex) {
 			reportError(ex);
-			recover(ex,_tokenSet_8);
+			recover(ex,_tokenSet_2);
 		}
 	}
 	
@@ -227,10 +230,10 @@ public JavaTemplateParser(ParserSharedInputState state) {
 			name=directive_attr_name();
 			match(MACROCODE_END);
 			{
-			if ((LA(1)==WS) && (_tokenSet_8.member(LA(2))) && (_tokenSet_9.member(LA(3))) && (_tokenSet_10.member(LA(4)))) {
+			if ((LA(1)==WS) && (_tokenSet_2.member(LA(2))) && (_tokenSet_8.member(LA(3))) && (_tokenSet_9.member(LA(4)))) {
 				match(WS);
 			}
-			else if ((_tokenSet_8.member(LA(1))) && (_tokenSet_9.member(LA(2))) && (_tokenSet_10.member(LA(3))) && (_tokenSet_6.member(LA(4)))) {
+			else if ((_tokenSet_2.member(LA(1))) && (_tokenSet_8.member(LA(2))) && (_tokenSet_9.member(LA(3))) && (_tokenSet_6.member(LA(4)))) {
 			}
 			else {
 				throw new NoViableAltException(LT(1), getFilename());
@@ -243,7 +246,7 @@ public JavaTemplateParser(ParserSharedInputState state) {
 		}
 		catch (RecognitionException ex) {
 			reportError(ex);
-			recover(ex,_tokenSet_8);
+			recover(ex,_tokenSet_2);
 		}
 	}
 	
@@ -431,10 +434,10 @@ public JavaTemplateParser(ParserSharedInputState state) {
 			}
 			match(MACROCODE_END);
 			{
-			if ((LA(1)==WS) && (_tokenSet_8.member(LA(2))) && (_tokenSet_9.member(LA(3))) && (_tokenSet_10.member(LA(4)))) {
+			if ((LA(1)==WS) && (_tokenSet_2.member(LA(2))) && (_tokenSet_8.member(LA(3))) && (_tokenSet_9.member(LA(4)))) {
 				match(WS);
 			}
-			else if ((_tokenSet_8.member(LA(1))) && (_tokenSet_9.member(LA(2))) && (_tokenSet_10.member(LA(3))) && (_tokenSet_6.member(LA(4)))) {
+			else if ((_tokenSet_2.member(LA(1))) && (_tokenSet_8.member(LA(2))) && (_tokenSet_9.member(LA(3))) && (_tokenSet_6.member(LA(4)))) {
 			}
 			else {
 				throw new NoViableAltException(LT(1), getFilename());
@@ -447,7 +450,7 @@ public JavaTemplateParser(ParserSharedInputState state) {
 		}
 		catch (RecognitionException ex) {
 			reportError(ex);
-			recover(ex,_tokenSet_8);
+			recover(ex,_tokenSet_2);
 		}
 	}
 	
@@ -465,10 +468,10 @@ public JavaTemplateParser(ParserSharedInputState state) {
 			ns=directive_attr_name();
 			match(MACROCODE_END);
 			{
-			if ((LA(1)==WS) && (_tokenSet_8.member(LA(2))) && (_tokenSet_9.member(LA(3))) && (_tokenSet_10.member(LA(4)))) {
+			if ((LA(1)==WS) && (_tokenSet_2.member(LA(2))) && (_tokenSet_8.member(LA(3))) && (_tokenSet_9.member(LA(4)))) {
 				match(WS);
 			}
-			else if ((_tokenSet_8.member(LA(1))) && (_tokenSet_9.member(LA(2))) && (_tokenSet_10.member(LA(3))) && (_tokenSet_6.member(LA(4)))) {
+			else if ((_tokenSet_2.member(LA(1))) && (_tokenSet_8.member(LA(2))) && (_tokenSet_9.member(LA(3))) && (_tokenSet_6.member(LA(4)))) {
 			}
 			else {
 				throw new NoViableAltException(LT(1), getFilename());
@@ -481,7 +484,7 @@ public JavaTemplateParser(ParserSharedInputState state) {
 		}
 		catch (RecognitionException ex) {
 			reportError(ex);
-			recover(ex,_tokenSet_8);
+			recover(ex,_tokenSet_2);
 		}
 	}
 	
@@ -499,10 +502,10 @@ public JavaTemplateParser(ParserSharedInputState state) {
 			parent=directive_attr_parent();
 			match(MACROCODE_END);
 			{
-			if ((LA(1)==WS) && (_tokenSet_8.member(LA(2))) && (_tokenSet_9.member(LA(3))) && (_tokenSet_10.member(LA(4)))) {
+			if ((LA(1)==WS) && (_tokenSet_2.member(LA(2))) && (_tokenSet_8.member(LA(3))) && (_tokenSet_9.member(LA(4)))) {
 				match(WS);
 			}
-			else if ((_tokenSet_8.member(LA(1))) && (_tokenSet_9.member(LA(2))) && (_tokenSet_10.member(LA(3))) && (_tokenSet_6.member(LA(4)))) {
+			else if ((_tokenSet_2.member(LA(1))) && (_tokenSet_8.member(LA(2))) && (_tokenSet_9.member(LA(3))) && (_tokenSet_6.member(LA(4)))) {
 			}
 			else {
 				throw new NoViableAltException(LT(1), getFilename());
@@ -515,7 +518,7 @@ public JavaTemplateParser(ParserSharedInputState state) {
 		}
 		catch (RecognitionException ex) {
 			reportError(ex);
-			recover(ex,_tokenSet_8);
+			recover(ex,_tokenSet_2);
 		}
 	}
 	
@@ -546,9 +549,9 @@ public JavaTemplateParser(ParserSharedInputState state) {
 							
 					break;
 				}
-				case 29:
+				case 33:
 				{
-					match(29);
+					match(33);
 					break;
 				}
 				case LITERAL_template:
@@ -647,6 +650,60 @@ public JavaTemplateParser(ParserSharedInputState state) {
 			match(MACROCODE_END);
 			
 					unit.addPlaceholder(v);
+				
+		}
+		catch (RecognitionException ex) {
+			reportError(ex);
+			recover(ex,_tokenSet_2);
+		}
+	}
+	
+	public final void directive_include() throws RecognitionException, TokenStreamException {
+		
+		Token  v = null;
+		
+				String file;
+				String arg;
+				String format = null;
+			
+		
+		try {      // for error handling
+			match(DIRECTIVE_BEGIN);
+			v = LT(1);
+			match(DIRECTIVE_CMD_INCLUDE);
+			file=directive_attr_file();
+			arg=directive_attr_arg();
+			{
+			switch ( LA(1)) {
+			case DIRECTIVE_ATTR_FORMAT:
+			{
+				format=directive_attr_format();
+				break;
+			}
+			case MACROCODE_END:
+			{
+				break;
+			}
+			default:
+			{
+				throw new NoViableAltException(LT(1), getFilename());
+			}
+			}
+			}
+			match(MACROCODE_END);
+			{
+			if ((LA(1)==WS) && (_tokenSet_2.member(LA(2))) && (_tokenSet_4.member(LA(3))) && (_tokenSet_5.member(LA(4)))) {
+				match(WS);
+			}
+			else if ((_tokenSet_2.member(LA(1))) && (_tokenSet_4.member(LA(2))) && (_tokenSet_5.member(LA(3))) && (_tokenSet_6.member(LA(4)))) {
+			}
+			else {
+				throw new NoViableAltException(LT(1), getFilename());
+			}
+			
+			}
+			
+					unit.addInclude(v, file, arg, format); 
 				
 		}
 		catch (RecognitionException ex) {
@@ -792,7 +849,7 @@ public JavaTemplateParser(ParserSharedInputState state) {
 		}
 		catch (RecognitionException ex) {
 			reportError(ex);
-			recover(ex,_tokenSet_11);
+			recover(ex,_tokenSet_10);
 		}
 		return language;
 	}
@@ -810,7 +867,7 @@ public JavaTemplateParser(ParserSharedInputState state) {
 		}
 		catch (RecognitionException ex) {
 			reportError(ex);
-			recover(ex,_tokenSet_12);
+			recover(ex,_tokenSet_11);
 		}
 		return language;
 	}
@@ -827,7 +884,7 @@ public JavaTemplateParser(ParserSharedInputState state) {
 		}
 		catch (RecognitionException ex) {
 			reportError(ex);
-			recover(ex,_tokenSet_13);
+			recover(ex,_tokenSet_12);
 		}
 	}
 	
@@ -844,9 +901,63 @@ public JavaTemplateParser(ParserSharedInputState state) {
 		}
 		catch (RecognitionException ex) {
 			reportError(ex);
-			recover(ex,_tokenSet_14);
+			recover(ex,_tokenSet_13);
 		}
 		return name;
+	}
+	
+	public final String  directive_attr_file() throws RecognitionException, TokenStreamException {
+		String file;
+		
+		
+				file = "";
+			
+		
+		try {      // for error handling
+			match(DIRECTIVE_ATTR_FILE);
+			file=directive_attr();
+		}
+		catch (RecognitionException ex) {
+			reportError(ex);
+			recover(ex,_tokenSet_14);
+		}
+		return file;
+	}
+	
+	public final String  directive_attr_arg() throws RecognitionException, TokenStreamException {
+		String arg;
+		
+		
+				arg = "";
+			
+		
+		try {      // for error handling
+			match(DIRECTIVE_ATTR_ARG);
+			arg=directive_attr();
+		}
+		catch (RecognitionException ex) {
+			reportError(ex);
+			recover(ex,_tokenSet_15);
+		}
+		return arg;
+	}
+	
+	public final String  directive_attr_format() throws RecognitionException, TokenStreamException {
+		String format;
+		
+		
+				format = "";
+			
+		
+		try {      // for error handling
+			match(DIRECTIVE_ATTR_FORMAT);
+			format=directive_attr();
+		}
+		catch (RecognitionException ex) {
+			reportError(ex);
+			recover(ex,_tokenSet_16);
+		}
+		return format;
 	}
 	
 	public final String  directive_attr_parent() throws RecognitionException, TokenStreamException {
@@ -862,7 +973,7 @@ public JavaTemplateParser(ParserSharedInputState state) {
 		}
 		catch (RecognitionException ex) {
 			reportError(ex);
-			recover(ex,_tokenSet_15);
+			recover(ex,_tokenSet_16);
 		}
 		return parent;
 	}
@@ -880,7 +991,7 @@ public JavaTemplateParser(ParserSharedInputState state) {
 		}
 		catch (RecognitionException ex) {
 			reportError(ex);
-			recover(ex,_tokenSet_16);
+			recover(ex,_tokenSet_17);
 		}
 		return type;
 	}
@@ -897,7 +1008,7 @@ public JavaTemplateParser(ParserSharedInputState state) {
 		}
 		catch (RecognitionException ex) {
 			reportError(ex);
-			recover(ex,_tokenSet_17);
+			recover(ex,_tokenSet_18);
 		}
 	}
 	
@@ -923,7 +1034,7 @@ public JavaTemplateParser(ParserSharedInputState state) {
 		}
 		catch (RecognitionException ex) {
 			reportError(ex);
-			recover(ex,_tokenSet_18);
+			recover(ex,_tokenSet_19);
 		}
 		return value;
 	}
@@ -950,11 +1061,15 @@ public JavaTemplateParser(ParserSharedInputState state) {
 		"DIRECTIVE_CMD_PROPERTY",
 		"DIRECTIVE_CMD_JAR",
 		"DIRECTIVE_CMD_IMPORT",
+		"DIRECTIVE_CMD_INCLUDE",
 		"DIRECTIVE_CMD_EXTENDS",
 		"DIRECTIVE_ATTR_LANGUAGE",
 		"DIRECTIVE_ATTR_TARGET_LANGUAGE",
 		"DIRECTIVE_ATTR_DESCRIPTION",
 		"DIRECTIVE_ATTR_NAME",
+		"DIRECTIVE_ATTR_FILE",
+		"DIRECTIVE_ATTR_ARG",
+		"DIRECTIVE_ATTR_FORMAT",
 		"DIRECTIVE_ATTR_PARENT",
 		"DIRECTIVE_ATTR_TYPE",
 		"DIRECTIVE_ATTR_CATEGORY",
@@ -969,32 +1084,32 @@ public JavaTemplateParser(ParserSharedInputState state) {
 	}
 	public static final BitSet _tokenSet_0 = new BitSet(mk_tokenSet_0());
 	private static final long[] mk_tokenSet_1() {
-		long[] data = { 1879058688L, 0L};
+		long[] data = { 30064781568L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_1 = new BitSet(mk_tokenSet_1());
 	private static final long[] mk_tokenSet_2() {
-		long[] data = { 3794L, 0L};
+		long[] data = { 3826L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_2 = new BitSet(mk_tokenSet_2());
 	private static final long[] mk_tokenSet_3() {
-		long[] data = { 11986L, 0L};
+		long[] data = { 12018L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_3 = new BitSet(mk_tokenSet_3());
 	private static final long[] mk_tokenSet_4() {
-		long[] data = { 32466L, 0L};
+		long[] data = { 1081074L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_4 = new BitSet(mk_tokenSet_4());
 	private static final long[] mk_tokenSet_5() {
-		long[] data = { 65490L, 0L};
+		long[] data = { 68222962L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_5 = new BitSet(mk_tokenSet_5());
 	private static final long[] mk_tokenSet_6() {
-		long[] data = { 1879113682L, 0L};
+		long[] data = { 30132994034L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_6 = new BitSet(mk_tokenSet_6());
@@ -1004,59 +1119,64 @@ public JavaTemplateParser(ParserSharedInputState state) {
 	}
 	public static final BitSet _tokenSet_7 = new BitSet(mk_tokenSet_7());
 	private static final long[] mk_tokenSet_8() {
-		long[] data = { 3826L, 0L};
+		long[] data = { 4095730L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_8 = new BitSet(mk_tokenSet_8());
 	private static final long[] mk_tokenSet_9() {
-		long[] data = { 1998546L, 0L};
+		long[] data = { 1712390130L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_9 = new BitSet(mk_tokenSet_9());
 	private static final long[] mk_tokenSet_10() {
-		long[] data = { 117506002L, 0L};
+		long[] data = { 25174016L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_10 = new BitSet(mk_tokenSet_10());
 	private static final long[] mk_tokenSet_11() {
-		long[] data = { 12591104L, 0L};
+		long[] data = { 20979712L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_11 = new BitSet(mk_tokenSet_11());
 	private static final long[] mk_tokenSet_12() {
-		long[] data = { 10493952L, 0L};
+		long[] data = { 2147491840L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_12 = new BitSet(mk_tokenSet_12());
 	private static final long[] mk_tokenSet_13() {
-		long[] data = { 134225920L, 0L};
+		long[] data = { 3238010880L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_13 = new BitSet(mk_tokenSet_13());
 	private static final long[] mk_tokenSet_14() {
-		long[] data = { 209723392L, 0L};
+		long[] data = { 134217728L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_14 = new BitSet(mk_tokenSet_14());
 	private static final long[] mk_tokenSet_15() {
-		long[] data = { 8192L, 0L};
+		long[] data = { 268443648L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_15 = new BitSet(mk_tokenSet_15());
 	private static final long[] mk_tokenSet_16() {
-		long[] data = { 159391744L, 0L};
+		long[] data = { 8192L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_16 = new BitSet(mk_tokenSet_16());
 	private static final long[] mk_tokenSet_17() {
-		long[] data = { 8396800L, 0L};
+		long[] data = { 2197823488L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_17 = new BitSet(mk_tokenSet_17());
 	private static final long[] mk_tokenSet_18() {
-		long[] data = { 232792064L, 0L};
+		long[] data = { 16785408L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_18 = new BitSet(mk_tokenSet_18());
+	private static final long[] mk_tokenSet_19() {
+		long[] data = { 3686801408L, 0L};
+		return data;
+	}
+	public static final BitSet _tokenSet_19 = new BitSet(mk_tokenSet_19());
 	
 	}

@@ -177,6 +177,9 @@ public class XjcListMapMapperPlugin implements XjcMapperPlugin {
 			String listType, String key, String value, String keyType, String valueType) throws TemplateException {
 		PrintWriter pw = null;
 		File schemeOutputDir = new File(sourceOutDir, schemaPackage.replace(".", File.separator));
+		if (!schemeOutputDir.exists()) {
+			schemeOutputDir.mkdirs();
+		}
 		try {
 			pw = new PrintWriter(new FileOutputStream(new File(schemeOutputDir, type + "Map.java")));
 			pw.println("package org.edgo.jtg.schema;");

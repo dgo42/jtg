@@ -78,6 +78,27 @@ public class ParsedUnit extends Node {
 		}
 	}
 
+	public void addInclude(Token v, String file, String arg, String format) {
+		String text = v.getText();
+		int lineNum = v.getLine();
+		// split the text into lines
+		String[] lines = text.split(GeneratorUtils.EOL);
+		for (int i = 0; i < lines.length; i++) {
+			IncludeNode node = new IncludeNode(templateFile, lines[i], lineNum + i);
+			node.setFile(file);
+			node.setArg(arg);
+			node.setFormat(format);
+			templateNodes.add(node);
+		}
+		if (text.endsWith(GeneratorUtils.EOL)) {
+			lineNum++;
+			IncludeNode node = new IncludeNode(templateFile, "", lineNum + lines.length - 1);
+			node.setFile(file);
+			node.setArg(arg);
+			templateNodes.add(node);
+		}
+	}
+
 	public void addMacrocode(Token v) {
 		String text = v.getText();
 		int lineNum = v.getLine();

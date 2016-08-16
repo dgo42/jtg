@@ -2,7 +2,8 @@ package org.edgo.jtg.core;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -18,6 +19,9 @@ public class DefaultEnvironment implements IEnvironment {
 
 	public DefaultEnvironment(String configPath, String generatorOutputDir) {
 		this.configPath = configPath;
+		if (this.configPath == null) {
+			this.configPath = generatorOutputDir;
+		}
 		this.generatorOutputDir = generatorOutputDir;
 	}
 
@@ -46,9 +50,11 @@ public class DefaultEnvironment implements IEnvironment {
 			file.getParentFile().mkdirs();
 		}
 		try {
-			return new PrintWriter(new FileOutputStream(file));
+			return new PrintWriter(new FileWriter(file));
 		} catch (FileNotFoundException e) {
 			throw new EnvironmentException("File not found");
+		} catch (IOException e) {
+			throw new EnvironmentException("Some error occurs");
 		}
 	}
 

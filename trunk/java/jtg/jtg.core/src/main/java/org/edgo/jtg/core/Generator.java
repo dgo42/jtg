@@ -3,9 +3,11 @@ package org.edgo.jtg.core;
 import java.io.File;
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Constructor;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.net.URLDecoder;
 import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
@@ -188,6 +190,27 @@ public class Generator {
 		}
 	}
 
+	public void generate(ClassLoader parentClassLoader, Map<String, Object> parameters) throws TemplateException {
+		JarCompiler jarCompiler;
+		ClassLoader classLoader = null;
+		try {
+			String templateFile = getTemplateDir() + File.separator + getStartTemplate();
+			jarCompiler = new JarCompiler(sourceLineProcessor, getJarOutputDir(), getSourceOutputDir(), getProjectFile(),
+					parentClassLoader);
+
+			URL jarUrl = GeneratorUtils.Project2JarUrl(getJarOutputDir(), getProjectFile());
+			classLoader = URLClassLoader.newInstance(new URL[] {jarUrl}, jarCompiler.getClassLoader(getProjectFile()));
+			generate(classLoader, templateFile, textWriter, parameters, cmdArgs);
+		} catch (TemplateException ex) {
+			throw ex;
+		} catch (Exception ex) {
+			throw new TemplateException(ex.getMessage(), ex, getProjectFile());
+		} finally {
+			jarCompiler = null;
+			classLoader = null;
+		}
+	}
+
 	public void init(String[] args, String configFile) throws TemplateException {
 		try {
 			initByConfig(configFile);
@@ -219,6 +242,10 @@ public class Generator {
 	}
 
 	private void initByArgs(String[] args) throws ConfigurationException {
+		if (cmdArgs == null) {
+			cmdArgs = new HashMap<String, String>();
+		}
+
 		for (int i = 0; i < args.length; i++) {
 			String lowArg = args[i].toLowerCase();
 			if (lowArg == "-schemadir" || lowArg == "-sd") {
@@ -281,17 +308,25 @@ public class Generator {
 
 	private void initByConfig(String configFile) throws ConfigurationException {
 		JtgConfiguration configuration;
-		if (configFile == null)
-			configuration = JtgSettings.loadConfig();
-		else {
-			configuration = JtgSettings.loadConfig(configFile);
-			File config = new File(configFile);
-			configPath = config.getParentFile().getAbsolutePath();
+		String file = configFile;
+		if (configFile == null) {
+			String path = JtgSettings.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+			String decodedPath = "";
+			try {
+				decodedPath = URLDecoder.decode(path, "UTF-8");
+			} catch (UnsupportedEncodingException e) {
+			}
+			file = decodedPath + "jtg.config";
 		}
-		//
-		// Werte der Configurations als default Commandline Argumente Uebernehmen.
-		//
-		initByJtgConfig(configuration);
+		File config = new File(file);
+		if (config.exists()) {
+			configuration = JtgSettings.loadConfig(file);
+			configPath = config.getParentFile().getAbsolutePath();
+			//
+			// Werte der Configurations als default Commandline Argumente Uebernehmen.
+			//
+			initByJtgConfig(configuration);
+		}
 	}
 
 	private void initByJtgConfig(JtgConfiguration configuration) {

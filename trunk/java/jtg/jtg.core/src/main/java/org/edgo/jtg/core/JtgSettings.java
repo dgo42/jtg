@@ -1,6 +1,5 @@
 package org.edgo.jtg.core;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
@@ -8,17 +7,12 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
-import org.edgo.jtg.core.config.JtgConfiguration;
 import org.edgo.jtg.core.config.Configuration;
+import org.edgo.jtg.core.config.JtgConfiguration;
 
 
 
 public class JtgSettings {
-
-    public static JtgConfiguration loadConfig() throws ConfigurationException {
-        String configFile = new File(".").getAbsolutePath() + File.separator + "jtg.config";
-        return loadConfig(configFile);
-    }
 
     public static JtgConfiguration loadConfig(String configFile) throws ConfigurationException {
         try {
