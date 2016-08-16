@@ -2,7 +2,7 @@
 <feature
       id="org.edgo.jtg.colorer"
       label="Eclipse Colorer JTG"
-      version="1.0.11.qualifier"
+      version="1.0.14.qualifier"
       provider-name="Igor Russkih">
 
    <description url="http://colorer.sf.net/eclipsecolorer/">
