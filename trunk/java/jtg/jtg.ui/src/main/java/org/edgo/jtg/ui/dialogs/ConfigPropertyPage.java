@@ -371,8 +371,8 @@ public class ConfigPropertyPage extends PropertyPage {
 		ISelectionStatusValidator validator = new TypedElementSelectionValidator(acceptedSelectedClasses, false);
 		IProject[] allProjects = workspaceRoot.getProjects();
 		ArrayList<IResource> rejectedElements = new ArrayList<IResource>(allProjects.length);
-		IProject currProject = getProject();
-		/*for (int i = 0; i < allProjects.length; i++) {
+		/*IProject currProject = getProject();
+		for (int i = 0; i < allProjects.length; i++) {
 			if (!allProjects[i].equals(currProject)) {
 				rejectedElements.add(allProjects[i]);
 			}
