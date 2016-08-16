@@ -2,8 +2,8 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Java Template Generator Basics Bundle
 Bundle-SymbolicName: org.edgo.jtg.basics.bundle;singleton:=true
-Bundle-Version: 1.0.10.qualifier
+Bundle-Version: 1.0.12.qualifier
 Bundle-ClassPath: jtg.basics.jar
 Bundle-Vendor: edgo.org
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.edgo.jtg.basics
