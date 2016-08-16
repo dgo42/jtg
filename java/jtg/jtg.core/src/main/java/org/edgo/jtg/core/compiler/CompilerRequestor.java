@@ -17,6 +17,7 @@ import org.edgo.jtg.core.Logger;
 import org.edgo.jtg.core.model.Argument;
 import org.edgo.jtg.core.model.Extends;
 import org.edgo.jtg.core.model.Import;
+import org.edgo.jtg.core.model.IncludeNode;
 import org.edgo.jtg.core.model.MacroNode;
 import org.edgo.jtg.core.model.Node;
 import org.edgo.jtg.core.model.ParsedUnit;
@@ -185,6 +186,10 @@ public class CompilerRequestor implements ICompilerRequestor {
 		}
 
 		public void visit(Import n) throws TemplateException {
+			visitNode(n);
+		}
+
+		public void visit(IncludeNode n) throws TemplateException {
 			visitNode(n);
 		}
 

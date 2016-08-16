@@ -1,11 +1,13 @@
 package org.edgo.jtg.core;
 
 import java.io.File;
+import java.text.MessageFormat;
 
 import org.edgo.jtg.basics.TemplateException;
 import org.edgo.jtg.core.model.Argument;
 import org.edgo.jtg.core.model.Extends;
 import org.edgo.jtg.core.model.Import;
+import org.edgo.jtg.core.model.IncludeNode;
 import org.edgo.jtg.core.model.MacroNode;
 import org.edgo.jtg.core.model.Node;
 import org.edgo.jtg.core.model.ParsedUnit;
@@ -113,6 +115,10 @@ public class JavaSourceVisitor extends JavaSourceBaseVisitor {
 			throw new TemplateException(METHOD_NOT_IMPLEMENTED, new Exception(METHOD_NOT_IMPLEMENTED), n.getFileName());
 		}
 
+		public void visit(IncludeNode n) throws TemplateException {
+			throw new TemplateException(METHOD_NOT_IMPLEMENTED, new Exception(METHOD_NOT_IMPLEMENTED), n.getFileName());
+		}
+
 		public void visit(MacroNode n) throws TemplateException {
 			throw new TemplateException(METHOD_NOT_IMPLEMENTED, new Exception(METHOD_NOT_IMPLEMENTED), n.getFileName());
 		}
@@ -176,6 +182,10 @@ public class JavaSourceVisitor extends JavaSourceBaseVisitor {
 			throw new TemplateException(METHOD_NOT_IMPLEMENTED, new Exception(METHOD_NOT_IMPLEMENTED), n.getFileName());
 		}
 
+		public void visit(IncludeNode n) throws TemplateException {
+			throw new TemplateException(METHOD_NOT_IMPLEMENTED, new Exception(METHOD_NOT_IMPLEMENTED), n.getFileName());
+		}
+
 		public void visit(MacroNode n) throws TemplateException {
 			throw new TemplateException(METHOD_NOT_IMPLEMENTED, new Exception(METHOD_NOT_IMPLEMENTED), n.getFileName());
 		}
@@ -234,6 +244,10 @@ public class JavaSourceVisitor extends JavaSourceBaseVisitor {
 		}
 
 		public void visit(PlaceholderNode n) throws TemplateException {
+			throw new TemplateException(METHOD_NOT_IMPLEMENTED, new Exception(METHOD_NOT_IMPLEMENTED), n.getFileName());
+		}
+
+		public void visit(IncludeNode n) throws TemplateException {
 			throw new TemplateException(METHOD_NOT_IMPLEMENTED, new Exception(METHOD_NOT_IMPLEMENTED), n.getFileName());
 		}
 
@@ -692,6 +706,36 @@ public class JavaSourceVisitor extends JavaSourceBaseVisitor {
 			output.append("output.print(");
 			output.append(n.getText().trim());
 			output.append("); } catch (NullPointerException ex) { String message = \"NullPointerException in template '\" + templateFileName + \"' at line ");
+			output.append(n.getSourceLineBegin());
+			output.append("\"; throw new TemplateException(message, ex, templateFileName, ");
+			output.append(n.getSourceLineBegin());
+			output.append("); }");
+			prevTokenLine = n.getSourceLineBegin();
+		}
+	}
+
+	public void visit(IncludeNode n) throws TemplateException {
+		if (!generateOnlyMacrocode) {
+			if (prevTokenLine != n.getSourceLineBegin()) {
+				if (n.getSourceLineBegin() - prevTokenLine == 1) {
+					output.append("output.println();");
+					output.append(GeneratorUtils.EOL);
+					lineNumb.increment();
+				}
+				makeDebug(templateFile, n.getSourceLineBegin(), n);
+				output.append(Constants.INDENT);
+			}
+			output.append("try { ");
+			String fileName = n.getFile();
+			if (n.getFormat() != null) {
+				fileName = MessageFormat.format(n.getFormat(), new Object[] { "\" + " + n.getFile() + " + \"" }); 
+			}
+			fileName = "\"" + fileName + "\"";
+			output.append("RunTemplate (");
+			output.append(fileName);
+			output.append(", output, new Object[] { ");
+			output.append(n.getArg());
+			output.append(" }); } catch (NullPointerException ex) { String message = \"NullPointerException in template '\" + templateFileName + \"' at line ");
 			output.append(n.getSourceLineBegin());
 			output.append("\"; throw new TemplateException(message, ex, templateFileName, ");
 			output.append(n.getSourceLineBegin());

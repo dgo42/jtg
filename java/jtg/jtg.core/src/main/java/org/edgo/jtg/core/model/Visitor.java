@@ -14,6 +14,8 @@ public interface Visitor {
 
 	void visit(PlaceholderNode n) throws TemplateException;
 
+	void visit(IncludeNode n) throws TemplateException;
+
 	void visit(MacroNode n) throws TemplateException;
 
 	void visit(TargetNode n) throws TemplateException;
