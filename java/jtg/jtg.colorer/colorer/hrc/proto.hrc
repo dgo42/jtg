@@ -236,6 +236,13 @@
     <firstline weight="2">/targetLanguage="java"/i</firstline>
   </prototype>
   
+  <prototype name="jtg.html" group="jtg" description="jtg - HTML">
+    <location link="jar:common.jar!jtg/jtg.html.hrc"/>
+    <filename>/\.(jtg)$/i</filename>
+    <firstline>/^(&lt;\#\@ \s* codeTemplate)/</firstline>
+    <firstline weight="2">/targetLanguage="html"/i</firstline>
+  </prototype>
+  
   <prototype name="embjava" group="jtg" description="Embedded Java">
     <location link="jar:common.jar!jtg/embjava.hrc"/>
     <parameters>

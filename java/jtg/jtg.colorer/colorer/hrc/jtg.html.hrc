@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<!DOCTYPE hrc PUBLIC "-//Cail Lomecb//DTD Colorer HRC take5//EN"
+  "http://colorer.sf.net/2003/hrc.dtd">
+<hrc version="take5" xmlns="http://colorer.sf.net/2003/hrc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://colorer.sf.net/2003/hrc http://colorer.sf.net/2003/hrc.xsd">
+
+	<type name="jtg.html">
+		<annotation>
+			<appinfo>
+				<prototype name="jtg.html" group="inet" description="jtg - HTML">
+					<location link="jtg/jtg.html.hrc" />
+					<filename>/\.(jtg)$/i</filename>
+					<firstline>/^(&lt;\#\@ \s* codeTemplate)/</firstline>
+					<firstline weight="2">/targetLanguage="html"/i</firstline>
+				</prototype>
+				<require>
+					<package name="jtg" />
+					<type name="html" />
+				</require>
+			</appinfo>
+		</annotation>
+
+		<import type="jtg" />
+		<import type="def" />
+		<import type="html" />
+
+		<scheme name="stringApost">
+			<inherit scheme="jtg:Insertion">
+				<virtual scheme="jtg:targetLanguage" subst-scheme="html" />
+			</inherit>
+			<inherit scheme="tsql:stringApost"></inherit>
+		</scheme>
+
+		<scheme name="Comment">
+			<inherit scheme="jtg:Insertion">
+				<virtual scheme="jtg:targetLanguage" subst-scheme="html" />
+			</inherit>
+			<inherit scheme="def:Comment" />
+		</scheme>
+
+		<scheme name="htmlString">
+			<inherit scheme="jtg:Insertion">
+				<virtual scheme="jtg:targetLanguage" subst-scheme="html" />
+			</inherit>
+			<inherit scheme="html:htmlString" />
+		</scheme>
+
+		<scheme name="html">
+			<!-- block start="/&lt;!--/" end="/--&gt;/" scheme="Comment" region="Comment" region00="PairStart" region10="PairEnd" />
+			<block start="/&lt;%--/" end="/--%$&gt;/" scheme="Comment" region="Comment" region00="PairStart" region10="PairEnd" / -->
+			<inherit scheme="jtg:Insertion">
+				<virtual scheme="jtg:targetLanguage" subst-scheme="html" />
+			</inherit>
+			<inherit scheme="html:html">
+				<virtual scheme="html:stringApost" subst-scheme="stringApost" />
+				<virtual scheme="html:html" subst-scheme="html" />
+			</inherit>
+		</scheme>
+
+		<scheme name="jtg.html">
+			<inherit scheme="jtg:jtg">
+				<virtual scheme="jtg:targetLanguage" subst-scheme="html" />
+			</inherit>
+		</scheme>
+	</type>
+</hrc>

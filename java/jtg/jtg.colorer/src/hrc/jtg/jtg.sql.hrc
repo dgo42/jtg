@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<!DOCTYPE hrc PUBLIC "-//Cail Lomecb//DTD Colorer HRC take5//EN"
+  "http://colorer.sf.net/2003/hrc.dtd">
+<hrc version="take5" xmlns="http://colorer.sf.net/2003/hrc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://colorer.sf.net/2003/hrc http://colorer.sf.net/2003/hrc.xsd">
+
+	<type name="jtg.sql">
+		<annotation>
+			<appinfo>
+				<prototype name="jtg.sql" group="inet" description="jtg - SQL">
+					<location link="inet/jtg.sql.hrc" />
+					<filename>/\.(jtg)$/i</filename>
+					<firstline>/^(&lt;\#\@ \s* codeTemplate)/</firstline>
+					<firstline weight="2">/targetLanguage="tsql"/i</firstline>
+				</prototype>
+				<require>
+					<package name="jtg" />
+					<type name="tsql" />
+				</require>
+			</appinfo>
+		</annotation>
+
+		<import type="jtg" />
+		<import type="def" />
+		<import type="tsql" />
+
+		<scheme name="stringApost">
+			<inherit scheme="jtg:Insertion">
+				<virtual scheme="jtg:targetLanguage" subst-scheme="tsql" />
+			</inherit>
+			<inherit scheme="tsql:stringApost"></inherit>
+		</scheme>
+
+		<scheme name="Comment">
+			<inherit scheme="jtg:Insertion">
+				<virtual scheme="jtg:targetLanguage" subst-scheme="embjava" />
+			</inherit>
+			<inherit scheme="def:Comment" />
+		</scheme>
+
+		<scheme name="tsql">
+			<!--regexp match="/(--.*($|\#?=))/" region0="Comment" /-->
+			<block start="/--/" end="/($|&lt;?=)/" scheme="Comment" region="LineComment" />
+			<regexp match="/^\s*(REM\s+).*($|\#?=)/i" region0="Comment" region1="Comment" />
+			<block start="/\/\//" end="/($|\#?=)/" scheme="Comment" region="Comment" />
+			<block start="/\/\*/" end="/\*\//" scheme="Comment" region="Comment" region00="PairStart" region10="PairEnd" />
+			<inherit scheme="jtg:Insertion">
+				<virtual scheme="jtg:targetLanguage" subst-scheme="tsql" />
+			</inherit>
+			<inherit scheme="tsql:tsql">
+				<virtual scheme="tsql:stringApost" subst-scheme="stringApost" />
+				<virtual scheme="tsql:tsql" subst-scheme="tsql" />
+			</inherit>
+		</scheme>
+
+		<scheme name="jtg.sql">
+			<inherit scheme="jtg:jtg">
+				<virtual scheme="jtg:targetLanguage" subst-scheme="tsql" />
+			</inherit>
+		</scheme>
+	</type>
+</hrc>

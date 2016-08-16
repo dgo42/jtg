@@ -1,0 +1,998 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<!DOCTYPE hrc PUBLIC "-//Cail Lomecb//DTD Colorer HRC take5//EN"
+"http://colorer.sf.net/2003/hrc.dtd">
+<hrc version="take5" xmlns="http://colorer.sf.net/2003/hrc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://colorer.sf.net/2003/hrc http://colorer.sf.net/2003/hrc.xsd">
+
+	<annotation>
+		<documentation></documentation>
+		<contributors>Ghislain Bonamy gbonamy@gnf.org</contributors>
+	</annotation>
+	<type name="acapella">
+
+
+		<region name="String" parent="def:String" />
+		<region name="StringEscape" parent="def:StringContent" />
+
+		<region name="Number" parent="def:Number" />
+		<region name="StructureSymbol" parent="def:SymbolStrong" />
+		<region name="Variables" parent="def:Symbol" />
+		<region name="Boolean" parent="def:Character" />
+
+		<region name="Functions" parent="def:KeywordStrong" />
+		<region name="Modules" parent="def:Keyword" />
+		<region name="InnerModules" parent="def:Symbol" />
+		<region name="StatAggregation" parent="def:Constant" />
+		<region name="ScturctureFolding" parent="def:Label" />
+
+		<region name="KeywordLibFunctions" parent="def:FunctionKeyword" />
+		<region name="ObjectType" parent="def:StringContent" />
+
+
+		<region name="procOutline" parent="def:Outlined" />
+		<region name="PairStart" parent="def:PairStart" />
+		<region name="PairEnd" parent="def:PairEnd" />
+		<region name="Directive" parent="def:Directive" />
+		<region name="Comment" parent="def:Comment" />
+
+
+
+		<region name="procOutline" parent="def:Outlined" />
+
+
+		<scheme name="acapella">
+			<regexp match="/(proc)\s*(\w*)\b/i" region1="KeywordLibFunctions"
+				region2="procOutline" />
+			<block start="/(\{)/" end="/(\})/" scheme="acapella" region00="SymbolStrong"
+				region01="PairStart" region10="SymbolStrong" region11="PairEnd" />
+			<inherit scheme="TabsAsErrors" />
+			<inherit scheme="SpacesAsErrors" />
+			<inherit scheme="acapellaLanguage" />
+
+
+		</scheme>
+
+
+		<scheme name="acapellaLanguage">
+
+
+			<inherit scheme="AcapellaComments" />
+			<inherit scheme="String" />
+			<inherit scheme="TabsAsErrors" />
+			<inherit scheme="SpaceAsErrors" />
+
+			<inherit scheme="def:NetAddresses" />
+			<inherit scheme="def:Path" />
+
+			<inherit scheme="def:Number" />
+			<inherit scheme="def:FloatNumber" />
+			<inherit scheme="def:BadHex" />
+			<inherit scheme="def:Hex" />
+
+
+
+			<!-- StatAggregation -->
+			<keywords region="StatAggregation" ignorecase="yes">
+				<word name="max" />
+				<word name="min" />
+				<word name="maxat" />
+				<word name="minat" />
+				<word name="length" />
+				<word name="count" />
+				<word name="rowcount" />
+				<word name="columncount" />
+				<word name="sum" />
+				<word name="median" />
+				<word name="mean" />
+				<word name="stddev" />
+				<word name="histogram" />
+				<word name="width" />
+				<word name="height" />
+				<word name="body" />
+				<word name="center" />
+				<word name="border" />
+			</keywords>
+			<!-- Types Keywords -->
+			<keywords region="ObjectType" ignorecase="yes">
+				<word name="container" />
+				<word name="objectlist" />
+				<word name="table" />
+				<word name="image" />
+				<word name="memstring" />
+				<word name="int" />
+				<word name="integer" />
+				<word name="double" />
+				<word name="float" />
+				<word name="numeric" />
+				<word name="decimal" />
+				<word name="mempointer" />
+				<word name="string" />
+				<word name="memblock" />
+				<word name="boolean" />
+				<word name="text" />
+				<word name="vector" />
+				<word name="polytype" />
+				<word name="mask" />
+				<word name="stencil" />
+				<word name="objects" />
+				<word name="result" />
+				<word name="errors" />
+				<word name="errorcode" />
+			</keywords>
+			<!-- Types Keywords Modifiers -->
+			<keywords region="Directive" ignorecase="yes">
+				<word name="in" />
+				<word name="out" />
+				<word name="inout" />
+				<word name="noquote" />
+				<word name="keepquotes" />
+				<word name="filename" />
+				<word name="inputfilename" />
+				<word name="outputfilename" />
+				<word name="dirname" />
+				<word name="modulename" />
+				<word name="localcontext" />
+				<word name="dynadefault" />
+				<word name="nulldefault" />
+				<word name="explicit" />
+				<word name="syntaxrun" />
+				<word name="nodimensioncheck" />
+			</keywords>
+
+			<keywords region="Boolean" ignorecase="yes">
+				<word name="true" />
+				<word name="false" />
+				<word name="yes" />
+				<word name="no" />
+			</keywords>
+
+			<inherit scheme="ScturctureFolding" />
+			<inherit scheme="Character" />
+			<inherit scheme="Functions" />
+			<inherit scheme="Modules" />
+			<inherit scheme="Operators" />
+
+			<inherit scheme="Variables" />
+		</scheme>
+
+
+		<scheme name="String">
+			<inherit scheme="def:NetAddresses" />
+			<inherit scheme="def:Path" />
+
+			<!--
+				<block start="/(?{def:StringEdge}[Ll]?&#34;)/"
+				end="/(?{def:StringEdge}&#34;)/" scheme="StringContent"
+				region="String" inner-region="yes" />
+			-->
+			<block start="/(&#34;)/" end="/(&#34;)/" scheme="StringContent"
+				region00="String" region01="PairStart" region10="String" region11="PairEnd"
+				region="String" inner-region="yes" />
+		</scheme>
+		<scheme name="StringContent">
+			<regexp match="/\\\\$/" region="def:Error" />
+			<regexp match="/\\[^xX\d]/" region="StringEscape" />
+			<regexp match="/\\$/" region="StringEscape" />
+			<regexp match="/\\x[\da-fA-F]{1,8}/i" region="StringEscape" />
+			<regexp match="/\\[0-7]{1,12}/" region="StringEscape" />
+			<regexp match="/\%[\-\+\#0]*?[\d\*]*(\.[\d\*]+)?[Ll]?[SsCcsuidopxXnEefgG]/"
+				region="StringEscape" />
+			<regexp match="/[^\\\&#34;]$/" region="def:Error" />
+			<inherit scheme="TabsAsErrors" />
+			<inherit scheme="def:NetAddresses" />
+			<inherit scheme="def:Path" />
+		</scheme>
+
+		<scheme name="AcapellaComments">
+
+			<block start="/\/\//" end="/$/" scheme="AcapellaComments"
+				region="def:Comment" />
+			<inherit scheme="def:NetAddresses" />
+			<inherit scheme="def:Path" />
+			<inherit scheme="def:Comment" />
+		</scheme>
+
+		<scheme name="ScturctureFolding">
+			<!-- Operator brackets -->
+			<block start="/(\bforeach\b)/i" end="/(\bend\(\))/i" scheme="acapella"
+				region00="ScturctureFolding" region01="PairStart" region10="ScturctureFolding"
+				region11="PairEnd" />
+
+			<block start="/(\bif\b)/i" end="/(\bend\(\))/i" scheme="acapella"
+				region00="ScturctureFolding" region01="PairStart" region10="ScturctureFolding"
+				region11="PairEnd" />
+			<block start="/(\belse\(\))/i" end="/\M(\bend\(\))/i" scheme="acapella"
+				region00="ScturctureFolding" region01="PairStart" region10="ScturctureFolding"
+				region11="PairEnd" />
+
+			<block start="/(\bwhile\b)/i" end="/(\bend\(\))/i" scheme="acapella"
+				region00="ScturctureFolding" region01="PairStart" region10="ScturctureFolding"
+				region11="PairEnd" />
+
+			<block start="/(\btry\(\))/i" end="/(\bend\(\))/i" scheme="acapella"
+				region00="ScturctureFolding" region01="PairStart" region10="ScturctureFolding"
+				region11="PairEnd" />
+			<block start="/(\bcatch_error\(\))/i" end="/\M(\bend\(\))/i"
+				scheme="acapella" region00="ScturctureFolding" region01="PairStart"
+				region10="ScturctureFolding" region11="PairEnd" />
+			<block start="/(\bcatch_warning\(\))/i" end="/\M(\bend\(\))/i"
+				scheme="acapella" region00="ScturctureFolding" region01="PairStart"
+				region10="ScturctureFolding" region11="PairEnd" />
+
+			<keywords ignorecase="yes" region="ScturctureFolding">
+				<word name="for" />
+				<word name="while" />
+				<word name="if" />
+				<word name="else()" />
+				<word name="break()" />
+				<word name="try()" />
+				<word name="catch_error()" />
+				<word name="catch_warning()" />
+				<word name="end()" />
+			</keywords>
+		</scheme>
+
+		<scheme name="TabsAsErrors" if="tabs-as-errors">
+			<regexp match="/\t+$/" region='def:Error' />
+		</scheme>
+
+		<scheme name="SpacesAsErrors" if="spaces-as-errors">
+			<regexp match="/\x20+$/" region='def:Error' />
+		</scheme>
+
+		<scheme name="Character">
+			<regexp
+				match="/[Ll]?'(\\\D | \\[0-7]{1,3} | \\x[\da-fA-F]{2} | [^\\']){1,4}'/x"
+				region="Character" />
+			<regexp match="/'.*?'/" region="def:Error" />
+		</scheme>
+
+		<scheme name="Operators">
+			<annotation>
+				<documentation>
+					Acapella Operators. This may need revision
+				</documentation>
+			</annotation>
+
+			<block start="/(\[)/" end="/(\])/" scheme="Operators" region00="StructureSymbol"
+				region01="PairStart" region10="StructureSymbol" region11="PairEnd" />
+			<!-- Symbols -->
+			<keywords region="StructureSymbol">
+				<symb name="&lt;" />
+				<symb name="&gt;" />
+				<symb name="^" />
+				<symb name="+" />
+				<symb name="&amp;" />
+				<symb name="~" />
+				<symb name="|" />
+				<symb name="-" />
+				<symb name="*" />
+				<symb name="/" />
+				<symb name="%" />
+				<symb name=";" />
+				<symb name=":" />
+				<symb name="=" />
+				<symb name="," />
+				<symb name="'" />
+				<symb name="." />
+				<symb name="!" />
+				<symb name="@" />
+
+				<symb name="or" />
+				<symb name="not" />
+				<symb name="and" />
+			</keywords>
+			<inherit scheme="AcapellaComments" />
+			<inherit scheme="String" />
+			<inherit scheme="TabsAsErrors" />
+			<inherit scheme="SpaceAsErrors" />
+
+			<inherit scheme="def:NetAddresses" />
+			<inherit scheme="def:Path" />
+
+			<inherit scheme="def:Number" />
+			<inherit scheme="def:FloatNumber" />
+			<inherit scheme="def:BadHex" />
+			<inherit scheme="def:Hex" />
+		</scheme>
+
+		<scheme name="Functions">
+
+			<!-- Functions brackets -->
+
+			<block start="/(\()/" end="/(\))/" scheme="acapella" region00="Functions"
+				region01="PairStart" region10="Functions" region11="PairEnd" />
+			<keywords region="Functions" ignorecase="yes">
+				<word name="abs" />
+				<word name="abs"/>
+<word name="acos"/>
+<word name="acosh"/>
+<word name="asin"/>
+<word name="asinh"/>
+<word name="at"/>
+<word name="atan"/>
+<word name="atan2"/>
+<word name="atanh"/>
+<word name="caserep"/>
+<word name="ceil"/>
+<word name="channo"/>
+<word name="cnt"/>
+<word name="cos"/>
+<word name="cosh"/>
+<word name="defined"/>
+<word name="erf"/>
+<word name="erfc"/>
+<word name="eval"/>
+<word name="exp"/>
+<word name="expno"/>
+<word name="filledvec"/>
+<word name="floor"/>
+<word name="hsv"/>
+<word name="iif"/>
+<word name="int"/>
+<word name="isfinite"/>
+<word name="isinf"/>
+<word name="isnan"/>
+<word name="length"/>
+<word name="lgamma"/>
+<word name="ln"/>
+<word name="log10"/>
+<word name="lower"/>
+<word name="md5"/>
+<word name="parallel"/>
+<word name="point"/>
+<word name="poisson"/>
+<word name="range"/>
+<word name="rep"/>
+<word name="rgb"/>
+<word name="rnd"/>
+<word name="round"/>
+<word name="sin"/>
+<word name="sinh"/>
+<word name="sqrt"/>
+<word name="step"/>
+<word name="substr"/>
+<word name="tan"/>
+<word name="tanh"/>
+<word name="tbl"/>
+<word name="typeof"/>
+<word name="upper"/>
+<word name="vec"/>
+<word name="xml"/>
+<word name="xmlcomm"/>
+<word name="xmldecl"/>
+<word name="xmldoc"/>
+<word name="xmltext"/>
+
+
+			</keywords>
+		</scheme>
+
+		<scheme name="Modules">
+			<!-- Modules brackets -->
+
+			<block start="/(\()/" end="/(\))/" scheme="acapella" region00="Modules"
+				region01="PairStart" region10="Modules" region11="PairEnd" />
+
+			<keywords region="Modules" ignorecase="yes">
+				<word name="a1_0001"/>
+<word name="A1_0002"/>
+<word name="a1_0002_objects"/>
+<word name="Abort"/>
+<word name="AccumulateTables"/>
+<word name="ActivateView"/>
+<word name="Add"/>
+<word name="addContainedObjectsInfo"/>
+<word name="addObjectID"/>
+<word name="AddObjects"/>
+<word name="AddPath"/>
+<word name="AdjustPositions"/>
+<word name="Alias"/>
+<word name="AmoebaDraw"/>
+<word name="Analyse_Positive_Negative_TablesSpots"/>
+<word name="AnalyzeNeuriteTree"/>
+<word name="And"/>
+<word name="AntiMedian"/>
+<word name="Append"/>
+<word name="appendQuotedText"/>
+<word name="AppendTable"/>
+<word name="AppendToTable"/>
+<word name="applydisplacement"/>
+<word name="ApplyNanMap"/>
+<word name="ApplyPalette"/>
+<word name="apply_script_to_container"/>
+<word name="assembleCompositObject"/>
+<word name="Assert"/>
+<word name="AssertZero"/>
+<word name="AssociateObject2Parents"/>
+<word name="AssociateObject2Phenotypes"/>
+<word name="AutoCrop"/>
+<word name="Automation"/>
+<word name="autoNucleiAlgorithmSelection"/>
+<word name="autoNucleiAlgorithmSelection_inner"/>
+<word name="Average"/>
+<word name="BackOrder"/>
+<word name="bckGndDetection"/>
+<word name="bckGndDetection_Inner"/>
+<word name="bckGndSubstraction"/>
+<word name="BEAD_detection"/>
+<word name="BEAD_detection2"/>
+<word name="BEAD_edges"/>
+<word name="beep"/>
+<word name="BestPoints"/>
+<word name="BinData"/>
+<word name="binImages"/>
+<word name="Binning"/>
+<word name="Bitwise"/>
+<word name="Blank"/>
+<word name="Boole"/>
+<word name="Break"/>
+<word name="Bright_Mask"/>
+<word name="Bright_Mask"/>
+<word name="buildCompositObject"/>
+<word name="Cache"/>
+<word name="Cache_Release"/>
+<word name="CalcArea"/>
+<word name="CalcAttr"/>
+<word name="CalcBorder"/>
+<word name="CalcBoundingBox"/>
+<word name="CalcCorrelation"/>
+<word name="CalcErosion"/>
+<word name="CalcFeatures"/>
+<word name="CalcFillStencil"/>
+<word name="CalcFractionEdgeContact"/>
+<word name="CalcHistogram"/>
+<word name="CalcIntensity"/>
+<word name="CalcMassCentre"/>
+<word name="CalcMoment"/>
+<word name="CalcNodes"/>
+<word name="CalcPercentOverlap"/>
+<word name="CalcSkeleton"/>
+<word name="CalcSkeletonByIntensity"/>
+<word name="CalcStat"/>
+<word name="CalcStencilFromCenters"/>
+<word name="CalcThreshMask"/>
+<word name="CalcVoronoi"/>
+<word name="CalcWatershed"/>
+<word name="CalcWidthLength"/>
+<word name="CalcWidthLengthSafe"/>
+<word name="CalcZone"/>
+<word name="CalcZoneArea"/>
+<word name="CalcZoneFromStencil"/>
+<word name="CalcZoneIntensity"/>
+<word name="CarryObjects"/>
+<word name="CarryPixels"/>
+<word name="Catch_Abort"/>
+<word name="Catch_Error"/>
+<word name="Catch_Stop"/>
+<word name="Catch_Warning"/>
+<word name="Centers2objects"/>
+<word name="chainedCytoplasm_Detection"/>
+<word name="chanAttrib"/>
+<word name="ChDir"/>
+<word name="Circles"/>
+<word name="ClearBorders"/>
+<word name="Clipboard"/>
+<word name="CloseView"/>
+<word name="Cluster"/>
+<word name="ClusterByDistance"/>
+<word name="combineMemBlocks"/>
+<word name="combineMemBlocksV0"/>
+<word name="Comment"/>
+<word name="CompAny"/>
+<word name="CompDisplacement"/>
+<word name="ComposeScript"/>
+<word name="ComputerInfo"/>
+<word name="ConsistencyChecks"/>
+<word name="containedObjects"/>
+<word name="Continue"/>
+<word name="ControlBreakingLines"/>
+<word name="ControlBreakingLines_A"/>
+<word name="Conv"/>
+<word name="ConvElems"/>
+<word name="Convert"/>
+<word name="convertImages"/>
+<word name="Convolution"/>
+<word name="ConvolutionKernel"/>
+<word name="ConvolutionMask"/>
+<word name="Copy"/>
+<word name="Correlation2Sets"/>
+<word name="CorrelationSetOfObjects"/>
+<word name="CorrelationSetOfObjects3D"/>
+<word name="Correlator"/>
+<word name="CorrelatorX"/>
+<word name="Covariance"/>
+<word name="Create"/>
+<word name="CreateAccumulatedTable"/>
+<word name="CreateFitContainer"/>
+<word name="CreateMaskVector"/>
+<word name="CreateScalarAttrTable"/>
+<word name="CreateSimuContainer"/>
+<word name="Crop"/>
+<word name="CropAny"/>
+<word name="Cumulants"/>
+<word name="Cumulants2Moments"/>
+<word name="CumulativeHistogram"/>
+<word name="Cut"/>
+<word name="CytoplasmRegion"/>
+<word name="cytoplasm_detection_A"/>
+<word name="cytoplasm_detection_A"/>
+<word name="cytoplasm_detection_B"/>
+<word name="cytoplasm_detection_B"/>
+<word name="cytoplasm_detection_C"/>
+<word name="cytoplasm_detection_C"/>
+<word name="cytoplasm_detection_D"/>
+<word name="cytoplasm_detection_D"/>
+<word name="cytoplasm_detection_E"/>
+<word name="cytoplasm_detection_E"/>
+<word name="cytoplasm_detection_F"/>
+<word name="cytoplasm_detection_F"/>
+<word name="cytoplasm_detection_inputs"/>
+<word name="cytoplasm_detection_inputs"/>
+<word name="Cytoplasm_Detection_Select"/>
+<word name="cytoplasm_detection_set"/>
+<word name="cytoplasm_detection_set"/>
+<word name="Dark_Mask"/>
+<word name="Dark_Mask"/>
+<word name="Data2Script"/>
+<word name="dataOperaOutput"/>
+<word name="Debug"/>
+<word name="decimateImages"/>
+<word name="DefineAttr"/>
+<word name="Delete"/>
+<word name="DeleteAttr"/>
+<word name="DetectNeurites"/>
+<word name="Diag"/>
+<word name="DiagVector2Image"/>
+<word name="Dila"/>
+<word name="Display"/>
+<word name="DistanceImage"/>
+<word name="DistanceVector"/>
+<word name="Distribution"/>
+<word name="Div"/>
+<word name="Divide"/>
+<word name="DivisionByZero"/>
+<word name="DownHill"/>
+<word name="DrawLine"/>
+<word name="Dump"/>
+<word name="dumpcontainer"/>
+<word name="dump_hdf"/>
+<word name="EigenVals"/>
+<word name="Else"/>
+<word name="End"/>
+<word name="Enlarge"/>
+<word name="EnlargeMask"/>
+<word name="EnsureFactor"/>
+<word name="EnvInfo"/>
+<word name="Eros"/>
+<word name="Erosion"/>
+<word name="Error"/>
+<word name="Eval"/>
+<word name="Expand"/>
+<word name="ExportASCII_v1_1"/>
+<word name="ExportASCII_v2_1"/>
+<word name="Extract"/>
+<word name="ExtractROI"/>
+<word name="extractSubLayout"/>
+<word name="FastICA"/>
+<word name="FileCopy"/>
+<word name="FileInfo"/>
+<word name="FileServer"/>
+<word name="FillObjects"/>
+<word name="findChanNum"/>
+<word name="FindElem"/>
+<word name="FindElemReverse"/>
+<word name="FindLatestFile"/>
+<word name="FindPercentileValues"/>
+<word name="FindStencilArea"/>
+<word name="FindStencilBorder"/>
+<word name="Fit"/>
+<word name="FitAny"/>
+<word name="FixedObjectsCenters2Stencil"/>
+<word name="FixedStencil"/>
+<word name="Flim"/>
+<word name="FlimObjects"/>
+<word name="Flip"/>
+<word name="FlowTrack"/>
+<word name="Foreach"/>
+<word name="ForeachWell"/>
+<word name="FormatHtml"/>
+<word name="Fourier"/>
+<word name="FTest"/>
+<word name="FunctionInfo"/>
+<word name="Functions"/>
+<word name="Gamma"/>
+<word name="GaussianDiscriminantApply"/>
+<word name="GaussianDiscriminantPrepare"/>
+<word name="GaussJordan"/>
+<word name="GaussNoise"/>
+<word name="GenerateOnlineHelp"/>
+<word name="getAttributes"/>
+<word name="GetColumn"/>
+<word name="getElementsInNode"/>
+<word name="GetEnv"/>
+<word name="getExpInfo"/>
+<word name="getExpInfoExp"/>
+<word name="getExpInfoMea"/>
+<word name="getExposure"/>
+<word name="getFeatures"/>
+<word name="getFeaturesTable"/>
+<word name="GetFile"/>
+<word name="GetFiles"/>
+<word name="getNodes"/>
+<word name="getNodesData"/>
+<word name="getNumStack"/>
+<word name="GetPath"/>
+<word name="getROITable"/>
+<word name="GetRow"/>
+<word name="getSelectedAlgorithm"/>
+<word name="GetSys"/>
+<word name="GetTableRow"/>
+<word name="getWellInfo"/>
+<word name="getWellInfoV2"/>
+<word name="Get_Positive_Negative_control"/>
+<word name="Glob"/>
+<word name="GnuPlot"/>
+<word name="Goto"/>
+<word name="Gradient"/>
+<word name="GrantLicense"/>
+<word name="GraphPlot"/>
+<word name="GraphView"/>
+<word name="Groups"/>
+<word name="GrowStencil"/>
+<word name="GZipData"/>
+<word name="High"/>
+<word name="Histequ"/>
+<word name="Histogram"/>
+<word name="Histogram2D"/>
+<word name="HsvJoin"/>
+<word name="HsvSplit"/>
+<word name="HtmlView"/>
+<word name="HtmlViewSession"/>
+<word name="If"/>
+<word name="IllegalMemoryAccess"/>
+<word name="Image2Table"/>
+<word name="imagesInit"/>
+<word name="imagesInitV2"/>
+<word name="ImageView"/>
+<word name="Import"/>
+<word name="ImportExcel"/>
+<word name="Include"/>
+<word name="IndividualThreshold"/>
+<word name="info_hdf"/>
+<word name="InnerProduct"/>
+<word name="Input"/>
+<word name="InputformApply"/>
+<word name="InputformTable"/>
+<word name="Insert_At"/>
+<word name="IntegralZoneArea"/>
+<word name="IntegralZoneIntensity"/>
+<word name="Interactive"/>
+<word name="Invalidate"/>
+<word name="Inverse"/>
+<word name="InvFourier"/>
+<word name="Items"/>
+<word name="Join"/>
+<word name="Keep"/>
+<word name="Label"/>
+<word name="LibCall"/>
+<word name="Libraries"/>
+<word name="Licensegroups"/>
+<word name="LinearHough"/>
+<word name="LinearHoughTransform"/>
+<word name="LoadPackage"/>
+<word name="MagickFormats"/>
+<word name="MagickRead"/>
+<word name="MagickReadMulti"/>
+<word name="MagickWrite"/>
+<word name="MainScriptInfo"/>
+<word name="Makemap"/>
+<word name="MakeNanMap"/>
+<word name="MakeTempFileName"/>
+<word name="man"/>
+<word name="Map"/>
+<word name="Mask"/>
+<word name="Mask2Stencil"/>
+<word name="MaskArray"/>
+<word name="Maskmeanintensity"/>
+<word name="MaskVector2Mask"/>
+<word name="MatrixMul"/>
+<word name="maxbox"/>
+<word name="Maximums"/>
+<word name="Maximums3D"/>
+<word name="MBF_CostesTest"/>
+<word name="MBF_DeBlur"/>
+<word name="MBF_ICQ"/>
+<word name="MBF_MakeGaussianKernel"/>
+<word name="MBF_MakeGaussianKernel"/>
+<word name="MBF_MandersCoefficients"/>
+<word name="MBF_PearsonsCoefficient"/>
+<word name="Md5"/>
+<word name="Mean"/>
+<word name="Mean_comb"/>
+<word name="Median"/>
+<word name="MembraneRegion"/>
+<word name="MemName"/>
+<word name="MemoryLeak"/>
+<word name="Merge_Prepare"/>
+<word name="MicroNucleiDetection"/>
+<word name="Minimums"/>
+<word name="Minus"/>
+<word name="MkDir"/>
+<word name="ModuleDescription"/>
+<word name="ModuleDescriptionHTML"/>
+<word name="ModuleDescriptionLatex"/>
+<word name="ModuleDescriptionPlain"/>
+<word name="ModuleDescriptionRTF"/>
+<word name="Modules"/>
+<word name="Modulus"/>
+<word name="Moment"/>
+<word name="Moments"/>
+<word name="Moments2Cumulants"/>
+<word name="Mul"/>
+<word name="Multiply"/>
+<word name="multiskewcrop_prepare"/>
+<word name="neurite_detection_A"/>
+<word name="neurite_detection_inputs"/>
+<word name="NormalityTest"/>
+<word name="normalizeObjects"/>
+<word name="Not"/>
+<word name="Nuclei_Detection"/>
+<word name="nuclei_detection_A"/>
+<word name="nuclei_detection_A"/>
+<word name="nuclei_detection_B"/>
+<word name="nuclei_detection_B"/>
+<word name="nuclei_detection_C"/>
+<word name="nuclei_detection_C"/>
+<word name="nuclei_detection_D"/>
+<word name="nuclei_detection_D"/>
+<word name="nuclei_detection_E"/>
+<word name="nuclei_detection_E"/>
+<word name="nuclei_detection_F"/>
+<word name="nuclei_detection_F"/>
+<word name="nuclei_detection_G"/>
+<word name="nuclei_detection_G"/>
+<word name="nuclei_detection_H"/>
+<word name="nuclei_detection_H"/>
+<word name="nuclei_detection_inputs"/>
+<word name="nuclei_detection_inputs"/>
+<word name="Nuclei_Detection_Select"/>
+<word name="Nuclei_Detection_Select"/>
+<word name="nuclei_detection_set"/>
+<word name="nuclei_detection_set"/>
+<word name="NucleusRegion"/>
+<word name="ObjectAtPoint"/>
+<word name="ObjectAttributeOnImage"/>
+<word name="ObjectFilter"/>
+<word name="ObjectInfo"/>
+<word name="Objectlist2Table"/>
+<word name="ObjectNumberOnImage"/>
+<word name="ObjectRadius"/>
+<word name="objectsDeleteGeometry"/>
+<word name="ObjectsDistances"/>
+<word name="ObjectsFromCenters"/>
+<word name="OpenFile"/>
+<word name="Or"/>
+<word name="Order_Compliment"/>
+<word name="Output"/>
+<word name="outputMemblockData"/>
+<word name="OverlapCrop"/>
+<word name="Pack"/>
+<word name="Package"/>
+<word name="paint"/>
+<word name="PairWiseDistance"/>
+<word name="Palette_Gradual"/>
+<word name="ParallelInfo"/>
+<word name="Parameters"/>
+<word name="ParasiteDetection"/>
+<word name="ParasiteDetection_inner"/>
+<word name="ParasiteDetection_parameters"/>
+<word name="Paste"/>
+<word name="PasteImage"/>
+<word name="PathSplit"/>
+<word name="Pattern"/>
+<word name="perl"/>
+<word name="Php"/>
+<word name="Plot"/>
+<word name="Plus"/>
+<word name="Points"/>
+<word name="PoissonNoise"/>
+<word name="Pop"/>
+<word name="PrettyPrint"/>
+<word name="Printf"/>
+<word name="PrintfLoop"/>
+<word name="PrintfOpen"/>
+<word name="Progress"/>
+<word name="projectStacks"/>
+<word name="projectStacksV2"/>
+<word name="ProvideInput"/>
+<word name="ProvideSingleWell"/>
+<word name="Push"/>
+<word name="PutEnv"/>
+<word name="Quantile"/>
+<word name="Quote"/>
+<word name="Rangemap"/>
+<word name="ReadAsciiData"/>
+<word name="ReadBinaryData"/>
+<word name="ReadDataSQU"/>
+<word name="ReadDta"/>
+<word name="ReadFile"/>
+<word name="ReadFlex"/>
+<word name="ReadImage"/>
+<word name="ReadNtp"/>
+<word name="ReadPev"/>
+<word name="ReadReg"/>
+<word name="ReadTable"/>
+<word name="ReadVector"/>
+<word name="ReadVideo"/>
+<word name="ReadXml"/>
+<word name="read_hdf"/>
+<word name="Rearrange"/>
+<word name="RectMask"/>
+<word name="RecursiveGlob"/>
+<word name="Redimension"/>
+<word name="Regex"/>
+<word name="RegexReplace"/>
+<word name="Remap"/>
+<word name="RemoveBorderObjects"/>
+<word name="RemoveBorderObjectsSoft"/>
+<word name="RemoveSmallObjects"/>
+<word name="remove_outliers"/>
+<word name="Rename"/>
+<word name="RenameAttr"/>
+<word name="Reorder"/>
+<word name="Require"/>
+<word name="RequireLicense"/>
+<word name="reQuote"/>
+<word name="Resize"/>
+<word name="Return"/>
+<word name="RgbJoin"/>
+<word name="RgbSplit"/>
+<word name="RingRegion"/>
+<word name="RingRegion_inner"/>
+<word name="RndInitAny"/>
+<word name="Rotate"/>
+<word name="Run"/>
+<word name="RunMainScript"/>
+<word name="SampleImage"/>
+<word name="SampleImage_2Channels"/>
+<word name="saveSelectedAlgorithm"/>
+<word name="searchElem"/>
+<word name="SelectBrightSpots"/>
+<word name="SendAlarm"/>
+<word name="Set"/>
+<word name="SetAttr"/>
+<word name="SetFormula"/>
+<word name="SetLink"/>
+<word name="SetParam"/>
+<word name="SetSys"/>
+<word name="SetWellAttr"/>
+<word name="ShiftAnalyze"/>
+<word name="Shuffle"/>
+<word name="SimuScan"/>
+<word name="SinglePixelclusterObjects"/>
+<word name="SingleWell"/>
+<word name="SkewAnalyze"/>
+<word name="SkewCrop"/>
+<word name="SkewCropCompare"/>
+<word name="SkewCropRect"/>
+<word name="sleep"/>
+<word name="Slopes"/>
+<word name="Snapshot"/>
+<word name="SolveBiSection"/>
+<word name="Sort"/>
+<word name="Sort_Prepare"/>
+<word name="SourcedataApply"/>
+<word name="SourcedataDefine"/>
+<word name="SourcedataInfo"/>
+<word name="SourcedataJump"/>
+<word name="SourcedataProviders"/>
+<word name="SourceDatasets"/>
+<word name="Split"/>
+<word name="splitMyObjects"/>
+<word name="SplitObjectList"/>
+<word name="SplitObjects"/>
+<word name="SplitString"/>
+<word name="SplitStringInTwo"/>
+<word name="SpotAccurateRepresentation"/>
+<word name="SpotAccurateRepresentation_inner"/>
+<word name="SpotAccurateRepresentation_parameters"/>
+<word name="Spot_Detection_A"/>
+<word name="Spot_Detection_B"/>
+<word name="Spot_Detection_C"/>
+<word name="Spot_Detection_D"/>
+<word name="Spot_detection_DataToSearchObjects"/>
+<word name="spot_detection_inputs"/>
+<word name="Spot_detection_outputs"/>
+<word name="Spot_detection_outputs_NoValidFields"/>
+<word name="Spot_detection_outputs_withtable"/>
+<word name="Spot_Detection_SCAN"/>
+<word name="Spot_Detection_Select"/>
+<word name="Spot_Detection_SET"/>
+<word name="Sprintf"/>
+<word name="SprintfLoop"/>
+<word name="StackOverflow"/>
+<word name="Standardize"/>
+<word name="StartServer"/>
+<word name="Stat"/>
+<word name="StatGroup"/>
+<word name="StdLibDirs"/>
+<word name="Stencil2Mask"/>
+<word name="Stencil2Objects"/>
+<word name="StencilFrom3DTo2D"/>
+<word name="Stop"/>
+<word name="Swap"/>
+<word name="Table2Image"/>
+<word name="TableFilter"/>
+<word name="TableFilter_Prepare"/>
+<word name="TableMerge"/>
+<word name="TableSplit"/>
+<word name="TableTranspose"/>
+<word name="TableView"/>
+<word name="Tabulate"/>
+<word name="TextOnImage"/>
+<word name="Texture_ComputeHaralick"/>
+<word name="Texture_DerivativePass"/>
+<word name="Texture_GaborFilter"/>
+<word name="Texture_LinearPass"/>
+<word name="ThresholdXX"/>
+<word name="Timer"/>
+<word name="TimeStamps2Counts"/>
+<word name="ToDatacube"/>
+<word name="Toimage"/>
+<word name="Translate"/>
+<word name="Transpose"/>
+<word name="Truecolor2Paletted"/>
+<word name="Try"/>
+<word name="TypeInfo"/>
+<word name="Undump"/>
+<word name="undump_hdf"/>
+<word name="Uniq"/>
+<word name="Uniq_Prepare"/>
+<word name="Unpack"/>
+<word name="Unquote"/>
+<word name="Using"/>
+<word name="VacuoleDetection"/>
+<word name="Var"/>
+<word name="Variance"/>
+<word name="VecVec2Image"/>
+<word name="VerifyAttr"/>
+<word name="Version"/>
+<word name="Warning"/>
+<word name="WarningFilter"/>
+<word name="WellAttr2Image"/>
+<word name="wellMontage"/>
+<word name="WellNR2RowCol"/>
+<word name="While"/>
+<word name="WholeObjectRegion"/>
+<word name="Write"/>
+<word name="WriteAplusXML"/>
+<word name="WriteFile"/>
+<word name="WriteFlex"/>
+<word name="WriteImage"/>
+<word name="WriteObjectsTable"/>
+<word name="WriteReg"/>
+<word name="WriteTable"/>
+<word name="WriteVideo"/>
+<word name="WriteXml"/>
+<word name="write_hdf"/>
+<word name="XmlInfo"/>
+<word name="XmlInsert"/>
+<word name="XmlReplace"/>
+<word name="Xor"/>
+<word name="XSLT"/>
+<word name="Zone2Objects"/>
+<word name="ZoneImage"/>
+<word name="ZoneMask"/>
+<word name="zprim"/>
+
+			</keywords>
+			<regexp match="/\m(\b\w+)\(/" region1="InnerModules" priority="low" />
+		</scheme>
+
+		<scheme name="Variables">
+			<regexp match="/\b(\w+)\b/" region1="Variables" priority="low" />
+		</scheme>
+	</type>
+</hrc>
