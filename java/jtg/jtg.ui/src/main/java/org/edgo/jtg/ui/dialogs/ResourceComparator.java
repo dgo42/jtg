@@ -42,7 +42,6 @@ public class ResourceComparator extends ViewerComparator {
 		return classComparison(element1) - classComparison(element2);
 	}
 
-	@SuppressWarnings("unchecked")
 	protected int compareNames(IResource resource1, IResource resource2) {
 		return getComparator().compare(resource1.getName(), resource2.getName());
 	}
@@ -51,7 +50,6 @@ public class ResourceComparator extends ViewerComparator {
 		String ext1 = getExtensionFor(resource1);
 		String ext2 = getExtensionFor(resource2);
 
-		@SuppressWarnings("unchecked")
 		int result = getComparator().compare(ext1, ext2);
 
 		if (result != 0) {

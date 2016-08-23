@@ -37,6 +37,7 @@ import org.eclipse.ui.console.MessageConsoleStream;
 import org.edgo.jtg.basics.LogMessage;
 import org.edgo.jtg.basics.TemplateException;
 import org.edgo.jtg.core.Generator;
+import org.edgo.jtg.core.GeneratorUtils;
 import org.edgo.jtg.core.JarCompiler;
 import org.edgo.jtg.core.config.JtgConfiguration;
 import org.edgo.jtg.ui.Constants;
@@ -157,6 +158,9 @@ public class JtgBuilder extends IncrementalProjectBuilder {
 		config.setGeneratedPackage(PreferenceLoader.loadValue(store, Constants.TEMPLATE_PACKAGE_PREF));
 
 		config.setUsingCache(((Boolean) PreferenceLoader.loadValueBool(store, Constants.USING_CACHE_PREF)).toString());
+		
+		config.setCommand(PreferenceLoader.loadValue(store, Constants.GOAL_PREF));
+		
 		return config;
 	}
 
@@ -169,10 +173,15 @@ public class JtgBuilder extends IncrementalProjectBuilder {
 			String projectName = project.getName();
 			String projectFile = "/" + projectName + "/" + config.getProjectFile();
 			String schemaFile = "/" + projectName + "/" + config.getSchemaDir() + "/" + config.getSchema();
+			String jarOutDir = config.getJarOutputDir();
 
 			Matcher matcher = Constants.ALL_FILE_MASK.matcher(name);
+			String jarName = GeneratorUtils.Project2JarName(jarOutDir, projectName);
 			if (matcher.find() || fullName.equals(projectFile) || fullName.equals(schemaFile)) {
-				regenarateAll(project);
+				IResource jarResource = findMember(project, jarName);
+				if (jarResource == null || resource.getModificationStamp() > jarResource.getModificationStamp()) {
+					regenarateAll(project);
+				}
 			}
 		}
 	}
@@ -210,14 +219,35 @@ public class JtgBuilder extends IncrementalProjectBuilder {
 
 	private IFile findMember(IContainer container, String fileName) {
 		try {
-			IResource resource = container.findMember(fileName);
+			IResource resource = container.findMember(fileName, true);
 			if (resource != null && resource instanceof IFile) {
 				return (IFile) resource;
+			}
+			IResource[] resources = container.members(IContainer.INCLUDE_HIDDEN);
+			for (IResource res : resources) {
+				if (res instanceof IContainer) {
+					IFile file = findMember((IContainer) res, fileName);
+					if (file != null) {
+						return file;
+					}
+				}
+			}
+		} catch (CoreException e) {
+			JtgUIPlugin.log(e);
+		}
+		return null;
+	}
+
+	private IFolder findFolder(IContainer container, String folderName) {
+		try {
+			IResource resource = container.findMember(folderName);
+			if (resource != null && resource instanceof IFolder) {
+				return (IFolder) resource;
 			}
 			IResource[] resources = container.members();
 			for (IResource res : resources) {
 				if (res instanceof IContainer) {
-					IFile file = findMember((IContainer) res, fileName);
+					IFolder file = findFolder((IContainer) res, folderName);
 					if (file != null) {
 						return file;
 					}
@@ -302,9 +332,11 @@ public class JtgBuilder extends IncrementalProjectBuilder {
 						IFile file = findMember(project, getFileName(fileName));
 						if (file != null) {
 							addMarker(file, message.getErrorMessage(), lineNumber, IMarker.SEVERITY_ERROR);
+							JtgUIPlugin.log(e);
 						}
 					} else {
 						addMarker(project, exceptionBuilder(e), lineNumber, IMarker.SEVERITY_ERROR);
+						JtgUIPlugin.log(e);
 					}
 				}
 			} else {
@@ -329,20 +361,33 @@ public class JtgBuilder extends IncrementalProjectBuilder {
 							message = e.toString();
 						}
 						addMarker(file, message, lineNumber, IMarker.SEVERITY_ERROR);
+						JtgUIPlugin.log(e);
 					} else {
 						addMarker(project, exceptionBuilder(e), lineNumber, IMarker.SEVERITY_ERROR);
+						JtgUIPlugin.log(e);
 					}
 				} else {
 					addMarker(project, exceptionBuilder(e), lineNumber, IMarker.SEVERITY_ERROR);
+					JtgUIPlugin.log(e);
 				}
 			}
 		} catch (Exception e) {
 			JtgUIPlugin.log(e);
 		}
+		String srcGenPath = config.getSourceOutputDir();
+		IResource res = findFolder(project, srcGenPath);
+		if (res != null && res.isAccessible()) {
+			try {
+				res.refreshLocal(IResource.DEPTH_INFINITE, null);
+			} catch (CoreException e) {
+				// nothing to do
+			}
+		}
 	}
 
 	private void deleteAllMarkers(IContainer project) throws CoreException {
 		IResource[] members = project.members();
+		deleteMarkers(project);
 		for (IResource element : members) {
 			if (IFolder.class.isInstance(element)) {
 				deleteAllMarkers((IFolder) element);
@@ -352,7 +397,7 @@ public class JtgBuilder extends IncrementalProjectBuilder {
 		}
 	}
 
-	private void deleteMarkers(IFile file) {
+	private void deleteMarkers(IResource file) {
 		try {
 			file.deleteMarkers(JTG_MARKER_TYPE, false, IResource.DEPTH_ZERO);
 		} catch (CoreException ce) {

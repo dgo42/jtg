@@ -26,6 +26,7 @@ import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
@@ -37,6 +38,7 @@ import org.eclipse.ui.dialogs.PropertyPage;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.views.navigator.ResourceComparator;
+import org.edgo.jtg.core.GeneratorCommand;
 import org.edgo.jtg.ui.Constants;
 import org.edgo.jtg.ui.JtgUIPlugin;
 import org.edgo.jtg.ui.config.PreferenceLoader;
@@ -55,20 +57,9 @@ public class ConfigPropertyPage extends PropertyPage {
 	private Text					txtSchemaPackage;
 	private Text					txtTemplatePackage;
 	private Button					chkUsingCache;
+	private Combo					cmbGoal;
 
 	private IWorkspaceRoot			workspaceRoot;
-
-	/*
-		IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
-		IPath containerPath = getContainerFullPath();
-		if ((containerPath != null) && (containerPath.segmentCount() > 0)) {
-		  IProject project = workspaceRoot.getProject(containerPath.segment(0));
-		  try {
-		    if (!project.hasNature("org.eclipse.jdt.core.javanature")) {
-		      setErrorMessage(SnippetMessages.getString("NewSnippetFileWizardPage.error.OnlyInJavaProject"));
-		      return false;
-		    }
-	*/
 
 	@Override
 	protected Control createContents(Composite parent) {
@@ -338,7 +329,7 @@ public class ConfigPropertyPage extends PropertyPage {
 		gl_grpGeneral.verticalSpacing = 3;
 		grpGeneral.setLayout(gl_grpGeneral);
 		FormData fd_grpGeneral = new FormData();
-		fd_grpGeneral.bottom = new FormAttachment(grpPackages, 46, SWT.BOTTOM);
+		fd_grpGeneral.bottom = new FormAttachment(grpPackages, 72, SWT.BOTTOM);
 		fd_grpGeneral.top = new FormAttachment(grpPackages, 5);
 		fd_grpGeneral.left = new FormAttachment(0, 5);
 		fd_grpGeneral.right = new FormAttachment(1, 1, -5);
@@ -358,6 +349,28 @@ public class ConfigPropertyPage extends PropertyPage {
 		lblUsingCahce.setText("Using cahce");
 
 		chkUsingCache = new Button(grpGeneral, SWT.CHECK);
+
+		Label lblGoal = new Label(grpGeneral, SWT.NONE);
+		lblUsingCahce.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDown(MouseEvent e) {
+				cmbGoal.forceFocus();
+			}
+		});
+
+		GridData gd_lblGoal = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_lblGoal.widthHint = 150;
+		lblGoal.setLayoutData(gd_lblGoal);
+		lblGoal.setText("Target goal");
+
+		cmbGoal = new Combo(grpGeneral, SWT.READ_ONLY);
+		cmbGoal.add("Generate java sources for schema only", 0);
+		cmbGoal.add("Generate java sources for templates only", 1);
+		cmbGoal.add("Generate java sources for schema and tempates", 2);
+		cmbGoal.add("Generate java sources for schema and tempates and compile java classes", 3);
+		cmbGoal.add("Generate java sources for schema and tempates and compile java classes and create JAR", 4);
+		cmbGoal.add("Full process include generate target using project file", 5);
+		
 		loadData();
 		return comp;
 	}
@@ -438,6 +451,8 @@ public class ConfigPropertyPage extends PropertyPage {
 		PreferenceLoader.storeValue(store, Constants.SCHEMA_PACKAGE_PREF, txtSchemaPackage.getText());
 		PreferenceLoader.storeValue(store, Constants.TEMPLATE_PACKAGE_PREF, txtTemplatePackage.getText());
 		PreferenceLoader.storeValue(store, Constants.USING_CACHE_PREF, chkUsingCache.getSelection());
+		GeneratorCommand cmd = GeneratorCommand.parse(cmbGoal.getSelectionIndex());
+		PreferenceLoader.storeValue(store, Constants.GOAL_PREF, cmd.getValue());
 	}
 
 	private void loadData() {
@@ -461,6 +476,12 @@ public class ConfigPropertyPage extends PropertyPage {
 		txtSchemaPackage.setText(PreferenceLoader.loadValue(store, Constants.SCHEMA_PACKAGE_PREF));
 		txtTemplatePackage.setText(PreferenceLoader.loadValue(store, Constants.TEMPLATE_PACKAGE_PREF));
 		chkUsingCache.setSelection(PreferenceLoader.loadValueBool(store, Constants.USING_CACHE_PREF));
+		GeneratorCommand cmd = GeneratorCommand.parse(PreferenceLoader.loadValue(store, Constants.GOAL_PREF));
+		if (cmd != null) {
+			cmbGoal.select(cmd.getIndex());
+		} else {
+			cmbGoal.select(GeneratorCommand.COMPLETE.getIndex());
+		}
 	}
 
 	@Override

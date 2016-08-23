@@ -106,6 +106,9 @@ public class AddRemoveJtgNatureHandler extends AbstractHandler {
 			PreferenceLoader.storeValue(store, Constants.SCHEMA_PACKAGE_PREF, Constants.SCHEMA_PACKAGE_DEFAULT);
 			PreferenceLoader.storeValue(store, Constants.TEMPLATE_PACKAGE_PREF, Constants.TEMPLATE_PACKAGE_DEFAULT);
 			PreferenceLoader.storeValue(store, Constants.USING_CACHE_PREF, Constants.USING_CACHE_DEFAULT);
+
+			PreferenceLoader.storeValue(store, Constants.GOAL_PREF, Constants.GOAL_DEFAULT.getValue());
+		
 		} catch (Exception e) {
 			JtgUIPlugin.log(e);
 			throw new CoreException(new StatusInfo(4, "Failed to toggle nature: \r\n" + e.toString()));
