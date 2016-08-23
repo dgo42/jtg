@@ -4,8 +4,10 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -23,9 +25,9 @@ import org.edgo.jtg.ui.config.PreferenceLoader;
 
 public class EclipseEnvironment implements IEnvironment {
 
-	private IProject	project;
+	private IProject project;
 
-	private IFile		lastFile	= null;
+	private IFile lastFile = null;
 
 	public EclipseEnvironment(IProject project) {
 		this.project = project;
@@ -47,8 +49,8 @@ public class EclipseEnvironment implements IEnvironment {
 						name = filenameStr.substring(0, dot);
 					}
 
-					IPath bakfile = path.getFullPath().append(
-							name + (new SimpleDateFormat(".yyyy_MM_dd_HHmmss.")).format(new Date()) + ext);
+					IPath bakfile = path.getFullPath()
+							.append(name + (new SimpleDateFormat(".yyyy_MM_dd_HHmmss.")).format(new Date()) + ext);
 
 					file.move(bakfile, true, null);
 				}
@@ -57,7 +59,8 @@ public class EclipseEnvironment implements IEnvironment {
 			file = project.getFile(fileName);
 			file.setCharset(encoding, null);
 			lastFile = file;
-			return new PrintWriter(new FileOutputStream(file.getLocation().toOSString()));
+			return new PrintWriter(new OutputStreamWriter(new FileOutputStream(file.getLocation().toOSString()),
+					StandardCharsets.UTF_8));
 		} catch (CoreException e) {
 			throw new EnvironmentException("File not found");
 		} catch (FileNotFoundException e) {
