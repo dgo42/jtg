@@ -2,9 +2,10 @@ package org.edgo.jtg.core;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -50,11 +51,11 @@ public class DefaultEnvironment implements IEnvironment {
 			file.getParentFile().mkdirs();
 		}
 		try {
-			return new PrintWriter(new FileWriter(file));
+			return new PrintWriter(new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8));
 		} catch (FileNotFoundException e) {
 			throw new EnvironmentException("File not found");
-		} catch (IOException e) {
-			throw new EnvironmentException("Some error occurs");
+/*		} catch (IOException e) {
+			throw new EnvironmentException("Some error occurs");*/
 		}
 	}
 

@@ -1,5 +1,12 @@
-﻿<#@ codeTemplate language="java" targetLanguage="sql" #>
-<#@ property name="mainElement" type="DirectUseElement" #>
+﻿<#@codeTemplate language="java" targetLanguage="sql"#>
+<#@import name="java.lang.Thread"#>
+<#@import name="java.lang.Runnable"#>
+<#@import name="java.lang.Override"#>
+<#@import name="java.text.DecimalFormat"#>
+<#@import name="java.util.ArrayList"#>
+<#@import name="java.util.Date"#>
+<#@import name="java.util.List"#>
+<#@property name="mainElement" type="DirectUseElement"#>
 <#script#>
 	public int test;
 
@@ -13,8 +20,36 @@
 <#/script#>
 <#--
 	edgo.org Code Generator (c) 2005-2014.
---#>
+#>
 <#
+/*	List<Thread> threads = new ArrayList<Thread>();
+    
+    final TemplateClass me = this;
+    final EmployeeElement emp = mainElement.employeeElements.employeeElements.get(0);
+    
+    Thread thread = new Thread(new Runnable() {
+		
+		@Override
+		public void run() {
+			double start = System.nanoTime();
+			for(int i = 0; i < 1000; i++) {
+				try {
+		    		me.RunTemplate ("Details\\Message.txt.jtg", "Output\\test.txt", new Object[] { emp });
+	    		} catch(TemplateException e) {
+	    			e.printStackTrace(output);
+	    		}
+			}
+			double end = System.nanoTime();
+			double elapsed = (end - start) / 1000000;
+			output.println("Elapsed time " + new DecimalFormat("#.######").format(elapsed) + " ms");
+		}
+	});
+	thread.start();
+	threads.add(thread);
+    for (Thread t : threads) {
+    	t.join();
+    }
+*/
     // 3. Variante
     for (EmployeeElement employee : mainElement.employeeElements.employeeElements) {
 #>

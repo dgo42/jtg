@@ -37,17 +37,19 @@ import org.edgo.jtg.core.model.ParsedUnit;
 
 public class JarCompiler {
 
-	private SourceLineProcessor	sourceLineProcessor;
-	private Map<String, Source>	sources;
-	private Map<String, String>	jars;
-	private ClassLoader			compilerClassLoader	= null;
+	private SourceLineProcessor sourceLineProcessor;
+	private Map<String, Source> sources;
+	private Map<String, String> jars;
+	private ClassLoader compilerClassLoader = null;
 
-	private String				sourceOutDir		= null;
-	private String				jarOutDir			= null;
-	private ClassLoader			parentClassLoader	= null;
-	private String				projectName			= null;
+	private String sourceOutDir = null;
+	private String jarOutDir = null;
+	private String templatePackage = null;
+	private String schemaPackage = null;
+	private ClassLoader parentClassLoader = null;
+	private String projectName = null;
 
-	final Logger				log					= new Logger();
+	final Logger log = new Logger();
 
 	/**
 	 * <summary>
@@ -59,26 +61,29 @@ public class JarCompiler {
 	 * @param projectName
 	 */
 	public JarCompiler(SourceLineProcessor sourceLineProcessor, String jarOutDir, String sourceOutDir,
-			String projectName, ClassLoader parentClassLoader) {
+			String projectName, String schemaPackage, String temlatePackage, ClassLoader parentClassLoader) {
 		this.sourceLineProcessor = sourceLineProcessor;
 		sources = new HashMap<String, Source>();
 		jars = new HashMap<String, String>();
 		this.jarOutDir = jarOutDir;
 		this.projectName = projectName;
 		this.parentClassLoader = parentClassLoader;
+		this.schemaPackage = schemaPackage;
+		this.templatePackage = temlatePackage;
 		if (sourceOutDir != null && !"".equals(sourceOutDir)) {
 			this.sourceOutDir = sourceOutDir;
 		}
 	}
 
-	public void AddSource(String raw_source, String className, MacroLang language, String filename, String generatedPackage,
-			String encoding, ParsedUnit unit) throws TemplateException {
+	public void AddSource(String raw_source, String className, MacroLang language, String filename,
+			String generatedPackage, String encoding, ParsedUnit unit) throws TemplateException {
 		try {
 			if (language == MacroLang.NONE) {
 				String message = "Unknown macro language in template '" + filename + "'";
 				throw new TemplateException(message, new Exception(message), filename);
 			}
-			if (sources.containsKey(filename)) return;
+			if (sources.containsKey(filename))
+				return;
 
 			String full_name = GeneratorUtils.SourceOutFullPath(sourceOutDir, generatedPackage, className);
 
@@ -93,7 +98,8 @@ public class JarCompiler {
 	// TODO
 	public void AddJar(String jar, String templatefile) throws TemplateException {
 		try {
-			if (jars.containsKey(jar)) return;
+			if (jars.containsKey(jar))
+				return;
 
 			jars.put(jar, jar);
 		} catch (Exception ex) {
@@ -159,7 +165,7 @@ public class JarCompiler {
 	 * public void WriteSource(String source, String filename, String encoding) throws Exception { String full_name =
 	 * GeneratorUtils.SourceOutFullPath(source_out_dir, filename); write_to_file(source, full_name, encoding); }
 	 */
-	public boolean Compile(String template_dir, String templatefile) throws TemplateException {
+	public boolean Compile(String template_dir, String templatefile, boolean forceJar) throws TemplateException {
 		try {
 			File jarOutFile = new File(jarOutDir);
 			if (!jarOutFile.exists()) {
@@ -167,7 +173,10 @@ public class JarCompiler {
 			}
 
 			Map<String, CompilationUnit> sourcesCompiledUnits = new HashMap<String, CompilationUnit>();
-			collectCompiledUnits(sourcesCompiledUnits, sourceOutDir, "");
+			String startDir = sourceOutDir + "/" + schemaPackage.replace(".", "/");
+			collectCompiledUnits(sourcesCompiledUnits, startDir, schemaPackage);
+			startDir = sourceOutDir + "/" + templatePackage.replace(".", "/");
+			collectCompiledUnits(sourcesCompiledUnits, startDir, templatePackage);
 
 			getClassLoader(templatefile);
 
@@ -181,7 +190,7 @@ public class JarCompiler {
 			CompilerOptions options = new CompilerOptions();
 
 			options.produceDebugAttributes = ClassFileConstants.ATTR_LINES | ClassFileConstants.ATTR_SOURCE;
-			//options.warningThreshold ^= ~CompilerOptions.UsingDeprecatedAPI;
+			// options.warningThreshold ^= ~CompilerOptions.UsingDeprecatedAPI;
 
 			options.defaultEncoding = "UTF-8";
 
@@ -196,14 +205,16 @@ public class JarCompiler {
 			}
 
 			// Target JVM
-			options.targetJDK = ClassFileConstants.JDK1_5;
-			options.complianceLevel = ClassFileConstants.JDK1_5;
+			options.targetJDK = ClassFileConstants.JDK1_7;
+			options.complianceLevel = ClassFileConstants.JDK1_7;
+			options.inlineJsrBytecode = true;
+			options.processAnnotations = true;
 
 			final IProblemFactory problemFactory = new DefaultProblemFactory(Locale.getDefault());
 
 			final CompilerRequestor requestor = new CompilerRequestor(sourcesCompiledUnits, sourceOutDir, log);
-			CompilationUnit[] compilationUnits = sourcesCompiledUnits.values().toArray(
-					new CompilationUnit[sourcesCompiledUnits.size()]);
+			CompilationUnit[] compilationUnits = sourcesCompiledUnits.values()
+					.toArray(new CompilationUnit[sourcesCompiledUnits.size()]);
 
 			Compiler compiler = new Compiler(env, policy, options, requestor, problemFactory);
 			compiler.compile(compilationUnits);
@@ -215,21 +226,23 @@ public class JarCompiler {
 				throw new TemplateException("Template", errors);
 			}
 
-			JarOutputStream jarStream = new JarOutputStream(new FileOutputStream(GeneratorUtils.Project2JarName(jarOutDir,
-					projectName)));
-			JarEntry manifestEntry = new JarEntry("META-INF/");
-			jarStream.putNextEntry(manifestEntry);
-			jarStream.closeEntry();
-			manifestEntry = new JarEntry("META-INF/MANIFEST.MF");
-			jarStream.putNextEntry(manifestEntry);
-			Manifest manifest = new Manifest();
-			Attributes attributes = manifest.getMainAttributes();
-			attributes.putValue(Attributes.Name.MANIFEST_VERSION.toString(), "1.0");
-			attributes.putValue("Created-By", System.getProperty("java.version") + " (" + System.getProperty("java.vendor")
-					+ ") + jtg");
-			manifest.write(jarStream);
-			packJar(jarStream, sourceOutDir, "");
-			jarStream.close();
+			if (forceJar) {
+				JarOutputStream jarStream = new JarOutputStream(
+						new FileOutputStream(GeneratorUtils.Project2JarName(jarOutDir, projectName)));
+				JarEntry manifestEntry = new JarEntry("META-INF/");
+				jarStream.putNextEntry(manifestEntry);
+				jarStream.closeEntry();
+				manifestEntry = new JarEntry("META-INF/MANIFEST.MF");
+				jarStream.putNextEntry(manifestEntry);
+				Manifest manifest = new Manifest();
+				Attributes attributes = manifest.getMainAttributes();
+				attributes.putValue(Attributes.Name.MANIFEST_VERSION.toString(), "1.0");
+				attributes.putValue("Created-By",
+						System.getProperty("java.version") + " (" + System.getProperty("java.vendor") + ") + jtg");
+				manifest.write(jarStream);
+				packJar(jarStream, sourceOutDir, "");
+				jarStream.close();
+			}
 			return true;
 		} catch (TemplateException ex) {
 			throw ex;
@@ -284,22 +297,27 @@ public class JarCompiler {
 		}
 	}
 
-	private void collectCompiledUnits(Map<String, CompilationUnit> sourcesCompiledUnits, String startDir, String packageName) {
+	private void collectCompiledUnits(Map<String, CompilationUnit> sourcesCompiledUnits, String startDir,
+			String packageName) {
 		File startFile = new File(startDir);
 		String[] files = startFile.list();
 		for (String file : files) {
 			String fullPath = new File(startDir, file).getPath();
 			File f = new File(fullPath);
 			if (f.isDirectory()) {
-				collectCompiledUnits(sourcesCompiledUnits, fullPath, ("".equals(packageName) ? file : packageName + "."
-						+ file));
+				collectCompiledUnits(sourcesCompiledUnits, fullPath,
+						("".equals(packageName) ? file : packageName + "." + file));
 			} else if (f.isFile() && file.endsWith(".java")) {
 				Source src = null;
 				if (sources.containsKey(fullPath)) {
 					src = sources.get(fullPath);
 				}
 				String className = (src != null ? src.ClassName : file.substring(0, file.length() - 5));
-				CompilationUnit compilationUnit = new CompilationUnit(fullPath, packageName + "." + className,
+				String fqcn = className;
+				if (!fqcn.contains(".") && !"".equals(packageName)) {
+					fqcn = packageName + "." + className;
+				}
+				CompilationUnit compilationUnit = new CompilationUnit(fullPath, fqcn,
 						(src != null ? src.Encoding : "UTF-8"), (src != null ? src.Unit : null), log);
 				sourcesCompiledUnits.put(new File(startDir, className + ".java").getPath(), compilationUnit);
 			}
@@ -307,7 +325,8 @@ public class JarCompiler {
 	}
 
 	private void write_to_file(String source, String full_name, String encoding) throws Exception {
-		if (sourceOutDir == null) return;
+		if (sourceOutDir == null)
+			return;
 
 		File pathFile = new File(full_name).getParentFile();
 		if (!pathFile.exists()) {

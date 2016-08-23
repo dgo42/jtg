@@ -1,10 +1,15 @@
-﻿<#@ codeTemplate language="java" targetLanguage="java" #>
-<#@ property name="employee" type="EmployeeElement" #>
+﻿<#@codeTemplate language="java" targetLanguage="java"#>
+<#@property name="employee" type="EmployeeElement"#>
 <#script#>
 	public int x = 7;
 <#/script#>
-
-<#= employee.firstName #>
+<#
+	// # sharp
+#>
+<#--
+	Comment
+#>
+<#= employee.firstName #> <tag>
 -------------------------
 Sehr geehrte(r) <#= employee.firstName #> <#= employee.lastName #>,
 

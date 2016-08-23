@@ -51,10 +51,6 @@ public class TemplateCompiler {
 	private ParsedUnit parse(String templatefile) throws TemplateException {
 		TemplateParser parser = new TemplateParser(templatefile);
 		ParsedUnit unit = parser.Parse();
-		/*		if (unit.getArguments().size() == 0) {
-					String message = "The template \"" + templatefile + "\" must have atleast one property directive";
-					throw new TemplateException(message, new Exception(message), templatefile);
-				}*/
 		if (unit.getArguments().size() > 0) {
 			firstArgument = unit.getArguments().get(0).getText();
 		} else {

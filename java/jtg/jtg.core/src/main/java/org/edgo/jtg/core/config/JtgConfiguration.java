@@ -76,6 +76,8 @@ public class JtgConfiguration {
     protected String templateDir;
     @XmlAttribute(name = "UsingCache", required = true)
     protected String usingCache;
+    @XmlAttribute(name = "Command", required = false)
+    protected String command;
 
     /**
      * Gets the value of the generatedPackage property.
@@ -340,5 +342,29 @@ public class JtgConfiguration {
     public void setUsingCache(String value) {
         this.usingCache = value;
     }
+
+    /**
+     * Gets the value of the command property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+	public String getCommand() {
+		return command;
+	}
+
+    /**
+     * Sets the value of the command property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+	public void setCommand(String command) {
+		this.command = command;
+	}
 
 }
