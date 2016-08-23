@@ -19,17 +19,17 @@ import org.edgo.jtg.core.config.JtgConfiguration;
 
 public class Generator {
 
-	private PrintStream			textWriter			= System.out;
+	private PrintStream textWriter = System.out;
 
-	private Map<String, String>	cmdArgs;
+	private Map<String, String> cmdArgs;
 
-	private GeneratorCommand	cmd					= GeneratorCommand.COMPLETE;
+	private GeneratorCommand cmd = GeneratorCommand.COMPLETE;
 
-	private String				configPath			= "";
+	private String configPath = "";
 
-	private SourceLineProcessor	sourceLineProcessor	= new SourceLineProcessor();
+	private SourceLineProcessor sourceLineProcessor = new SourceLineProcessor();
 
-	private IEnvironment		env;
+	private IEnvironment env;
 
 	public Generator() {
 	}
@@ -85,9 +85,11 @@ public class Generator {
 	private String makeAbsolute(String path) {
 		File roots[] = File.listRoots();
 		for (File root : roots) {
-			if (path.toLowerCase().startsWith(root.toString().toLowerCase())) return path;
+			if (path.toLowerCase().startsWith(root.toString().toLowerCase()))
+				return path;
 		}
-		if (path.startsWith(File.separator)) return path;
+		if (path.startsWith(File.separator))
+			return path;
 		return new File(configPath, path).getAbsolutePath();
 	}
 
@@ -146,8 +148,8 @@ public class Generator {
 		try {
 			String templateArg = null;
 			String templateFile = getTemplateDir() + File.separator + getStartTemplate();
-			jarCompiler = new JarCompiler(sourceLineProcessor, getJarOutputDir(), getSourceOutputDir(), getProjectFile(),
-					parentClassLoader);
+			jarCompiler = new JarCompiler(sourceLineProcessor, getJarOutputDir(), getSourceOutputDir(),
+					getProjectFile(), getSchemaPackage(), getGenratedPackage(), parentClassLoader);
 
 			if (getCommand() != GeneratorCommand.COMPLETE) {
 				if (getCommand() == GeneratorCommand.SCHEMA_ONLY) {
@@ -166,18 +168,26 @@ public class Generator {
 					return;
 				}
 
+				if (getCommand() == GeneratorCommand.COMPILE_ONLY) {
+					generateSchemaClasses(jarCompiler);
+ 					generateTemplateClasses(jarCompiler, getTemplateDir());
+					compileJar(jarCompiler, false);
+					return;
+				}
+
 				if (getCommand() == GeneratorCommand.JAR_ONLY) {
 					generateSchemaClasses(jarCompiler);
 					generateTemplateClasses(jarCompiler, getTemplateDir());
-					compileJar(jarCompiler);
+					compileJar(jarCompiler, true);
 					return;
 				}
 			}
 			schemaCompiler = generateSchemaClasses(jarCompiler);
 			templateArg = generateTemplateClasses(jarCompiler, getTemplateDir());
-			compileJar(jarCompiler);
+			compileJar(jarCompiler, true);
 			URL jarUrl = GeneratorUtils.Project2JarUrl(getJarOutputDir(), getProjectFile());
-			classLoader = URLClassLoader.newInstance(new URL[] {jarUrl}, jarCompiler.getClassLoader(getProjectFile()));
+			classLoader = URLClassLoader.newInstance(new URL[] { jarUrl },
+					jarCompiler.getClassLoader(getProjectFile()));
 			generateMainTemplate(templateFile, templateArg, classLoader, schemaCompiler);
 		} catch (TemplateException ex) {
 			throw ex;
@@ -195,11 +205,12 @@ public class Generator {
 		ClassLoader classLoader = null;
 		try {
 			String templateFile = getTemplateDir() + File.separator + getStartTemplate();
-			jarCompiler = new JarCompiler(sourceLineProcessor, getJarOutputDir(), getSourceOutputDir(), getProjectFile(),
-					parentClassLoader);
+			jarCompiler = new JarCompiler(sourceLineProcessor, getJarOutputDir(), getSourceOutputDir(),
+					getProjectFile(), getSchemaPackage(), getGenratedPackage(), parentClassLoader);
 
 			URL jarUrl = GeneratorUtils.Project2JarUrl(getJarOutputDir(), getProjectFile());
-			classLoader = URLClassLoader.newInstance(new URL[] {jarUrl}, jarCompiler.getClassLoader(getProjectFile()));
+			classLoader = URLClassLoader.newInstance(new URL[] { jarUrl },
+					jarCompiler.getClassLoader(getProjectFile()));
 			generate(classLoader, templateFile, textWriter, parameters, cmdArgs);
 		} catch (TemplateException ex) {
 			throw ex;
@@ -281,7 +292,8 @@ public class Generator {
 				else if (val == "project" || val == "p")
 					cmd = GeneratorCommand.COMPLETE;
 				else {
-					String msg = MessageFormat.format("Wrong command specified ({0}). Please type -h for help.", args[i]);
+					String msg = MessageFormat.format("Wrong command specified ({0}). Please type -h for help.",
+							args[i]);
 					throw new ConfigurationException(msg);
 				}
 			} else if (lowArg == "-usecache" || lowArg == "-uc") {
@@ -345,6 +357,8 @@ public class Generator {
 		cmdArgs.put("Schema", configuration.getSchema());
 		cmdArgs.put("ProjectFile", configuration.getProjectFile());
 		cmdArgs.put("StartTemplate", configuration.getStartTemplate());
+
+		cmd = GeneratorCommand.parse(configuration.getCommand());
 	}
 
 	private SchemaCompiler generateSchemaClasses(JarCompiler jarCompiler) throws TemplateException {
@@ -374,13 +388,14 @@ public class Generator {
 		return mainArg;
 	}
 
-	private void compileJar(JarCompiler jarCompiler) throws TemplateException {
-		jarCompiler.Compile(getTemplateDir(), getProjectFile());
+	private void compileJar(JarCompiler jarCompiler, boolean forceJar) throws TemplateException {
+		jarCompiler.Compile(getTemplateDir(), getProjectFile(), forceJar);
 	}
 
 	private void generateMainTemplate(String templateFile, String templateArg, ClassLoader classLoader,
 			SchemaCompiler schemaCompiler) throws TemplateException {
-		Object data = ProjectLoader.LoadProject(getProjectFullPath(), getSourceOutputDir(), getSchemaPackage(), classLoader);
+		Object data = ProjectLoader.LoadProject(getProjectFullPath(), getSourceOutputDir(), getSchemaPackage(),
+				classLoader);
 		HashMap<String, Object> parameters = new HashMap<String, Object>();
 		if (null != templateArg && "" != templateArg) {
 			parameters.put(templateArg, data);
@@ -391,15 +406,16 @@ public class Generator {
 
 	public void generate(ClassLoader classLoader, String templateFile, PrintStream output, Map<String, Object> args,
 			Map<String, String> cmdArgs) throws TemplateException {
-		String templateName = GeneratorUtils.Template2PackageClassName(getGenratedPackage(), getTemplateDir(), templateFile);
+		String templateName = GeneratorUtils.Template2PackageClassName(getGenratedPackage(), getTemplateDir(),
+				templateFile);
 		ClassLoader oldContextClassLoader = Thread.currentThread().getContextClassLoader();
 		try {
 			Class<?> templateType = classLoader.loadClass(templateName);
 
-			Constructor<?> ctor = templateType.getConstructor(new Class[] {Class.class, Map.class, IEnvironment.class,
-					Map.class});
+			Constructor<?> ctor = templateType
+					.getConstructor(new Class[] { Class.class, Map.class, IEnvironment.class, Map.class });
 
-			TemplateClass template = (TemplateClass) ctor.newInstance(new Object[] {null, cmdArgs, env, args});
+			TemplateClass template = (TemplateClass) ctor.newInstance(new Object[] { null, cmdArgs, env, args });
 			if (null == template) {
 				String message = "Can't construct " + templateName + " as TemplateClass (see " + templateFile + ".";
 				throw new TemplateException(message, new NullPointerException(message), templateFile);

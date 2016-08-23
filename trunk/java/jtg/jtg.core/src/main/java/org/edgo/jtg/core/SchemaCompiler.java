@@ -11,6 +11,7 @@ import org.edgo.jtg.basics.TemplateException;
 import org.edgo.jtg.core.xjc.XjcListMapMapperPlugin;
 import org.edgo.jtg.core.xjc.XjcMapperPlugin;
 import org.edgo.jtg.core.xjc.XjcPublicPlugin;
+import org.jvnet.jaxb2_commons.plugin.annotate.AnnotatePlugin;
 import org.xml.sax.SAXParseException;
 
 import com.sun.codemodel.JCodeModel;
@@ -44,7 +45,12 @@ public class SchemaCompiler {
 			options.setSchemaLanguage(Language.XMLSCHEMA);
 			options.strictCheck = false;
 			options.compatibilityMode = Options.EXTENSION;
+			AnnotatePlugin plugin = new AnnotatePlugin();
+			plugin.parseArgument(null, new String[] { "-Xannotate" }, 0);
+			options.pluginURIs.addAll(plugin.getCustomizationURIs());
+			options.activePlugins.add(plugin);
 			options.activePlugins.add(new XjcPublicPlugin());
+			
 			ErrorReceiverImpl errorReceiver = new ErrorReceiverImpl();
 
 			Model model = ModelLoader.load(options, new JCodeModel(), errorReceiver);
@@ -63,7 +69,7 @@ public class SchemaCompiler {
 			
 			if (model.generateCode(options, errorReceiver) == null) {
 				String message = "failed to compile a schema";
-				throw new TemplateException(message, new NullPointerException(message), schema);
+				throw new TemplateException(message, errorReceiver.getMessages());
 			}
 
 			writer = new FileCodeWriter(options.targetDir, false);
@@ -73,6 +79,8 @@ public class SchemaCompiler {
 		} catch (IOException e) {
 			throw new TemplateException("unable to write files: " + e.getMessage(), e, schema);
 		} catch (Exception ex) {
+			throw new TemplateException(ex.getMessage(), ex, schema);
+		} catch (Throwable ex) {
 			throw new TemplateException(ex.getMessage(), ex, schema);
 		} finally {
 			if (null != writer) try {

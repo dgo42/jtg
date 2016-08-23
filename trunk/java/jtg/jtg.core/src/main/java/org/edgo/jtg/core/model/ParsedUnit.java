@@ -3,23 +3,22 @@ package org.edgo.jtg.core.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.antlr.v4.runtime.RecognitionException;
+import org.antlr.v4.runtime.Token;
 import org.edgo.jtg.basics.TemplateException;
 import org.edgo.jtg.core.GeneratorUtils;
 
-import antlr.RecognitionException;
-import antlr.Token;
-
 public class ParsedUnit extends Node {
 
-	private MacroLang					language;
-	private final String				templateFile;
-	private final String				encoding;
-	private final List<Import>			imports			= new ArrayList<Import>();
-	private final List<String>			jars			= new ArrayList<String>();
-	private final List<Argument>		arguments		= new ArrayList<Argument>();
-	private final List<TemplateNode>	templateNodes	= new ArrayList<TemplateNode>();
-	private final List<ScriptNode>		scriptNodes		= new ArrayList<ScriptNode>();
-	private Extends						extendsClass	= null;
+	private MacroLang language;
+	private final String templateFile;
+	private final String encoding;
+	private final List<Import> imports = new ArrayList<Import>();
+	private final List<String> jars = new ArrayList<String>();
+	private final List<Argument> arguments = new ArrayList<Argument>();
+	private final List<TemplateNode> templateNodes = new ArrayList<TemplateNode>();
+	private final List<ScriptNode> scriptNodes = new ArrayList<ScriptNode>();
+	private Extends extendsClass = null;
 
 	public ParsedUnit(String templateFile, String encoding) {
 		super(templateFile, 1);
@@ -51,7 +50,7 @@ public class ParsedUnit extends Node {
 
 	public void directiveExtends(String parent, int line) throws RecognitionException {
 		if (extendsClass != null) {
-			throw new RecognitionException("There is only one extends directive allowed");
+			throw new RecognitionException("There is only one extends directive allowed", null, null, null);
 		}
 		extendsClass = new Extends(templateFile, parent, line);
 	}
@@ -78,24 +77,35 @@ public class ParsedUnit extends Node {
 		}
 	}
 
-	public void addInclude(Token v, String file, String arg, String format) {
-		String text = v.getText();
-		int lineNum = v.getLine();
+	public void addInclude(Token v, String file, String params, String arg) {
+		/*
+		 * String text = v.getText(); int lineNum = v.getLine(); // split the text into lines String[] lines =
+		 * text.split(GeneratorUtils.EOL); for (int i = 0; i < lines.length; i++) { IncludeNode node = new IncludeNode(templateFile,
+		 * lines[i], lineNum + i); node.setFile(file); node.setParams(params); node.setArg(arg); templateNodes.add(node); } if
+		 * (text.endsWith(GeneratorUtils.EOL)) { lineNum++; IncludeNode node = new IncludeNode(templateFile, "", lineNum + lines.length -
+		 * 1); node.setFile(file); node.setParams(params); node.setArg(arg); templateNodes.add(node); }
+		 */
+		IncludeNode node = new IncludeNode(templateFile, "", v.getLine());
+		node.setFile(file);
+		node.setParams(params);
+		node.setArg(arg);
+		templateNodes.add(node);
+	}
+
+	public void addMacrocode(Token v1, Token v2) {
+		String text = v1.getText();
+		if (v2 != null) {
+			text += v2.getText();
+		}
+		int lineNum = v1.getLine();
 		// split the text into lines
 		String[] lines = text.split(GeneratorUtils.EOL);
 		for (int i = 0; i < lines.length; i++) {
-			IncludeNode node = new IncludeNode(templateFile, lines[i], lineNum + i);
-			node.setFile(file);
-			node.setArg(arg);
-			node.setFormat(format);
-			templateNodes.add(node);
+			templateNodes.add(new MacroNode(templateFile, lines[i], lineNum + i));
 		}
 		if (text.endsWith(GeneratorUtils.EOL)) {
 			lineNum++;
-			IncludeNode node = new IncludeNode(templateFile, "", lineNum + lines.length - 1);
-			node.setFile(file);
-			node.setArg(arg);
-			templateNodes.add(node);
+			templateNodes.add(new MacroNode(templateFile, "", lineNum + lines.length - 1));
 		}
 	}
 
@@ -114,17 +124,17 @@ public class ParsedUnit extends Node {
 	}
 
 	public void addTargetcode(Token v) {
-		// escape '"'
-		String text = v.getText()/*.replace("\"", "\\\"")*/;
-		int lineNum = v.getLine();
-		// split the text into lines
-		String[] lines = text.split(GeneratorUtils.EOL);
-		for (int i = 0; i < lines.length; i++) {
-			templateNodes.add(new TargetNode(templateFile, lines[i], lineNum + i));
-		}
-		if (text.endsWith(GeneratorUtils.EOL)) {
-			lineNum++;
-			templateNodes.add(new TargetNode(templateFile, "", lineNum + lines.length - 1));
+		String text = v.getText();
+		if (!"\r\n".equals(text) && !"\n".equals(text)) {
+			int lineNum = v.getLine();
+			String[] lines = text.split(GeneratorUtils.EOL);
+			int lineCount = lines.length;
+			if (text.endsWith(GeneratorUtils.EOL)) {
+				lineCount++;
+			}
+			TargetNode node = new TargetNode(templateFile, text, lineNum);
+			node.setTargetLineEnd(lineNum + lineCount);
+			templateNodes.add(node);
 		}
 	}
 

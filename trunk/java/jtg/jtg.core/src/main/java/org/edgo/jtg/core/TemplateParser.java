@@ -4,19 +4,17 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Reader;
+import java.nio.charset.Charset;
 
+import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CommonTokenStream;
 import org.edgo.jtg.basics.TemplateException;
+import org.edgo.jtg.core.grammar.JavaTemplateGrammarParser;
 import org.edgo.jtg.core.grammar.JavaTemplateLexer;
-import org.edgo.jtg.core.grammar.JavaTemplateParser;
-import org.edgo.jtg.core.grammar.MacroLexer;
-import org.edgo.jtg.core.grammar.TargetLexer;
 import org.edgo.jtg.core.model.ParsedUnit;
 import org.mozilla.intl.chardet.nsDetector;
 import org.mozilla.intl.chardet.nsICharsetDetectionObserver;
 import org.mozilla.intl.chardet.nsPSMDetector;
-
-import antlr.TokenStreamSelector;
 
 
 public class TemplateParser {
@@ -62,38 +60,34 @@ public class TemplateParser {
             if (probEncoding.length > 0) {
                 encoding = probEncoding[0]; 
             }
-
+            Charset charset = Charset.forName(encoding);
             //Input
-            Reader encodedReader = new InputStreamReader(new FileInputStream(templFile), encoding);
+            InputStreamReader encodedReader = new InputStreamReader(new FileInputStream(templFile), charset);
             
             // skip first unicode char
             int ch = encodedReader.read();
             if (ch != 0xFEFF) {
-//                encoding = System.getProperty("file.encoding", "UTF-8");
             	// reopen if non unicode
             	encodedReader.close();
-                encodedReader = new InputStreamReader(new FileInputStream(templFile), encoding);
+                encodedReader = new InputStreamReader(new FileInputStream(templFile), charset);
             }
-            // create main lexer - TargetLexer
-            TargetLexer targetLexer = new TargetLexer(encodedReader);
-            MacroLexer macroLexer = new MacroLexer(targetLexer.getInputState());
-            JavaTemplateLexer jtgLexer = new JavaTemplateLexer(macroLexer.getInputState());
-
-            TokenStreamSelector selector = new TokenStreamSelector();
-            // notify lexers about selector
-            targetLexer.setSelector(selector);
-            jtgLexer.setSelector(selector);
-            macroLexer.setSelector(selector);
-            // notify selector about various lexers; name them for convenient reference later
-            selector.addInputStream(targetLexer, "targetcode");
-            selector.addInputStream(jtgLexer, "main");
-            selector.addInputStream(macroLexer, "macrocode");
-            selector.select("targetcode"); // start with target code lexer
-
-            JavaTemplateParser parser = new JavaTemplateParser(selector);
+            // create main lexer - jtgLexer
+            ANTLRInputStream antlrStream = new ANTLRInputStream(encodedReader);
+            
+            JavaTemplateLexer lexer = new JavaTemplateLexer(antlrStream);
+            JavaTemplateGrammarParser parser = new JavaTemplateGrammarParser(new CommonTokenStream(lexer));
             ParsedUnit unit = new ParsedUnit(templatefile, encoding);
-            parser.setFilename(templatefile);
-            parser.template(unit);
+
+            parser.setUnit(unit);
+/*            
+            Token t = null;
+            do {
+            	t = lexer.nextToken();
+            	System.out.println("Token type: " + t.getType() + ", channel: " + t.getChannel() + "   \"" + t.getText() + "\"");
+            } while (t.getType() >= 0);
+*/
+            parser.template();
+
             return unit;
         } catch (Exception ex) {
             throw new TemplateException(ex.toString(), ex, templatefile);

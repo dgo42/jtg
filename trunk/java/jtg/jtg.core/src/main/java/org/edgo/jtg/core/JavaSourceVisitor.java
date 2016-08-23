@@ -320,10 +320,10 @@ public class JavaSourceVisitor extends JavaSourceBaseVisitor {
 			output.append("import java.lang.NullPointerException;");
 			output.append(GeneratorUtils.EOL);
 			lineNumb.increment();
+			output.append("import org.edgo.jtg.basics.TemplateNullPointerException;");
+			output.append(GeneratorUtils.EOL);
+			lineNumb.increment();
 		}
-		output.append("import java.util.HashMap;");
-		output.append(GeneratorUtils.EOL);
-		lineNumb.increment();
 		output.append("import java.util.Map;");
 		output.append(GeneratorUtils.EOL);
 		lineNumb.increment();
@@ -503,7 +503,7 @@ public class JavaSourceVisitor extends JavaSourceBaseVisitor {
 		output.append(GeneratorUtils.EOL);
 		lineNumb.increment();
 
-		output.append("    public void Generate(PrintWriter output) throws TemplateException {");
+		output.append("    public void Generate(final PrintWriter output) throws TemplateException {");
 		output.append(GeneratorUtils.EOL);
 		lineNumb.increment();
 		output.append("        try {");
@@ -695,6 +695,7 @@ public class JavaSourceVisitor extends JavaSourceBaseVisitor {
 		if (!generateOnlyMacrocode) {
 			if (prevTokenLine != n.getSourceLineBegin()) {
 				if (n.getSourceLineBegin() - prevTokenLine == 1) {
+					output.append(Constants.INDENT);
 					output.append("output.println();");
 					output.append(GeneratorUtils.EOL);
 					lineNumb.increment();
@@ -705,12 +706,11 @@ public class JavaSourceVisitor extends JavaSourceBaseVisitor {
 			output.append("try { ");
 			output.append("output.print(");
 			output.append(n.getText().trim());
-			output.append("); } catch (NullPointerException ex) { String message = \"NullPointerException in template '\" + templateFileName + \"' at line ");
-			output.append(n.getSourceLineBegin());
-			output.append("\"; throw new TemplateException(message, ex, templateFileName, ");
+			output.append("); } catch (NullPointerException ex) { throw new TemplateNullPointerException(null, ex, templateFileName, ");
 			output.append(n.getSourceLineBegin());
 			output.append("); }");
 			prevTokenLine = n.getSourceLineBegin();
+			makeDebugOutputOff(true);
 		}
 	}
 
@@ -718,6 +718,7 @@ public class JavaSourceVisitor extends JavaSourceBaseVisitor {
 		if (!generateOnlyMacrocode) {
 			if (prevTokenLine != n.getSourceLineBegin()) {
 				if (n.getSourceLineBegin() - prevTokenLine == 1) {
+					output.append(Constants.INDENT);
 					output.append("output.println();");
 					output.append(GeneratorUtils.EOL);
 					lineNumb.increment();
@@ -727,20 +728,27 @@ public class JavaSourceVisitor extends JavaSourceBaseVisitor {
 			}
 			output.append("try { ");
 			String fileName = n.getFile();
-			if (n.getFormat() != null) {
-				fileName = MessageFormat.format(n.getFormat(), new Object[] { "\" + " + n.getFile() + " + \"" }); 
+			if (n.getParams() != null) {
+				String params = n.getParams();
+				String[] paramArray = new String[] { params }; 
+				if (params.contains(",")) {
+					paramArray = params.split(",");
+				}
+				for(int i = 0; i < paramArray.length; i++) {
+					paramArray[i] = "\" + " + paramArray[i].trim() + " + \"";
+				}
+				fileName = MessageFormat.format(fileName, (Object[])paramArray); 
 			}
 			fileName = "\"" + fileName + "\"";
 			output.append("RunTemplate (");
 			output.append(fileName);
 			output.append(", output, new Object[] { ");
 			output.append(n.getArg());
-			output.append(" }); } catch (NullPointerException ex) { String message = \"NullPointerException in template '\" + templateFileName + \"' at line ");
-			output.append(n.getSourceLineBegin());
-			output.append("\"; throw new TemplateException(message, ex, templateFileName, ");
+			output.append(" }); } catch (NullPointerException ex) { throw new TemplateNullPointerException(null, ex, templateFileName, ");
 			output.append(n.getSourceLineBegin());
 			output.append("); }");
 			prevTokenLine = n.getSourceLineBegin();
+			makeDebugOutputOff(true);
 		}
 	}
 
@@ -758,9 +766,11 @@ public class JavaSourceVisitor extends JavaSourceBaseVisitor {
 	}
 
 	public void visit(TargetNode n) throws TemplateException {
+		int newLines = 0;
 		if (!generateOnlyMacrocode) {
 			if (prevTokenLine != n.getSourceLineBegin()) {
 				if (n.getSourceLineBegin() - prevTokenLine == 1) {
+					output.append(Constants.INDENT);
 					output.append("output.println();");
 					output.append(GeneratorUtils.EOL);
 					lineNumb.increment();
@@ -773,6 +783,15 @@ public class JavaSourceVisitor extends JavaSourceBaseVisitor {
 				for (int chr : n.getText().toCharArray()) {
 					if (((char) chr) == '\"') {
 						output.append("\\\"");
+					} else if (((char) chr) == '\n') {
+						output.append("\\n\" + ");
+						output.append(GeneratorUtils.EOL);
+						lineNumb.increment();
+						//makeDebug(templateFile, n.getSourceLineBegin() + (++newLines), n);
+						output.append(Constants.INDENT);
+						output.append("\"");
+					} else if (((char) chr) == '\r') {
+						output.append("\\r");
 					} else if (chr > 0x7F) {
 						output.append("\\u");
 						output.append(String.format("%1$04X", chr & 0xFFFF));
@@ -782,7 +801,13 @@ public class JavaSourceVisitor extends JavaSourceBaseVisitor {
 				}
 				output.append("\"); ");
 			}
-			prevTokenLine = n.getSourceLineBegin();
+			makeDebugOutputOff(true);
+			//if (n.getText().endsWith(GeneratorUtils.EOL) && newLines > 1) {
+				output.append(GeneratorUtils.EOL);
+				lineNumb.increment();
+				//makeDebug(templateFile, n.getSourceLineBegin() + (++newLines), n);
+			//}
+			prevTokenLine = n.getSourceLineBegin() + newLines + 1;
 		}
 	}
 

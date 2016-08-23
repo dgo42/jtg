@@ -6,7 +6,7 @@ public class IncludeNode extends PlaceholderNode {
 
 	private String file;
 	private String arg;
-	private String format;
+	private String params;
 	
     public IncludeNode(String sourceFile, String name, int line) {
         super(sourceFile, name, line);
@@ -33,12 +33,12 @@ public class IncludeNode extends PlaceholderNode {
 		this.arg = arg;
 	}
 
-	public String getFormat() {
-		return format;
+	public String getParams() {
+		return params;
 	}
 
-	public void setFormat(String format) {
-		this.format = format;
+	public void setParams(String params) {
+		this.params = params;
 	}
 
 }
