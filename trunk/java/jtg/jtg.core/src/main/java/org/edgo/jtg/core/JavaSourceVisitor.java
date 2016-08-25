@@ -787,6 +787,7 @@ public class JavaSourceVisitor extends JavaSourceBaseVisitor {
 						output.append("\\n\" + ");
 						output.append(GeneratorUtils.EOL);
 						lineNumb.increment();
+						newLines++;
 						//makeDebug(templateFile, n.getSourceLineBegin() + (++newLines), n);
 						output.append(Constants.INDENT);
 						output.append("\"");
