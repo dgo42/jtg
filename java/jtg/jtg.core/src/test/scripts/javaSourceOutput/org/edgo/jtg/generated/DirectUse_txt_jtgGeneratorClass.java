@@ -77,7 +77,6 @@ public class DirectUse_txt_jtgGeneratorClass extends TemplateClass {
         output.print("\r\n" + 
             "	Next employee...\r\n" + 
             ""); 
-
         
                 RunTemplate ("Details\\Message.txt.jtg", "Output\\" + employee.lastName + ".txt", new Object[] { employee });
             }
@@ -229,23 +228,23 @@ public class DirectUse_txt_jtgGeneratorClass extends TemplateClass {
 		linesMapping.put(56, 55);
 		linesMapping.put(57, 55);
 		linesMapping.put(58, 55);
-		linesMapping.put(81, 57);
-		linesMapping.put(82, 58);
-		linesMapping.put(83, 59);
+		linesMapping.put(80, 57);
+		linesMapping.put(81, 58);
+		linesMapping.put(82, 59);
+		linesMapping.put(83, 60);
 		linesMapping.put(84, 60);
-		linesMapping.put(85, 60);
-		linesMapping.put(114, 10);
-		linesMapping.put(115, 11);
-		linesMapping.put(116, 12);
-		linesMapping.put(117, 13);
-		linesMapping.put(118, 14);
-		linesMapping.put(119, 15);
-		linesMapping.put(120, 16);
-		linesMapping.put(121, 17);
-		linesMapping.put(122, 18);
-		linesMapping.put(123, 19);
+		linesMapping.put(113, 10);
+		linesMapping.put(114, 11);
+		linesMapping.put(115, 12);
+		linesMapping.put(116, 13);
+		linesMapping.put(117, 14);
+		linesMapping.put(118, 15);
+		linesMapping.put(119, 16);
+		linesMapping.put(120, 17);
+		linesMapping.put(121, 18);
+		linesMapping.put(122, 19);
+		linesMapping.put(123, 20);
 		linesMapping.put(124, 20);
-		linesMapping.put(125, 20);
     }
 
 }
