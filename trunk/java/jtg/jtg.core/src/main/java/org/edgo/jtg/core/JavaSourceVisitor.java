@@ -270,7 +270,7 @@ public class JavaSourceVisitor extends JavaSourceBaseVisitor {
 
 	private String	sourceOutFile;
 
-	private int		prevTokenLine	= 0;
+	private int		prevTokenLine	= 1;
 
 	public JavaSourceVisitor(SourceLineProcessor sourceLineProcessor, StringBuilder output, String templateFile,
 			String configPath, boolean generateOnlyMacrocode, String schemaPackage, String generatedPackage,
@@ -653,7 +653,7 @@ public class JavaSourceVisitor extends JavaSourceBaseVisitor {
 				sourceLineProcessor.addSourceLines(sourceOutFile, templFileName, 1, src, i);
 				output.append("		linesMapping.put(").append(i).append(", ").append(src).append(");");
 				output.append(GeneratorUtils.EOL);
-				lineNumb.increment();
+				lineNumb.increment(); 
 			}
 		}
 		output.append("    }");
@@ -700,9 +700,9 @@ public class JavaSourceVisitor extends JavaSourceBaseVisitor {
 					output.append(GeneratorUtils.EOL);
 					lineNumb.increment();
 				}
-				makeDebug(templateFile, n.getSourceLineBegin(), n);
 				output.append(Constants.INDENT);
 			}
+			makeDebug(templateFile, n.getSourceLineBegin(), n);
 			output.append("try { ");
 			output.append("output.print(");
 			output.append(n.getText().trim());
@@ -723,9 +723,9 @@ public class JavaSourceVisitor extends JavaSourceBaseVisitor {
 					output.append(GeneratorUtils.EOL);
 					lineNumb.increment();
 				}
-				makeDebug(templateFile, n.getSourceLineBegin(), n);
 				output.append(Constants.INDENT);
 			}
+			makeDebug(templateFile, n.getSourceLineBegin(), n);
 			output.append("try { ");
 			String fileName = n.getFile();
 			if (n.getParams() != null) {
@@ -775,9 +775,9 @@ public class JavaSourceVisitor extends JavaSourceBaseVisitor {
 					output.append(GeneratorUtils.EOL);
 					lineNumb.increment();
 				}
-				makeDebug(templateFile, n.getSourceLineBegin(), n);
 				output.append(Constants.INDENT);
 			}
+			makeDebug(templateFile, n.getSourceLineBegin(), n);
 			if (!"".equals(n.getText())) {
 				output.append("output.print(\"");
 				for (int chr : n.getText().toCharArray()) {
