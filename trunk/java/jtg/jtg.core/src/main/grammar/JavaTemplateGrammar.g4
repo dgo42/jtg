@@ -46,14 +46,14 @@ template
 directive_template
     : MACROCODE_BEGIN DIRECTIVE_BEGIN (WS_DIR)* v=DIRECTIVE_CMD_TEMPLATE (WS_DIR)+  
 	  lang=directive_attr_language (WS_DIR)+ targetlanguage=directive_attr_target_language ((WS_DIR)+ directive_attr_description)?
-	  (WS_DIR)* DIRECTIVE_END (WS_NEWLINE)*
+	  (WS_DIR)* DIRECTIVE_END (NEWLINE)*
 	  {
 		unit.setMacroLang($lang.lang);
 	  }
     ;
 
 directive_import
-    : MACROCODE_BEGIN DIRECTIVE_BEGIN (WS_DIR)? v=DIRECTIVE_CMD_IMPORT (WS_DIR)+ ns=directive_attr_name (WS_DIR)? DIRECTIVE_END (WS_NEWLINE)*
+    : MACROCODE_BEGIN DIRECTIVE_BEGIN (WS_DIR)? v=DIRECTIVE_CMD_IMPORT (WS_DIR)+ ns=directive_attr_name (WS_DIR)? DIRECTIVE_END (NEWLINE)*
     {
 		unit.directiveImport($ns.name, $v.getLine()); 
 	}
@@ -62,7 +62,7 @@ directive_import
 directive_include
     : MACROCODE_BEGIN DIRECTIVE_BEGIN (WS_DIR)? v=DIRECTIVE_CMD_INCLUDE (WS_DIR)+
       file=directive_attr_file ((WS_DIR)+ params=directive_attr_params)? ((WS_DIR)+ arg=directive_attr_arg)? (WS_DIR)?
-      DIRECTIVE_END (WS_NEWLINE)*
+      DIRECTIVE_END (NEWLINE)*
       {
       	String params = null;
       	if (_localctx.params != null) {
@@ -77,14 +77,14 @@ directive_include
     ;
 
 directive_extends
-    : MACROCODE_BEGIN DIRECTIVE_BEGIN (WS_DIR)? v=DIRECTIVE_CMD_EXTENDS (WS_DIR)+ parent=directive_attr_parent (WS_DIR)? DIRECTIVE_END(WS_NEWLINE)*
+    : MACROCODE_BEGIN DIRECTIVE_BEGIN (WS_DIR)? v=DIRECTIVE_CMD_EXTENDS (WS_DIR)+ parent=directive_attr_parent (WS_DIR)? DIRECTIVE_END(NEWLINE)*
     {
 		unit.directiveExtends($parent.parent, $v.getLine()); 
 	}
     ;
 
 directive_jar
-    : MACROCODE_BEGIN DIRECTIVE_BEGIN (WS_DIR)? v=DIRECTIVE_CMD_JAR (WS_DIR)+ name=directive_attr_name (WS_DIR)? DIRECTIVE_END (WS_NEWLINE)*
+    : MACROCODE_BEGIN DIRECTIVE_BEGIN (WS_DIR)? v=DIRECTIVE_CMD_JAR (WS_DIR)+ name=directive_attr_name (WS_DIR)? DIRECTIVE_END (NEWLINE)*
     {
 		unit.directiveJar($name.name);
     }
@@ -93,7 +93,7 @@ directive_jar
 directive_property
     : MACROCODE_BEGIN DIRECTIVE_BEGIN (WS_DIR)? v=DIRECTIVE_CMD_PROPERTY (WS_DIR)+
    	    name=directive_attr_name (WS_DIR)+ type=directive_attr_type ((WS_DIR)+ directive_attr_description)?
-	  (WS_DIR)? DIRECTIVE_END (WS_NEWLINE)*
+	  (WS_DIR)? DIRECTIVE_END (NEWLINE)*
 	  {
 		unit.directiveArguments($name.name, $type.type, $v.getLine());
 	  }
@@ -134,7 +134,7 @@ script
 	    { 
 		  unit.addScript($v); 
 	    }
-	  )? MACROCODE_BEGIN SCRIPT_END (WS_NEWLINE)*;
+	  )? MACROCODE_BEGIN SCRIPT_END (NEWLINE)*;
 
 placeholder
     : MACROCODE_BEGIN PLACEHOLDER_BEGIN v=MACROCODE MACRO_END
@@ -153,7 +153,7 @@ macrocode
 comment : MACROCODE_BEGIN COMMENT_BEGIN (v=COMMENTCODE)? COMMENT_END;
 
 targetcode
-    : WS_NEWLINE* v=TARGETCODE
+    : NEWLINE* v=TARGETCODE
 		{
 			unit.addTargetcode($v); 
 		} 

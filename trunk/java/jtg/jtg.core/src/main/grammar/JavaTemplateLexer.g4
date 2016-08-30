@@ -43,13 +43,14 @@ MACROCODE_BEGIN :
 	//{ !(_input.LA(3) == '=' || _input.LA(3) == '-' || _input.LA(3) == '@' || _input.LA(3) == 's' || (_input.LA(3) == '/' && _input.LA(4) != 's')) }? 
 	'<#'	-> mode(TEMPLATE);
 
-WS_NEWLINE : ( ' ' | '\t' | ( '\n' | '\r')) -> channel(HIDDEN);
+NEWLINE : ( '\n' | '\r') -> channel(HIDDEN);
 
 TARGETCODE
     : (
 		/* '<' but not '<#' */
 		{ _input.LA(2) != '#' }? '<'
 		/*  */
+		| ( ' ' | '\t' )
 		| ~[<]
       )+
     ;

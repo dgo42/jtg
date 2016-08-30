@@ -43,7 +43,8 @@ public class Details_Message_txt_jtgGeneratorClass extends TemplateClass {
                     try { output.print(employee.firstName); } catch (NullPointerException ex) { throw new TemplateNullPointerException(null, ex, templateFileName, 12); }output.print(" <tag>\r\n" + 
             "-------------------------\r\n" + 
             "Sehr geehrte(r) "); 
-            try { output.print(employee.firstName); } catch (NullPointerException ex) { throw new TemplateNullPointerException(null, ex, templateFileName, 14); }try { output.print(employee.lastName); } catch (NullPointerException ex) { throw new TemplateNullPointerException(null, ex, templateFileName, 14); }output.print(",\r\n" + 
+            try { output.print(employee.firstName); } catch (NullPointerException ex) { throw new TemplateNullPointerException(null, ex, templateFileName, 14); }output.print(" "); 
+            try { output.print(employee.lastName); } catch (NullPointerException ex) { throw new TemplateNullPointerException(null, ex, templateFileName, 14); }output.print(",\r\n" + 
             "\r\n" + 
             "Ihre ID ist "); 
             try { output.print(employee.id); } catch (NullPointerException ex) { throw new TemplateNullPointerException(null, ex, templateFileName, 16); }output.print(".\r\n" + 
@@ -101,21 +102,22 @@ public class Details_Message_txt_jtgGeneratorClass extends TemplateClass {
 		linesMapping.put(45, 12);
 		linesMapping.put(46, 14);
 		linesMapping.put(46, 14);
-		linesMapping.put(46, 14);
+		linesMapping.put(47, 14);
 		linesMapping.put(47, 14);
 		linesMapping.put(48, 14);
-		linesMapping.put(49, 16);
-		linesMapping.put(49, 16);
+		linesMapping.put(49, 14);
+		linesMapping.put(50, 16);
 		linesMapping.put(50, 16);
 		linesMapping.put(51, 16);
 		linesMapping.put(52, 16);
 		linesMapping.put(53, 16);
 		linesMapping.put(54, 16);
 		linesMapping.put(55, 16);
-		linesMapping.put(88, 3);
-		linesMapping.put(89, 4);
-		linesMapping.put(90, 5);
+		linesMapping.put(56, 16);
+		linesMapping.put(89, 3);
+		linesMapping.put(90, 4);
 		linesMapping.put(91, 5);
+		linesMapping.put(92, 5);
     }
 
 }
