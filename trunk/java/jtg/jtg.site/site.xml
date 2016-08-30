@@ -6,10 +6,10 @@ In Templates is used java for macroses. It&apos;s possible to define members and
 It&apos;s also possible to run other templates.
 This construct makes possible to realise different complex projects.
    </description>
-   <feature url="features/org.edgo.jtg_1.0.14.201608302359.jar" id="org.edgo.jtg" version="1.0.14.201608302359">
+   <feature url="features/org.edgo.jtg_1.0.14.201608310052.jar" id="org.edgo.jtg" version="1.0.14.201608310052">
       <category name="Java Template Generator"/>
    </feature>
-   <feature url="features/org.edgo.jtg.colorer_1.0.14.201608302359.jar" id="org.edgo.jtg.colorer" version="1.0.14.201608302359">
+   <feature url="features/org.edgo.jtg.colorer_1.0.14.201608310052.jar" id="org.edgo.jtg.colorer" version="1.0.14.201608310052">
       <category name="Eclipse Colorer JTG"/>
    </feature>
    <category-def name="Java Template Generator" label="Java Template Generator"/>
