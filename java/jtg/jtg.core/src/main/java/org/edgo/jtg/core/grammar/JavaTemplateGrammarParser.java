@@ -30,7 +30,7 @@ public class JavaTemplateGrammarParser extends Parser {
 		DIRECTIVE_ATTR_PARAMS=13, DIRECTIVE_ATTR_PARENT=14, DIRECTIVE_ATTR_TYPE=15, 
 		STRING_VALUE=16, MACROCODE_BEGIN=17, MACROCODE_END=18, PLACEHOLDER_BEGIN=19, 
 		DIRECTIVE_BEGIN=20, COMMENT_BEGIN=21, SCRIPT_BEGIN=22, SCRIPT_END=23, 
-		MACROCODE=24, TARGETCODE=25, WS_NEWLINE=26, MACRO_BLOCK_BEGIN=27, MACRO_END=28, 
+		MACROCODE=24, TARGETCODE=25, NEWLINE=26, MACRO_BLOCK_BEGIN=27, MACRO_END=28, 
 		COMMENTCODE=29, COMMENT_END=30, SCRIPT_MACROCODE=31, ASSIGN=32, WS_DIR=33, 
 		DIRECTIVE_END=34;
 	public static final int
@@ -64,9 +64,9 @@ public class JavaTemplateGrammarParser extends Parser {
 		"DIRECTIVE_ATTR_NAME", "DIRECTIVE_ATTR_FILE", "DIRECTIVE_ATTR_ARG", "DIRECTIVE_ATTR_PARAMS", 
 		"DIRECTIVE_ATTR_PARENT", "DIRECTIVE_ATTR_TYPE", "STRING_VALUE", "MACROCODE_BEGIN", 
 		"MACROCODE_END", "PLACEHOLDER_BEGIN", "DIRECTIVE_BEGIN", "COMMENT_BEGIN", 
-		"SCRIPT_BEGIN", "SCRIPT_END", "MACROCODE", "TARGETCODE", "WS_NEWLINE", 
-		"MACRO_BLOCK_BEGIN", "MACRO_END", "COMMENTCODE", "COMMENT_END", "SCRIPT_MACROCODE", 
-		"ASSIGN", "WS_DIR", "DIRECTIVE_END"
+		"SCRIPT_BEGIN", "SCRIPT_END", "MACROCODE", "TARGETCODE", "NEWLINE", "MACRO_BLOCK_BEGIN", 
+		"MACRO_END", "COMMENTCODE", "COMMENT_END", "SCRIPT_MACROCODE", "ASSIGN", 
+		"WS_DIR", "DIRECTIVE_END"
 	};
 	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
 
@@ -262,7 +262,7 @@ public class JavaTemplateGrammarParser extends Parser {
 			setState(63);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << MACROCODE_BEGIN) | (1L << TARGETCODE) | (1L << WS_NEWLINE))) != 0)) {
+			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << MACROCODE_BEGIN) | (1L << TARGETCODE) | (1L << NEWLINE))) != 0)) {
 				{
 				setState(61);
 				_errHandler.sync(this);
@@ -345,9 +345,9 @@ public class JavaTemplateGrammarParser extends Parser {
 		public Directive_attr_descriptionContext directive_attr_description() {
 			return getRuleContext(Directive_attr_descriptionContext.class,0);
 		}
-		public List<TerminalNode> WS_NEWLINE() { return getTokens(JavaTemplateGrammarParser.WS_NEWLINE); }
-		public TerminalNode WS_NEWLINE(int i) {
-			return getToken(JavaTemplateGrammarParser.WS_NEWLINE, i);
+		public List<TerminalNode> NEWLINE() { return getTokens(JavaTemplateGrammarParser.NEWLINE); }
+		public TerminalNode NEWLINE(int i) {
+			return getToken(JavaTemplateGrammarParser.NEWLINE, i);
 		}
 		public Directive_templateContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -471,7 +471,7 @@ public class JavaTemplateGrammarParser extends Parser {
 					{
 					{
 					setState(104);
-					match(WS_NEWLINE);
+					match(NEWLINE);
 					}
 					} 
 				}
@@ -509,9 +509,9 @@ public class JavaTemplateGrammarParser extends Parser {
 		public TerminalNode WS_DIR(int i) {
 			return getToken(JavaTemplateGrammarParser.WS_DIR, i);
 		}
-		public List<TerminalNode> WS_NEWLINE() { return getTokens(JavaTemplateGrammarParser.WS_NEWLINE); }
-		public TerminalNode WS_NEWLINE(int i) {
-			return getToken(JavaTemplateGrammarParser.WS_NEWLINE, i);
+		public List<TerminalNode> NEWLINE() { return getTokens(JavaTemplateGrammarParser.NEWLINE); }
+		public TerminalNode NEWLINE(int i) {
+			return getToken(JavaTemplateGrammarParser.NEWLINE, i);
 		}
 		public Directive_importContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -585,7 +585,7 @@ public class JavaTemplateGrammarParser extends Parser {
 					{
 					{
 					setState(128);
-					match(WS_NEWLINE);
+					match(NEWLINE);
 					}
 					} 
 				}
@@ -625,9 +625,9 @@ public class JavaTemplateGrammarParser extends Parser {
 		public TerminalNode WS_DIR(int i) {
 			return getToken(JavaTemplateGrammarParser.WS_DIR, i);
 		}
-		public List<TerminalNode> WS_NEWLINE() { return getTokens(JavaTemplateGrammarParser.WS_NEWLINE); }
-		public TerminalNode WS_NEWLINE(int i) {
-			return getToken(JavaTemplateGrammarParser.WS_NEWLINE, i);
+		public List<TerminalNode> NEWLINE() { return getTokens(JavaTemplateGrammarParser.NEWLINE); }
+		public TerminalNode NEWLINE(int i) {
+			return getToken(JavaTemplateGrammarParser.NEWLINE, i);
 		}
 		public Directive_attr_paramsContext directive_attr_params() {
 			return getRuleContext(Directive_attr_paramsContext.class,0);
@@ -755,7 +755,7 @@ public class JavaTemplateGrammarParser extends Parser {
 					{
 					{
 					setState(168);
-					match(WS_NEWLINE);
+					match(NEWLINE);
 					}
 					} 
 				}
@@ -801,9 +801,9 @@ public class JavaTemplateGrammarParser extends Parser {
 		public TerminalNode WS_DIR(int i) {
 			return getToken(JavaTemplateGrammarParser.WS_DIR, i);
 		}
-		public List<TerminalNode> WS_NEWLINE() { return getTokens(JavaTemplateGrammarParser.WS_NEWLINE); }
-		public TerminalNode WS_NEWLINE(int i) {
-			return getToken(JavaTemplateGrammarParser.WS_NEWLINE, i);
+		public List<TerminalNode> NEWLINE() { return getTokens(JavaTemplateGrammarParser.NEWLINE); }
+		public TerminalNode NEWLINE(int i) {
+			return getToken(JavaTemplateGrammarParser.NEWLINE, i);
 		}
 		public Directive_extendsContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -877,7 +877,7 @@ public class JavaTemplateGrammarParser extends Parser {
 					{
 					{
 					setState(192);
-					match(WS_NEWLINE);
+					match(NEWLINE);
 					}
 					} 
 				}
@@ -915,9 +915,9 @@ public class JavaTemplateGrammarParser extends Parser {
 		public TerminalNode WS_DIR(int i) {
 			return getToken(JavaTemplateGrammarParser.WS_DIR, i);
 		}
-		public List<TerminalNode> WS_NEWLINE() { return getTokens(JavaTemplateGrammarParser.WS_NEWLINE); }
-		public TerminalNode WS_NEWLINE(int i) {
-			return getToken(JavaTemplateGrammarParser.WS_NEWLINE, i);
+		public List<TerminalNode> NEWLINE() { return getTokens(JavaTemplateGrammarParser.NEWLINE); }
+		public TerminalNode NEWLINE(int i) {
+			return getToken(JavaTemplateGrammarParser.NEWLINE, i);
 		}
 		public Directive_jarContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -991,7 +991,7 @@ public class JavaTemplateGrammarParser extends Parser {
 					{
 					{
 					setState(216);
-					match(WS_NEWLINE);
+					match(NEWLINE);
 					}
 					} 
 				}
@@ -1036,9 +1036,9 @@ public class JavaTemplateGrammarParser extends Parser {
 		public Directive_attr_descriptionContext directive_attr_description() {
 			return getRuleContext(Directive_attr_descriptionContext.class,0);
 		}
-		public List<TerminalNode> WS_NEWLINE() { return getTokens(JavaTemplateGrammarParser.WS_NEWLINE); }
-		public TerminalNode WS_NEWLINE(int i) {
-			return getToken(JavaTemplateGrammarParser.WS_NEWLINE, i);
+		public List<TerminalNode> NEWLINE() { return getTokens(JavaTemplateGrammarParser.NEWLINE); }
+		public TerminalNode NEWLINE(int i) {
+			return getToken(JavaTemplateGrammarParser.NEWLINE, i);
 		}
 		public Directive_propertyContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -1152,7 +1152,7 @@ public class JavaTemplateGrammarParser extends Parser {
 					{
 					{
 					setState(254);
-					match(WS_NEWLINE);
+					match(NEWLINE);
 					}
 					} 
 				}
@@ -1638,9 +1638,9 @@ public class JavaTemplateGrammarParser extends Parser {
 		}
 		public TerminalNode SCRIPT_BEGIN() { return getToken(JavaTemplateGrammarParser.SCRIPT_BEGIN, 0); }
 		public TerminalNode SCRIPT_END() { return getToken(JavaTemplateGrammarParser.SCRIPT_END, 0); }
-		public List<TerminalNode> WS_NEWLINE() { return getTokens(JavaTemplateGrammarParser.WS_NEWLINE); }
-		public TerminalNode WS_NEWLINE(int i) {
-			return getToken(JavaTemplateGrammarParser.WS_NEWLINE, i);
+		public List<TerminalNode> NEWLINE() { return getTokens(JavaTemplateGrammarParser.NEWLINE); }
+		public TerminalNode NEWLINE(int i) {
+			return getToken(JavaTemplateGrammarParser.NEWLINE, i);
 		}
 		public TerminalNode SCRIPT_MACROCODE() { return getToken(JavaTemplateGrammarParser.SCRIPT_MACROCODE, 0); }
 		public ScriptContext(ParserRuleContext parent, int invokingState) {
@@ -1693,7 +1693,7 @@ public class JavaTemplateGrammarParser extends Parser {
 					{
 					{
 					setState(309);
-					match(WS_NEWLINE);
+					match(NEWLINE);
 					}
 					} 
 				}
@@ -1883,9 +1883,9 @@ public class JavaTemplateGrammarParser extends Parser {
 	public static class TargetcodeContext extends ParserRuleContext {
 		public Token v;
 		public TerminalNode TARGETCODE() { return getToken(JavaTemplateGrammarParser.TARGETCODE, 0); }
-		public List<TerminalNode> WS_NEWLINE() { return getTokens(JavaTemplateGrammarParser.WS_NEWLINE); }
-		public TerminalNode WS_NEWLINE(int i) {
-			return getToken(JavaTemplateGrammarParser.WS_NEWLINE, i);
+		public List<TerminalNode> NEWLINE() { return getTokens(JavaTemplateGrammarParser.NEWLINE); }
+		public TerminalNode NEWLINE(int i) {
+			return getToken(JavaTemplateGrammarParser.NEWLINE, i);
 		}
 		public TargetcodeContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -1911,11 +1911,11 @@ public class JavaTemplateGrammarParser extends Parser {
 			setState(340);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			while (_la==WS_NEWLINE) {
+			while (_la==NEWLINE) {
 				{
 				{
 				setState(337);
-				match(WS_NEWLINE);
+				match(NEWLINE);
 				}
 				}
 				setState(342);
