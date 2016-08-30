@@ -24,7 +24,9 @@ import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
@@ -48,6 +50,8 @@ import org.osgi.service.prefs.Preferences;
 public class JtgBuilder extends IncrementalProjectBuilder {
 
 	boolean	alreadyBuilt	= false;
+
+	boolean	hasErrors		= false;
 
 	class SampleDeltaVisitor implements IResourceDeltaVisitor {
 
@@ -82,7 +86,7 @@ public class JtgBuilder extends IncrementalProjectBuilder {
 	}
 
 	class SampleResourceVisitor implements IResourceVisitor {
-		public boolean visit(IResource resource) {
+		public boolean visit(IResource resource) throws CoreException {
 			checkResource(resource);
 			//return true to continue visiting children.
 			return true;
@@ -114,14 +118,21 @@ public class JtgBuilder extends IncrementalProjectBuilder {
 	 */
 	@SuppressWarnings("rawtypes")
 	protected IProject[] build(int kind, Map args, IProgressMonitor monitor) throws CoreException {
-		if (kind == FULL_BUILD) {
-			fullBuild(monitor);
-		} else {
-			IResourceDelta delta = getDelta(getProject());
-			if (delta == null) {
+		try {
+			if (kind == FULL_BUILD) {
 				fullBuild(monitor);
 			} else {
-				incrementalBuild(delta, monitor);
+				IResourceDelta delta = getDelta(getProject());
+				if (delta == null) {
+					fullBuild(monitor);
+				} else {
+					incrementalBuild(delta, monitor);
+				}
+			}
+		} catch(CoreException e) {
+			Throwable t = e.getStatus().getException();
+			if (!(t instanceof BuildDoneException) && !(t instanceof BuildFailedException)) {
+				throw e;
 			}
 		}
 		return null;
@@ -164,13 +175,13 @@ public class JtgBuilder extends IncrementalProjectBuilder {
 		return config;
 	}
 
-	void checkResource(IResource resource) {
+	void checkResource(IResource resource) throws CoreException {
 		if (resource instanceof IFile) {
 			String name = resource.getName();
 			String fullName = resource.getFullPath().toString();
 			IProject project = resource.getProject();
 			JtgConfiguration config = getConfiguration(project);
-			String projectName = project.getName();
+			String projectName = config.getProjectFile();
 			String projectFile = "/" + projectName + "/" + config.getProjectFile();
 			String schemaFile = "/" + projectName + "/" + config.getSchemaDir() + "/" + config.getSchema();
 			String jarOutDir = config.getJarOutputDir();
@@ -179,7 +190,7 @@ public class JtgBuilder extends IncrementalProjectBuilder {
 			String jarName = GeneratorUtils.Project2JarName(jarOutDir, projectName);
 			if (matcher.find() || fullName.equals(projectFile) || fullName.equals(schemaFile)) {
 				IResource jarResource = findMember(project, jarName);
-				if (jarResource == null || resource.getModificationStamp() > jarResource.getModificationStamp()) {
+				if (jarResource == null || resource.getLocalTimeStamp() > jarResource.getLocalTimeStamp()) {
 					regenarateAll(project);
 				}
 			}
@@ -281,7 +292,7 @@ public class JtgBuilder extends IncrementalProjectBuilder {
 		return classLoader;
 	}
 
-	private void regenarateAll(IProject project) {
+	private void regenarateAll(IProject project) throws CoreException {
 		try {
 			deleteAllMarkers(project);
 		} catch (CoreException e) {
@@ -305,8 +316,11 @@ public class JtgBuilder extends IncrementalProjectBuilder {
 		}
 
 		try {
+			hasErrors = false;
 			generator.generate(classLoader);
 			alreadyBuilt = true;
+			Status status = new Status(IStatus.OK, "jtg", "", new BuildDoneException());
+			throw new CoreException(status);
 		} catch (TemplateException e) {
 			List<LogMessage> messages = e.getErrors();
 			if (messages != null && messages.size() > 0) {
@@ -332,11 +346,11 @@ public class JtgBuilder extends IncrementalProjectBuilder {
 						IFile file = findMember(project, getFileName(fileName));
 						if (file != null) {
 							addMarker(file, message.getErrorMessage(), lineNumber, IMarker.SEVERITY_ERROR);
-							JtgUIPlugin.log(e);
+							//JtgUIPlugin.log(e);
 						}
 					} else {
 						addMarker(project, exceptionBuilder(e), lineNumber, IMarker.SEVERITY_ERROR);
-						JtgUIPlugin.log(e);
+						//JtgUIPlugin.log(e);
 					}
 				}
 			} else {
@@ -361,17 +375,24 @@ public class JtgBuilder extends IncrementalProjectBuilder {
 							message = e.toString();
 						}
 						addMarker(file, message, lineNumber, IMarker.SEVERITY_ERROR);
-						JtgUIPlugin.log(e);
+						//JtgUIPlugin.log(e);
 					} else {
 						addMarker(project, exceptionBuilder(e), lineNumber, IMarker.SEVERITY_ERROR);
-						JtgUIPlugin.log(e);
+						//JtgUIPlugin.log(e);
 					}
 				} else {
 					addMarker(project, exceptionBuilder(e), lineNumber, IMarker.SEVERITY_ERROR);
-					JtgUIPlugin.log(e);
+					//JtgUIPlugin.log(e);
 				}
 			}
+			hasErrors = true;
+		} catch (CoreException e) {
+			if (!(e.getStatus().getException() instanceof BuildDoneException)) {
+				throw e;
+			}
+			JtgUIPlugin.log(e);
 		} catch (Exception e) {
+			hasErrors = true;
 			JtgUIPlugin.log(e);
 		}
 		String srcGenPath = config.getSourceOutputDir();
@@ -382,6 +403,10 @@ public class JtgBuilder extends IncrementalProjectBuilder {
 			} catch (CoreException e) {
 				// nothing to do
 			}
+		}
+		if (hasErrors) {
+			Status status = new Status(IStatus.ERROR, "jtg", "", new BuildFailedException());
+			throw new CoreException(status);
 		}
 	}
 
@@ -405,11 +430,8 @@ public class JtgBuilder extends IncrementalProjectBuilder {
 	}
 
 	protected void fullBuild(final IProgressMonitor monitor) throws CoreException {
-		try {
-			alreadyBuilt = false;
-			getProject().accept(new SampleResourceVisitor());
-		} catch (CoreException e) {
-		}
+		alreadyBuilt = false;
+		getProject().accept(new SampleResourceVisitor());
 	}
 
 	protected void incrementalBuild(IResourceDelta delta, IProgressMonitor monitor) throws CoreException {
