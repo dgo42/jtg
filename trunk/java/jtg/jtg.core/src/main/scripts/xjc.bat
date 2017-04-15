@@ -38,7 +38,7 @@ goto LAUNCHXJC
 
 :LAUNCHXJC
 set JAXP_HOME=%JAXB_HOME%\..\jaxp
-%JAVA% %XJC_OPTS% -Djava.endorsed.dirs=%JAXb_HOME%\lib\endorsed -jar %JAXB_HOME%\lib\jaxb-xjc.jar %*
+"%JAVA%" %XJC_OPTS% -Djava.endorsed.dirs=%JAXb_HOME%\lib\endorsed -jar %JAXB_HOME%\lib\jaxb-xjc.jar %*
 
 
 :END

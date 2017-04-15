@@ -29,5 +29,5 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/jtg.basics"/>
-	<classpathentry kind="output" path="target/classes"/>
+	<classpathentry kind="output" path="target/test-classes"/>
 </classpath>

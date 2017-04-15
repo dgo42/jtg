@@ -7,7 +7,7 @@
 		<version>1.0.0</version>
 	</parent>
 	<artifactId>jtg.core</artifactId>
-	<version>1.0.15-SNAPSHOT</version>
+	<version>1.0.18-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>jtg.core</name>

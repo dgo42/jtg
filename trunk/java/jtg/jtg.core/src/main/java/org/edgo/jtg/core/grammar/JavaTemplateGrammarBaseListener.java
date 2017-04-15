@@ -3,8 +3,6 @@
 
 package org.edgo.jtg.core.grammar;
 
-import org.edgo.jtg.core.model.ParsedUnit;
-
 
 
 import org.antlr.v4.runtime.ParserRuleContext;
