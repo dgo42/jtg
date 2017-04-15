@@ -3,8 +3,6 @@
 
 package org.edgo.jtg.core.grammar;
 
-import org.edgo.jtg.core.model.ParsedUnit;
-
 
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
@@ -114,9 +112,9 @@ public class JavaTemplateGrammarParser extends Parser {
 	public ATN getATN() { return _ATN; }
 
 
-	    private ParsedUnit unit;
+	    private org.edgo.jtg.core.model.ParsedUnit unit;
 
-	    public void setUnit(ParsedUnit unit) {
+	    public void setUnit(org.edgo.jtg.core.model.ParsedUnit unit) {
 	        this.unit = unit;
 	    }
 

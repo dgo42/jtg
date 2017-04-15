@@ -8,8 +8,6 @@ grammar JavaTemplateGrammar;
 
 package org.edgo.jtg.core.grammar;
 
-import org.edgo.jtg.core.model.ParsedUnit;
-
 }
 
 options {
@@ -17,9 +15,9 @@ options {
 }
 
 @parser::members {
-    private ParsedUnit unit;
+    private org.edgo.jtg.core.model.ParsedUnit unit;
 
-    public void setUnit(ParsedUnit unit) {
+    public void setUnit(org.edgo.jtg.core.model.ParsedUnit unit) {
         this.unit = unit;
     }
 }

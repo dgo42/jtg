@@ -284,6 +284,8 @@ public class JavaSourceVisitor extends JavaSourceBaseVisitor {
 	public void visit(ParsedUnit n) throws TemplateException {
 		String className = GeneratorUtils.Template2ClassName(templateDir, templateFile);
 		boolean usingGeneratorMode = false;
+		boolean usingRunTemplate = false;
+		
 		for (ScriptNode node : n.getScriptNodes()) {
 			if (node.getText().contains("GeneratorMode.")) {
 				usingGeneratorMode = true;
@@ -291,9 +293,13 @@ public class JavaSourceVisitor extends JavaSourceBaseVisitor {
 			}
 		}
 		for (TemplateNode node : n.getTemplateNodes()) {
-			if (MacroNode.class.isInstance(node) && node.getText().contains("GeneratorMode.")) {
-				usingGeneratorMode = true;
-				break;
+			if (MacroNode.class.isInstance(node)) {
+				if (node.getText().contains("GeneratorMode.")) {
+					usingGeneratorMode = true;
+				}
+				if (node.getText().contains("RunTemplate")) {
+					usingRunTemplate = true;
+				}
 			}
 		}
 
@@ -521,7 +527,7 @@ public class JavaSourceVisitor extends JavaSourceBaseVisitor {
 		makeDebug(sourceOutFile, lineNumb, n);
 		output.append(GeneratorUtils.EOL);
 		lineNumb.increment();
-		if (hasPlaceholderNodes) {
+		if (hasPlaceholderNodes || usingRunTemplate) {
 			output.append("        } catch(TemplateException e) {");
 			output.append(GeneratorUtils.EOL);
 			lineNumb.increment();
