@@ -18,9 +18,9 @@
 		</xs:appinfo>
 	</xs:annotation>
 
-	<xs:element name="directUseElement" type="tns:DirectUseElement" />
+	<xs:element name="DirectUseElement" type="tns:DirectUseElementType" />
 
-	<xs:complexType name="DirectUseElement">
+	<xs:complexType name="DirectUseElementType">
 		<xs:all>
 			<xs:element name="employeeElements" type="tns:ArrayOfEmployeeElements" minOccurs="0" />
 		</xs:all>

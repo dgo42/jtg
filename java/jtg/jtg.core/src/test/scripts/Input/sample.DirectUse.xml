@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
-<d:directUseElement 
-	xmlns:d="http://edgo.org"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-    xsi:schemaLocation="http://edgo.org sample.DirectUse.jgsd">
-  <employeeElements>
-    <employeeElement ID="0">
-      <firstName>Jackie</firstName>
-      <lastName>Chan</lastName>
-      <title>Herr</title>
-    </employeeElement>
-    <employeeElement ID="1">
-      <firstName>Bruce</firstName>
-      <lastName>Lee</lastName>
-      <title>Herr</title>
-    </employeeElement>
-    <employeeElement ID="2">
-      <firstName>Chuck</firstName>
-      <lastName>Norris</lastName>
-      <title>Herr</title>
-    </employeeElement>
-  </employeeElements>
-</d:directUseElement>
+<DirectUseElement version="0" 
+	xmlns="http://edgo.org"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://edgo.org sample.DirectUse.xml">
+	<employeeElements>
+		<employeeElement ID="0">
+			<firstName>Jackie</firstName>
+			<lastName>Chan</lastName>
+			<title>Herr</title>
+		</employeeElement>
+		<employeeElement ID="1">
+			<firstName>Bruce</firstName>
+			<lastName>Lee</lastName>
+			<title>Herr</title>
+		</employeeElement>
+		<employeeElement ID="2">
+			<firstName>Chuck</firstName>
+			<lastName>Norris</lastName>
+			<title>Herr</title>
+		</employeeElement>
+	</employeeElements>
+</DirectUseElement>
