@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Java Template Generator Core Bundle
 Bundle-SymbolicName: org.edgo.jtg.core.bundle
-Bundle-Version: 1.0.14.qualifier
+Bundle-Version: 1.0.17.qualifier
 Bundle-ClassPath: lib/slf4j-log4j12-1.7.21.jar,lib/antlr4-runtime-4.5.3.jar,
  lib/FastInfoset-1.2.12.jar,lib/jackson-core-2.8.1.jar,lib/jackson-annotations-2.8.0.jar,
  lin/jackson-databind-2.8.1.jar,lib/jackson-module-jaxb-annotations-2.8.1.jar,
@@ -10,7 +10,7 @@ Bundle-ClassPath: lib/slf4j-log4j12-1.7.21.jar,lib/antlr4-runtime-4.5.3.jar,
  lib/jaxb-impl-2.2.7.jar,lib/jaxb-xjc-2.2.7.jar,lib/jsr173-api-1.0.jar,
  lib/commons-logging-1.2.jar,lib/commons-lang3-3.4.jar,lib/javaparser-1.0.11.jar,
  lib/annox-1.0.1.jar,lib/jaxb2-basics-tools-0.11.1.jar,lib/jaxb2-basics-ant-0.11.1.jar,
- lib/jaxb2-basics-annotate-1.0.2.jar,lib/jtg.core-1.0.14-SNAPSHOT.jar,lib/junit-3.8.1.jar
+ lib/jaxb2-basics-annotate-1.0.2.jar,lib/jtg.core-1.0.15-SNAPSHOT.jar,lib/junit-3.8.1.jar
 Bundle-Vendor: edgo.org
 Export-Package: org.edgo.jtg.core,
  org.edgo.jtg.core.compiler,
