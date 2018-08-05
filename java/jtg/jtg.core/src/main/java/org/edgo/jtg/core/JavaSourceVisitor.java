@@ -409,6 +409,9 @@ public class JavaSourceVisitor extends JavaSourceBaseVisitor {
 		output.append("\", args);");
 		output.append(GeneratorUtils.EOL);
 		lineNumb.increment();
+		output.append("        initDebugLines();");
+		output.append(GeneratorUtils.EOL);
+		lineNumb.increment();
 		output.append("        templateFileName = \"");
 		output.append(makeRelativeTemplateFile(templateFile));
 		output.append("\";");
@@ -438,11 +441,14 @@ public class JavaSourceVisitor extends JavaSourceBaseVisitor {
 		output.append(n.getEncoding());
 		output.append("\", args);");
 		output.append(GeneratorUtils.EOL);
+		lineNumb.increment();
+		output.append("        initDebugLines();");
+		output.append(GeneratorUtils.EOL);
+		lineNumb.increment();
 		output.append("        templateFileName = \"");
 		output.append(makeRelativeTemplateFile(templateFile));
 		output.append("\";");
 		output.append(GeneratorUtils.EOL);
-		lineNumb.increment();
 		lineNumb.increment();
 		makeDebugOutputOff(false);
 		v = new JavaSourceAssignFromArrayVisitor(sourceLineProcessor, output, templateDir, templateFile, configPath,
@@ -463,6 +469,9 @@ public class JavaSourceVisitor extends JavaSourceBaseVisitor {
 		output.append("        super(derivedType != null ? derivedType : ");
 		output.append(className);
 		output.append(".class, cmdArgs, env, encoding, args);");
+		output.append(GeneratorUtils.EOL);
+		lineNumb.increment();
+		output.append("        initDebugLines();");
 		output.append(GeneratorUtils.EOL);
 		lineNumb.increment();
 		output.append("        templateFileName = \"");
@@ -492,11 +501,14 @@ public class JavaSourceVisitor extends JavaSourceBaseVisitor {
 		output.append(className);
 		output.append(".class, cmdArgs, env, encoding, args);");
 		output.append(GeneratorUtils.EOL);
+		lineNumb.increment();
+		output.append("        initDebugLines();");
+		output.append(GeneratorUtils.EOL);
+		lineNumb.increment();
 		output.append("        templateFileName = \"");
 		output.append(makeRelativeTemplateFile(templateFile));
 		output.append("\";");
 		output.append(GeneratorUtils.EOL);
-		lineNumb.increment();
 		lineNumb.increment();
 		makeDebugOutputOff(false);
 		v = new JavaSourceAssignFromArrayVisitor(sourceLineProcessor, output, templateDir, templateFile, configPath,
@@ -663,7 +675,9 @@ public class JavaSourceVisitor extends JavaSourceBaseVisitor {
 		makeDebug(sourceOutFile, lineNumb, n);
 		output.append(GeneratorUtils.EOL);
 		lineNumb.increment();
-		output.append("    static {");
+		int initDebugLinesRows = 0;
+		int initDebugLinesCount = 0;
+		output.append("    private void initDebugLines() {");
 		output.append(GeneratorUtils.EOL);
 		lineNumb.increment();
 		File file = new File(templateFile);
@@ -675,6 +689,22 @@ public class JavaSourceVisitor extends JavaSourceBaseVisitor {
 				output.append("		linesMapping.put(").append(i).append(", ").append(src).append(");");
 				output.append(GeneratorUtils.EOL);
 				lineNumb.increment();
+				initDebugLinesRows++;
+				if (initDebugLinesRows > 2000) {
+					initDebugLinesRows = 0;
+					initDebugLinesCount++;
+					output.append("        initDebugLines").append(initDebugLinesCount).append("();");
+					output.append(GeneratorUtils.EOL);
+					lineNumb.increment();
+					output.append("    }");
+					output.append(GeneratorUtils.EOL);
+					lineNumb.increment();
+					output.append(GeneratorUtils.EOL);
+					lineNumb.increment();
+					output.append("    private void initDebugLines").append(initDebugLinesCount).append("() {");
+					output.append(GeneratorUtils.EOL);
+					lineNumb.increment();
+				}
 			}
 		}
 		for (Import imp : n.getImports()) {
@@ -684,6 +714,22 @@ public class JavaSourceVisitor extends JavaSourceBaseVisitor {
 				output.append("		linesMapping.put(").append(i).append(", ").append(src).append(");");
 				output.append(GeneratorUtils.EOL);
 				lineNumb.increment();
+				initDebugLinesRows++;
+				if (initDebugLinesRows > 2000) {
+					initDebugLinesRows = 0;
+					initDebugLinesCount++;
+					output.append("        initDebugLines").append(initDebugLinesCount).append("();");
+					output.append(GeneratorUtils.EOL);
+					lineNumb.increment();
+					output.append("    }");
+					output.append(GeneratorUtils.EOL);
+					lineNumb.increment();
+					output.append(GeneratorUtils.EOL);
+					lineNumb.increment();
+					output.append("    private void initDebugLines").append(initDebugLinesCount).append("() {");
+					output.append(GeneratorUtils.EOL);
+					lineNumb.increment();
+				}
 			}
 		}
 		for (TemplateNode node : n.getTemplateNodes()) {
@@ -693,6 +739,22 @@ public class JavaSourceVisitor extends JavaSourceBaseVisitor {
 				output.append("		linesMapping.put(").append(i).append(", ").append(src).append(");");
 				output.append(GeneratorUtils.EOL);
 				lineNumb.increment();
+				initDebugLinesRows++;
+				if (initDebugLinesRows > 2000) {
+					initDebugLinesRows = 0;
+					initDebugLinesCount++;
+					output.append("        initDebugLines").append(initDebugLinesCount).append("();");
+					output.append(GeneratorUtils.EOL);
+					lineNumb.increment();
+					output.append("    }");
+					output.append(GeneratorUtils.EOL);
+					lineNumb.increment();
+					output.append(GeneratorUtils.EOL);
+					lineNumb.increment();
+					output.append("    private void initDebugLines").append(initDebugLinesCount).append("() {");
+					output.append(GeneratorUtils.EOL);
+					lineNumb.increment();
+				}
 			}
 		}
 		for (ScriptNode node : n.getScriptNodes()) {
@@ -702,6 +764,22 @@ public class JavaSourceVisitor extends JavaSourceBaseVisitor {
 				output.append("		linesMapping.put(").append(i).append(", ").append(src).append(");");
 				output.append(GeneratorUtils.EOL);
 				lineNumb.increment(); 
+				initDebugLinesRows++;
+				if (initDebugLinesRows > 2000) {
+					initDebugLinesRows = 0;
+					initDebugLinesCount++;
+					output.append("        initDebugLines").append(initDebugLinesCount).append("();");
+					output.append(GeneratorUtils.EOL);
+					lineNumb.increment();
+					output.append("    }");
+					output.append(GeneratorUtils.EOL);
+					lineNumb.increment();
+					output.append(GeneratorUtils.EOL);
+					lineNumb.increment();
+					output.append("    private void initDebugLines").append(initDebugLinesCount).append("() {");
+					output.append(GeneratorUtils.EOL);
+					lineNumb.increment();
+				}
 			}
 		}
 		output.append("    }");

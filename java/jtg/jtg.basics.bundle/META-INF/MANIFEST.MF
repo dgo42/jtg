@@ -2,9 +2,9 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Java Template Generator Basics Bundle
 Bundle-SymbolicName: org.edgo.jtg.basics.bundle
-Bundle-Version: 1.0.18.qualifier
+Bundle-Version: 1.0.19.qualifier
 Bundle-Vendor: edgo.org
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Bundle-ClassPath: lib/jchardet-1.0.jar,lib/jtg.basics-1.0.18-SNAPSHOT.jar
+Bundle-ClassPath: lib/jchardet-1.0.jar,lib/jtg.basics-1.0.19-SNAPSHOT.jar
 Export-Package: org.edgo.jtg.basics,
  org.mozilla.intl.chardet

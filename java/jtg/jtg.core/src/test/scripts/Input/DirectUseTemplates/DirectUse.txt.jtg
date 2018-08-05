@@ -56,5 +56,6 @@
 	Next employee...
 <#
         RunTemplate ("Details\\Message.txt.jtg", "Output\\" + employee.lastName + ".txt", new Object[] { employee });
+        RunTemplate ("Details\\TestHugeTemplate.txt.jtg", "Output\\Huge_" + employee.lastName + ".txt", new Object[] { employee });
     }
 #>

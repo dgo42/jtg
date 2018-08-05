@@ -1,21 +1,24 @@
-// Generated from ..\grammar\JavaTemplateLexer.g4 by ANTLR 4.5.3
+// Generated from ..\grammar\JavaTemplateLexer.g4 by ANTLR 4.7.1
 
 
 package org.edgo.jtg.core.grammar;
 
 
-import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
-import org.antlr.v4.runtime.Token;
-import org.antlr.v4.runtime.TokenStream;
-import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.atn.*;
+import org.antlr.v4.runtime.Lexer;
+import org.antlr.v4.runtime.RuleContext;
+import org.antlr.v4.runtime.RuntimeMetaData;
+import org.antlr.v4.runtime.Vocabulary;
+import org.antlr.v4.runtime.VocabularyImpl;
+import org.antlr.v4.runtime.atn.ATN;
+import org.antlr.v4.runtime.atn.ATNDeserializer;
+import org.antlr.v4.runtime.atn.LexerATNSimulator;
+import org.antlr.v4.runtime.atn.PredictionContextCache;
 import org.antlr.v4.runtime.dfa.DFA;
-import org.antlr.v4.runtime.misc.*;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class JavaTemplateLexer extends Lexer {
-	static { RuntimeMetaData.checkVersion("4.5.3", RuntimeMetaData.VERSION); }
+	static { RuntimeMetaData.checkVersion("4.7.1", RuntimeMetaData.VERSION); }
 
 	protected static final DFA[] _decisionToDFA;
 	protected static final PredictionContextCache _sharedContextCache =
@@ -31,11 +34,12 @@ public class JavaTemplateLexer extends Lexer {
 		MACROCODE=24, TARGETCODE=25, NEWLINE=26, MACRO_BLOCK_BEGIN=27, MACRO_END=28, 
 		COMMENTCODE=29, COMMENT_END=30, SCRIPT_MACROCODE=31, ASSIGN=32, WS_DIR=33, 
 		DIRECTIVE_END=34;
-	public static final int TEMPLATE = 1;
-	public static final int MACRO = 2;
-	public static final int COMMENT = 3;
-	public static final int SCRIPT_MACRO = 4;
-	public static final int DIRECTIVE = 5;
+	public static final int
+		TEMPLATE=1, MACRO=2, COMMENT=3, SCRIPT_MACRO=4, DIRECTIVE=5;
+	public static String[] channelNames = {
+		"DEFAULT_TOKEN_CHANNEL", "HIDDEN"
+	};
+
 	public static String[] modeNames = {
 		"DEFAULT_MODE", "TEMPLATE", "MACRO", "COMMENT", "SCRIPT_MACRO", "DIRECTIVE"
 	};
@@ -117,6 +121,9 @@ public class JavaTemplateLexer extends Lexer {
 
 	@Override
 	public String getSerializedATN() { return _serializedATN; }
+
+	@Override
+	public String[] getChannelNames() { return channelNames; }
 
 	@Override
 	public String[] getModeNames() { return modeNames; }
@@ -222,7 +229,7 @@ public class JavaTemplateLexer extends Lexer {
 	}
 
 	public static final String _serializedATN =
-		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\2$\u013e\b\1\b\1\b"+
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\2$\u013e\b\1\b\1\b"+
 		"\1\b\1\b\1\b\1\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b"+
 		"\4\t\t\t\4\n\t\n\4\13\t\13\4\f\t\f\4\r\t\r\4\16\t\16\4\17\t\17\4\20\t"+
 		"\20\4\21\t\21\4\22\t\22\4\23\t\23\4\24\t\24\4\25\t\25\4\26\t\26\4\27\t"+
@@ -247,34 +254,34 @@ public class JavaTemplateLexer extends Lexer {
 		"\2%\b\23\n\34\f\33\16\24\20\25\22\26\24\27\26\30\30\31\32\35\34\32\36"+
 		"\36 \37\" $!&\"(\3*\4,\5.\6\60\7\62\b\64\t\66\n8\13:\f<\r>\16@\17B\20"+
 		"D\21F#H\2J\22L$\b\2\3\4\5\6\7\7\4\2\f\f\17\17\4\2\13\13\"\"\3\2>>\7\2"+
-		"//\61\61??BBuu\3\2%%\u0143\2\b\3\2\2\2\2\n\3\2\2\2\2\f\3\2\2\2\3\16\3"+
-		"\2\2\2\3\20\3\2\2\2\3\22\3\2\2\2\3\24\3\2\2\2\3\26\3\2\2\2\3\30\3\2\2"+
-		"\2\3\32\3\2\2\2\4\34\3\2\2\2\4\36\3\2\2\2\5 \3\2\2\2\5\"\3\2\2\2\6$\3"+
-		"\2\2\2\7&\3\2\2\2\7(\3\2\2\2\7*\3\2\2\2\7,\3\2\2\2\7.\3\2\2\2\7\60\3\2"+
-		"\2\2\7\62\3\2\2\2\7\64\3\2\2\2\7\66\3\2\2\2\78\3\2\2\2\7:\3\2\2\2\7<\3"+
-		"\2\2\2\7>\3\2\2\2\7@\3\2\2\2\7B\3\2\2\2\7D\3\2\2\2\7F\3\2\2\2\7J\3\2\2"+
-		"\2\7L\3\2\2\2\bN\3\2\2\2\nS\3\2\2\2\f[\3\2\2\2\16_\3\2\2\2\20b\3\2\2\2"+
-		"\22g\3\2\2\2\24l\3\2\2\2\26r\3\2\2\2\30~\3\2\2\2\32\u008b\3\2\2\2\34\u0094"+
-		"\3\2\2\2\36\u0098\3\2\2\2 \u00a0\3\2\2\2\"\u00a4\3\2\2\2$\u00ac\3\2\2"+
-		"\2&\u00b2\3\2\2\2(\u00b4\3\2\2\2*\u00c1\3\2\2\2,\u00ca\3\2\2\2.\u00ce"+
-		"\3\2\2\2\60\u00d5\3\2\2\2\62\u00dd\3\2\2\2\64\u00e5\3\2\2\2\66\u00ee\3"+
-		"\2\2\28\u00fd\3\2\2\2:\u0109\3\2\2\2<\u010e\3\2\2\2>\u0113\3\2\2\2@\u0117"+
-		"\3\2\2\2B\u011e\3\2\2\2D\u0125\3\2\2\2F\u012a\3\2\2\2H\u012c\3\2\2\2J"+
-		"\u012f\3\2\2\2L\u0139\3\2\2\2NO\7>\2\2OP\7%\2\2PQ\3\2\2\2QR\b\2\2\2R\t"+
-		"\3\2\2\2ST\t\2\2\2TU\3\2\2\2UV\b\3\3\2V\13\3\2\2\2WX\6\4\2\2X\\\7>\2\2"+
-		"Y\\\t\3\2\2Z\\\n\4\2\2[W\3\2\2\2[Y\3\2\2\2[Z\3\2\2\2\\]\3\2\2\2][\3\2"+
-		"\2\2]^\3\2\2\2^\r\3\2\2\2_`\7%\2\2`a\7@\2\2a\17\3\2\2\2bc\6\6\3\2cd\7"+
-		"?\2\2de\3\2\2\2ef\b\6\4\2f\21\3\2\2\2gh\6\7\4\2hi\7B\2\2ij\3\2\2\2jk\b"+
-		"\7\5\2k\23\3\2\2\2lm\6\b\5\2mn\7/\2\2no\7/\2\2op\3\2\2\2pq\b\b\6\2q\25"+
-		"\3\2\2\2rs\6\t\6\2st\7u\2\2tu\7e\2\2uv\7t\2\2vw\7k\2\2wx\7r\2\2xy\7v\2"+
-		"\2yz\3\2\2\2z{\5\16\5\2{|\3\2\2\2|}\b\t\7\2}\27\3\2\2\2~\177\6\n\7\2\177"+
-		"\u0080\7\61\2\2\u0080\u0081\7u\2\2\u0081\u0082\7e\2\2\u0082\u0083\7t\2"+
-		"\2\u0083\u0084\7k\2\2\u0084\u0085\7r\2\2\u0085\u0086\7v\2\2\u0086\u0087"+
-		"\3\2\2\2\u0087\u0088\5\16\5\2\u0088\u0089\3\2\2\2\u0089\u008a\b\n\b\2"+
-		"\u008a\31\3\2\2\2\u008b\u008c\6\13\b\2\u008c\u008d\n\5\2\2\u008d\u008e"+
-		"\3\2\2\2\u008e\u008f\b\13\4\2\u008f\33\3\2\2\2\u0090\u0091\6\f\t\2\u0091"+
-		"\u0095\7%\2\2\u0092\u0095\n\6\2\2\u0093\u0095\t\2\2\2\u0094\u0090\3\2"+
-		"\2\2\u0094\u0092\3\2\2\2\u0094\u0093\3\2\2\2\u0095\u0096\3\2\2\2\u0096"+
+		"//\61\61??BBuu\3\2%%\2\u0143\2\b\3\2\2\2\2\n\3\2\2\2\2\f\3\2\2\2\3\16"+
+		"\3\2\2\2\3\20\3\2\2\2\3\22\3\2\2\2\3\24\3\2\2\2\3\26\3\2\2\2\3\30\3\2"+
+		"\2\2\3\32\3\2\2\2\4\34\3\2\2\2\4\36\3\2\2\2\5 \3\2\2\2\5\"\3\2\2\2\6$"+
+		"\3\2\2\2\7&\3\2\2\2\7(\3\2\2\2\7*\3\2\2\2\7,\3\2\2\2\7.\3\2\2\2\7\60\3"+
+		"\2\2\2\7\62\3\2\2\2\7\64\3\2\2\2\7\66\3\2\2\2\78\3\2\2\2\7:\3\2\2\2\7"+
+		"<\3\2\2\2\7>\3\2\2\2\7@\3\2\2\2\7B\3\2\2\2\7D\3\2\2\2\7F\3\2\2\2\7J\3"+
+		"\2\2\2\7L\3\2\2\2\bN\3\2\2\2\nS\3\2\2\2\f[\3\2\2\2\16_\3\2\2\2\20b\3\2"+
+		"\2\2\22g\3\2\2\2\24l\3\2\2\2\26r\3\2\2\2\30~\3\2\2\2\32\u008b\3\2\2\2"+
+		"\34\u0094\3\2\2\2\36\u0098\3\2\2\2 \u00a0\3\2\2\2\"\u00a4\3\2\2\2$\u00ac"+
+		"\3\2\2\2&\u00b2\3\2\2\2(\u00b4\3\2\2\2*\u00c1\3\2\2\2,\u00ca\3\2\2\2."+
+		"\u00ce\3\2\2\2\60\u00d5\3\2\2\2\62\u00dd\3\2\2\2\64\u00e5\3\2\2\2\66\u00ee"+
+		"\3\2\2\28\u00fd\3\2\2\2:\u0109\3\2\2\2<\u010e\3\2\2\2>\u0113\3\2\2\2@"+
+		"\u0117\3\2\2\2B\u011e\3\2\2\2D\u0125\3\2\2\2F\u012a\3\2\2\2H\u012c\3\2"+
+		"\2\2J\u012f\3\2\2\2L\u0139\3\2\2\2NO\7>\2\2OP\7%\2\2PQ\3\2\2\2QR\b\2\2"+
+		"\2R\t\3\2\2\2ST\t\2\2\2TU\3\2\2\2UV\b\3\3\2V\13\3\2\2\2WX\6\4\2\2X\\\7"+
+		">\2\2Y\\\t\3\2\2Z\\\n\4\2\2[W\3\2\2\2[Y\3\2\2\2[Z\3\2\2\2\\]\3\2\2\2]"+
+		"[\3\2\2\2]^\3\2\2\2^\r\3\2\2\2_`\7%\2\2`a\7@\2\2a\17\3\2\2\2bc\6\6\3\2"+
+		"cd\7?\2\2de\3\2\2\2ef\b\6\4\2f\21\3\2\2\2gh\6\7\4\2hi\7B\2\2ij\3\2\2\2"+
+		"jk\b\7\5\2k\23\3\2\2\2lm\6\b\5\2mn\7/\2\2no\7/\2\2op\3\2\2\2pq\b\b\6\2"+
+		"q\25\3\2\2\2rs\6\t\6\2st\7u\2\2tu\7e\2\2uv\7t\2\2vw\7k\2\2wx\7r\2\2xy"+
+		"\7v\2\2yz\3\2\2\2z{\5\16\5\2{|\3\2\2\2|}\b\t\7\2}\27\3\2\2\2~\177\6\n"+
+		"\7\2\177\u0080\7\61\2\2\u0080\u0081\7u\2\2\u0081\u0082\7e\2\2\u0082\u0083"+
+		"\7t\2\2\u0083\u0084\7k\2\2\u0084\u0085\7r\2\2\u0085\u0086\7v\2\2\u0086"+
+		"\u0087\3\2\2\2\u0087\u0088\5\16\5\2\u0088\u0089\3\2\2\2\u0089\u008a\b"+
+		"\n\b\2\u008a\31\3\2\2\2\u008b\u008c\6\13\b\2\u008c\u008d\n\5\2\2\u008d"+
+		"\u008e\3\2\2\2\u008e\u008f\b\13\4\2\u008f\33\3\2\2\2\u0090\u0091\6\f\t"+
+		"\2\u0091\u0095\7%\2\2\u0092\u0095\n\6\2\2\u0093\u0095\t\2\2\2\u0094\u0090"+
+		"\3\2\2\2\u0094\u0092\3\2\2\2\u0094\u0093\3\2\2\2\u0095\u0096\3\2\2\2\u0096"+
 		"\u0094\3\2\2\2\u0096\u0097\3\2\2\2\u0097\35\3\2\2\2\u0098\u0099\7%\2\2"+
 		"\u0099\u009a\7@\2\2\u009a\u009b\3\2\2\2\u009b\u009c\b\r\b\2\u009c\37\3"+
 		"\2\2\2\u009d\u009e\6\16\n\2\u009e\u00a1\7%\2\2\u009f\u00a1\n\6\2\2\u00a0"+

@@ -1,4 +1,4 @@
-// Generated from ..\grammar\JavaTemplateGrammar.g4 by ANTLR 4.5.3
+// Generated from ..\grammar\JavaTemplateGrammar.g4 by ANTLR 4.7.1
 
 
 package org.edgo.jtg.core.grammar;

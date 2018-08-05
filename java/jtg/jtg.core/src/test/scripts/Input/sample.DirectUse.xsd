@@ -3,6 +3,7 @@
 	xmlns="http://www.w3.org/2001/XMLSchema" 
 	targetNamespace="http://edgo.org" 
 	xmlns:tns="http://edgo.org" 
+	xmlns:jtg="http://edgo.org/jtg/ext"
 	xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
 	xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
@@ -11,12 +12,34 @@
 	jaxb:version="2.0">
 
 	<xs:annotation>
+		<xs:documentation><![CDATA[The JAXB global binding is used for simple code generation and should be in each schema.
+The JTG binding is used to generate classes needed for List <-> HashMap mapping
+The JAXB binding defines the List <-> HashMap mapping
+For Java 8 it is necessary to create file jaxp.properties in jre/lib with following line:
+javax.xml.accessExternalSchema=all
+]]></xs:documentation>
+		<xs:appinfo>
+			<jaxb:globalBindings>
+				<xjc:simple/>
+			</jaxb:globalBindings>
+			<!--jtg:binding field="entry" type="JavaType">
+				<jtg:hashMap key="key" value="value"/>
+			</jtg:binding-->
+			<!--jaxb:bindings node="//xs:complexType[@name='ProjectType']//xs:element[@name='typeMapping']">
+				<jaxb:property>
+					<jaxb:baseType name="org.edgo.jtg.schema.JavaTypeMap&lt;String,JavaTypeSettingsType&gt;"/>
+				</jaxb:property>
+			</jaxb:bindings-->
+		</xs:appinfo>
+	</xs:annotation>
+
+	<!--xs:annotation>
 		<xs:appinfo>
 			<jaxb:globalBindings>
 				<xjc:simple/>
 			</jaxb:globalBindings>
 		</xs:appinfo>
-	</xs:annotation>
+	</xs:annotation-->
 
 	<xs:element name="DirectUseElement" type="tns:DirectUseElementType" />
 
@@ -38,8 +61,8 @@
 			<xs:element name="lastName" type="xs:string" minOccurs="0" />
 			<xs:element name="title" type="xs:string" minOccurs="0" />
 		</xs:sequence>
-		<xs:attribute name="id" type="xs:int" />
-		<xs:attribute name="nullable" type="xs:boolean" />
+		<xs:attribute name="id" type="xs:int" use="required"/>
+		<xs:attribute name="nullable" type="xs:boolean" use="optional"/>
 	</xs:complexType>
 
 </xs:schema>

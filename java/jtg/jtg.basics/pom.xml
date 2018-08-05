@@ -5,9 +5,10 @@
 	    <groupId>org.edgo</groupId>
 	    <artifactId>jtg.parent</artifactId>
 	    <version>1.0.0</version>
+		<relativePath>../jtg.parent/pom.xml</relativePath>
 	</parent>
 	<artifactId>jtg.basics</artifactId>
-	<version>1.0.18-SNAPSHOT</version>
+	<version>1.0.19-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>jtg.basics</name>

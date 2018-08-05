@@ -1,8 +1,8 @@
 package org.edgo.jtg.core;
 
-import junit.framework.TestCase;
-
 import org.edgo.jtg.basics.TemplateException;
+
+import junit.framework.TestCase;
 
 public class GeneratorTest extends TestCase {
 

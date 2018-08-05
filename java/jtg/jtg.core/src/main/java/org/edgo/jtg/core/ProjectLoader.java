@@ -27,6 +27,7 @@ public class ProjectLoader {
             	JAXBElement<?> data = (JAXBElement<?>)result;
             	return data.getValue();
             }
+            
             return result;
         } catch (JAXBException ex) {
             throw new TemplateException(ex.getMessage(), ex, projectFullPath);

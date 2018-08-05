@@ -1,21 +1,30 @@
-// Generated from ..\grammar\JavaTemplateGrammar.g4 by ANTLR 4.5.3
+// Generated from ..\grammar\JavaTemplateGrammar.g4 by ANTLR 4.7.1
 
 
 package org.edgo.jtg.core.grammar;
 
 
-import org.antlr.v4.runtime.atn.*;
-import org.antlr.v4.runtime.dfa.DFA;
-import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.misc.*;
-import org.antlr.v4.runtime.tree.*;
 import java.util.List;
-import java.util.Iterator;
-import java.util.ArrayList;
+
+import org.antlr.v4.runtime.Parser;
+import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.RecognitionException;
+import org.antlr.v4.runtime.RuntimeMetaData;
+import org.antlr.v4.runtime.Token;
+import org.antlr.v4.runtime.TokenStream;
+import org.antlr.v4.runtime.Vocabulary;
+import org.antlr.v4.runtime.VocabularyImpl;
+import org.antlr.v4.runtime.atn.ATN;
+import org.antlr.v4.runtime.atn.ATNDeserializer;
+import org.antlr.v4.runtime.atn.ParserATNSimulator;
+import org.antlr.v4.runtime.atn.PredictionContextCache;
+import org.antlr.v4.runtime.dfa.DFA;
+import org.antlr.v4.runtime.tree.ParseTreeListener;
+import org.antlr.v4.runtime.tree.TerminalNode;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class JavaTemplateGrammarParser extends Parser {
-	static { RuntimeMetaData.checkVersion("4.5.3", RuntimeMetaData.VERSION); }
+	static { RuntimeMetaData.checkVersion("4.7.1", RuntimeMetaData.VERSION); }
 
 	protected static final DFA[] _decisionToDFA;
 	protected static final PredictionContextCache _sharedContextCache =
@@ -538,6 +547,7 @@ public class JavaTemplateGrammarParser extends Parser {
 			setState(113);
 			match(DIRECTIVE_BEGIN);
 			setState(115);
+			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==WS_DIR) {
 				{
@@ -565,6 +575,7 @@ public class JavaTemplateGrammarParser extends Parser {
 			setState(123);
 			((Directive_importContext)_localctx).ns = directive_attr_name();
 			setState(125);
+			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==WS_DIR) {
 				{
@@ -660,6 +671,7 @@ public class JavaTemplateGrammarParser extends Parser {
 			setState(137);
 			match(DIRECTIVE_BEGIN);
 			setState(139);
+			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==WS_DIR) {
 				{
@@ -735,6 +747,7 @@ public class JavaTemplateGrammarParser extends Parser {
 				break;
 			}
 			setState(165);
+			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==WS_DIR) {
 				{
@@ -830,6 +843,7 @@ public class JavaTemplateGrammarParser extends Parser {
 			setState(177);
 			match(DIRECTIVE_BEGIN);
 			setState(179);
+			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==WS_DIR) {
 				{
@@ -857,6 +871,7 @@ public class JavaTemplateGrammarParser extends Parser {
 			setState(187);
 			((Directive_extendsContext)_localctx).parent = directive_attr_parent();
 			setState(189);
+			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==WS_DIR) {
 				{
@@ -944,6 +959,7 @@ public class JavaTemplateGrammarParser extends Parser {
 			setState(201);
 			match(DIRECTIVE_BEGIN);
 			setState(203);
+			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==WS_DIR) {
 				{
@@ -971,6 +987,7 @@ public class JavaTemplateGrammarParser extends Parser {
 			setState(211);
 			((Directive_jarContext)_localctx).name = directive_attr_name();
 			setState(213);
+			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==WS_DIR) {
 				{
@@ -1065,6 +1082,7 @@ public class JavaTemplateGrammarParser extends Parser {
 			setState(225);
 			match(DIRECTIVE_BEGIN);
 			setState(227);
+			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==WS_DIR) {
 				{
@@ -1132,6 +1150,7 @@ public class JavaTemplateGrammarParser extends Parser {
 				break;
 			}
 			setState(251);
+			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==WS_DIR) {
 				{
@@ -1668,6 +1687,7 @@ public class JavaTemplateGrammarParser extends Parser {
 			setState(302);
 			match(SCRIPT_BEGIN);
 			setState(305);
+			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==SCRIPT_MACROCODE) {
 				{
@@ -1796,6 +1816,7 @@ public class JavaTemplateGrammarParser extends Parser {
 			setState(322);
 			((MacrocodeContext)_localctx).v1 = match(MACRO_BLOCK_BEGIN);
 			setState(324);
+			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==MACROCODE) {
 				{
@@ -1855,6 +1876,7 @@ public class JavaTemplateGrammarParser extends Parser {
 			setState(331);
 			match(COMMENT_BEGIN);
 			setState(333);
+			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==COMMENTCODE) {
 				{
@@ -1939,7 +1961,7 @@ public class JavaTemplateGrammarParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3$\u015d\4\2\t\2\4"+
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3$\u015d\4\2\t\2\4"+
 		"\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t"+
 		"\13\4\f\t\f\4\r\t\r\4\16\t\16\4\17\t\17\4\20\t\20\4\21\t\21\4\22\t\22"+
 		"\4\23\t\23\4\24\t\24\4\25\t\25\4\26\t\26\4\27\t\27\3\2\3\2\3\2\3\2\3\2"+
@@ -1966,11 +1988,11 @@ public class JavaTemplateGrammarParser extends Parser {
 		"\23\3\24\3\24\3\24\3\24\3\24\3\24\3\25\3\25\3\25\5\25\u0147\n\25\3\25"+
 		"\3\25\3\25\3\25\3\26\3\26\3\26\5\26\u0150\n\26\3\26\3\26\3\27\7\27\u0155"+
 		"\n\27\f\27\16\27\u0158\13\27\3\27\3\27\3\27\3\27\2\2\30\2\4\6\b\n\f\16"+
-		"\20\22\24\26\30\32\34\36 \"$&(*,\2\2\u0178\2.\3\2\2\2\4F\3\2\2\2\6r\3"+
-		"\2\2\2\b\u008a\3\2\2\2\n\u00b2\3\2\2\2\f\u00ca\3\2\2\2\16\u00e2\3\2\2"+
-		"\2\20\u0108\3\2\2\2\22\u010c\3\2\2\2\24\u0110\3\2\2\2\26\u0113\3\2\2\2"+
-		"\30\u0117\3\2\2\2\32\u011b\3\2\2\2\34\u011f\3\2\2\2\36\u0123\3\2\2\2 "+
-		"\u0127\3\2\2\2\"\u012b\3\2\2\2$\u012f\3\2\2\2&\u013d\3\2\2\2(\u0143\3"+
+		"\20\22\24\26\30\32\34\36 \"$&(*,\2\2\2\u0178\2.\3\2\2\2\4F\3\2\2\2\6r"+
+		"\3\2\2\2\b\u008a\3\2\2\2\n\u00b2\3\2\2\2\f\u00ca\3\2\2\2\16\u00e2\3\2"+
+		"\2\2\20\u0108\3\2\2\2\22\u010c\3\2\2\2\24\u0110\3\2\2\2\26\u0113\3\2\2"+
+		"\2\30\u0117\3\2\2\2\32\u011b\3\2\2\2\34\u011f\3\2\2\2\36\u0123\3\2\2\2"+
+		" \u0127\3\2\2\2\"\u012b\3\2\2\2$\u012f\3\2\2\2&\u013d\3\2\2\2(\u0143\3"+
 		"\2\2\2*\u014c\3\2\2\2,\u0156\3\2\2\2.\66\5\4\3\2/\65\5\f\7\2\60\65\5\16"+
 		"\b\2\61\65\5\6\4\2\62\65\5\n\6\2\63\65\5,\27\2\64/\3\2\2\2\64\60\3\2\2"+
 		"\2\64\61\3\2\2\2\64\62\3\2\2\2\64\63\3\2\2\2\658\3\2\2\2\66\64\3\2\2\2"+
