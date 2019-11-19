@@ -155,9 +155,17 @@ public class JarCompiler {
 			return ClassFileConstants.JDK1_7;
 		} else if (version.equals("1.8")) {
 			return ClassFileConstants.JDK1_8;
+		} else if (version.startsWith("9+")) {
+			return ClassFileConstants.JDK9;
+		} else if (version.equals("10+")) {
+			return ClassFileConstants.JDK10;
+		} else if (version.equals("11+")) {
+			return ClassFileConstants.JDK11;
+		} else if (version.equals("12+")) {
+			return ClassFileConstants.JDK12;
 		} else {
 			log.warn("Unknown source VM " + version + " ignored.");
-			return ClassFileConstants.JDK1_7;
+			return ClassFileConstants.JDK9;
 		}
 	}
 
@@ -201,12 +209,12 @@ public class JarCompiler {
 				options.sourceLevel = jvmLevelFromString(opt);
 			} else {
 				// Default to 1.7
-				options.sourceLevel = ClassFileConstants.JDK1_7;
+				options.sourceLevel = ClassFileConstants.JDK1_8;
 			}
 
 			// Target JVM
-			options.targetJDK = ClassFileConstants.JDK1_7;
-			options.complianceLevel = ClassFileConstants.JDK1_7;
+			options.targetJDK = ClassFileConstants.JDK1_8;
+			options.complianceLevel = ClassFileConstants.JDK1_8;
 			options.inlineJsrBytecode = true;
 			options.processAnnotations = true;
 
@@ -319,7 +327,8 @@ public class JarCompiler {
 				}
 				CompilationUnit compilationUnit = new CompilationUnit(fullPath, fqcn,
 						(src != null ? src.Encoding : "UTF-8"), (src != null ? src.Unit : null), log);
-				sourcesCompiledUnits.put(new File(startDir, className + ".java").getPath(), compilationUnit);
+				//sourcesCompiledUnits.put(new File(startDir, className + ".java").getPath(), compilationUnit);
+				sourcesCompiledUnits.put(fqcn, compilationUnit);
 			}
 		}
 	}

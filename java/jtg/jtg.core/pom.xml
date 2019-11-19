@@ -7,7 +7,7 @@
 		<version>1.0.0</version>
 	</parent>
 	<artifactId>jtg.core</artifactId>
-	<version>1.0.19-SNAPSHOT</version>
+	<version>1.0.20-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>jtg.core</name>
@@ -31,14 +31,20 @@
 		<dependency>
 			<groupId>org.edgo</groupId>
 			<artifactId>jtg.basics</artifactId>
-			<version>1.0.19-SNAPSHOT</version>
+			<version>1.0.20-SNAPSHOT</version>
 		</dependency>
-		<dependency>
+		<!--dependency>
 			<groupId>org.eclipse.jdt.core.compiler</groupId>
 			<artifactId>ecj</artifactId>
 			<version>4.6.1</version>
-		</dependency>
+		</dependency-->
+		<!-- https://mvnrepository.com/artifact/org.eclipse.jdt/ecj -->
 		<dependency>
+		    <groupId>org.eclipse.jdt</groupId>
+		    <artifactId>ecj</artifactId>
+		    <version>3.19.0</version>
+		</dependency>
+		<!-- dependency>
 			<groupId>org.jvnet.jaxb2_commons</groupId>
 			<artifactId>jaxb2-basics-tools</artifactId>
 			<version>0.12.0</version>
@@ -57,7 +63,7 @@
 		    <groupId>org.jvnet.jaxb2_commons</groupId>
 		    <artifactId>jaxb2-basics-ant</artifactId>
 		    <version>0.12.0</version>
-		</dependency>
+		</dependency-->
 		<dependency>
 		    <groupId>org.jvnet.jaxb2_commons</groupId>
 		    <artifactId>jaxb2-basics-annotate</artifactId>
@@ -101,7 +107,7 @@
 		    <version>4.7.1</version>
 		</dependency>
 		
-		<dependency>
+		<!-- dependency>
 			<groupId>com.sun.xml.bind</groupId>
 			<artifactId>jaxb-impl</artifactId>
 			<version>2.3.0.1</version>
@@ -120,7 +126,15 @@
 			<groupId>com.sun.xml.bind</groupId>
 			<artifactId>jaxb-xjc</artifactId>
 			<version>2.3.0.1</version>
+		</dependency-->
+		
+		<!-- https://mvnrepository.com/artifact/org.glassfish.jaxb/jaxb-xjc -->
+		<dependency>
+		    <groupId>org.glassfish.jaxb</groupId>
+		    <artifactId>jaxb-xjc</artifactId>
+		    <version>2.3.2</version>
 		</dependency>
+		
 	</dependencies>
 
 	<build>
