@@ -18,7 +18,7 @@ First idea to make own generic text generator I've got in 2005 as I worked for D
 custom framework. 
 I've used http://velocity.apache.org/. But in this engine you should control generation process from you program. It means you need some 
 control code, which starts velocity engine for different output types, for multiple different objects. Futhermore you need to collect 
-different java objects and put it into hashmap deends on what one or other template needs.
+different java objects and put it into hashmap depends on what one or other template needs.
 
 In 2006 we founded with 7 other developer small company. And at start, as we don't have customer projects for all employees, we've decided
 to implement this generator using modern and fast growing .NET framework. This generator was developed between 2006 until now. You can ask
