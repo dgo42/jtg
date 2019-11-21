@@ -394,7 +394,7 @@ public class JtgBuilder extends IncrementalProjectBuilder {
 			if (!(e.getStatus().getException() instanceof BuildDoneException)) {
 				throw e;
 			}
-			JtgUIPlugin.log(e);
+			//JtgUIPlugin.log(e);
 		} catch (Exception e) {
 			hasErrors = true;
 			JtgUIPlugin.log(e);

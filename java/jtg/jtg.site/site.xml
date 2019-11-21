@@ -6,7 +6,7 @@ In Templates is used java for macroses. It&apos;s possible to define members and
 It&apos;s also possible to run other templates.
 This construct makes possible to realise different complex projects.
    </description>
-   <feature url="features/org.edgo.jtg_1.0.21.201911211050.jar" id="org.edgo.jtg" version="1.0.21.201911211050">
+   <feature url="features/org.edgo.jtg_1.0.22.201911211113.jar" id="org.edgo.jtg" version="1.0.22.201911211113">
       <category name="Java Template Generator"/>
    </feature>
    <feature url="features/org.edgo.jtg.colorer_1.0.19.201808051755.jar" id="org.edgo.jtg.colorer" version="1.0.19.201808051755">
