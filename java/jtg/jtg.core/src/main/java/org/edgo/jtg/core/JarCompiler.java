@@ -213,8 +213,8 @@ public class JarCompiler {
 			}
 
 			// Target JVM
-			options.targetJDK = ClassFileConstants.JDK1_8;
-			options.complianceLevel = ClassFileConstants.JDK1_8;
+			options.targetJDK = options.sourceLevel;
+			options.complianceLevel = options.sourceLevel;
 			options.inlineJsrBytecode = true;
 			options.processAnnotations = true;
 

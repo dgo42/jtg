@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Java Template Generator UI
 Bundle-SymbolicName: org.edgo.jtg.ui;singleton:=true
-Bundle-Version: 1.0.18.qualifier
+Bundle-Version: 1.0.21.qualifier
 Bundle-Activator: org.edgo.jtg.ui.JtgUIPlugin
 Bundle-Vendor: edgo.org
 Require-Bundle: org.edgo.jtg.basics.bundle,
@@ -21,5 +21,4 @@ Export-Package: org.edgo.jtg.ui,
  org.edgo.jtg.ui.dialogs,
  org.edgo.jtg.ui.swt
 Bundle-ClassPath: library.jar
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy

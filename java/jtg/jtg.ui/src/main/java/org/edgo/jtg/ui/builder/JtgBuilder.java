@@ -181,9 +181,11 @@ public class JtgBuilder extends IncrementalProjectBuilder {
 			String fullName = resource.getFullPath().toString();
 			IProject project = resource.getProject();
 			JtgConfiguration config = getConfiguration(project);
+			String projectDir = project.getName();
 			String projectName = config.getProjectFile();
-			String projectFile = "/" + projectName + "/" + config.getProjectFile();
-			String schemaFile = "/" + projectName + "/" + config.getSchemaDir() + "/" + config.getSchema();
+			//String schemaFile = config.getSchema();
+			String projectFile = "/" + projectDir + "/" + config.getProjectFile();
+			String schemaFile = "/" + projectDir + "/" + config.getSchemaDir() + "/" + config.getSchema();
 			String jarOutDir = config.getJarOutputDir();
 
 			Matcher matcher = Constants.ALL_FILE_MASK.matcher(name);
@@ -232,6 +234,7 @@ public class JtgBuilder extends IncrementalProjectBuilder {
 		try {
 			IResource resource = container.findMember(fileName, true);
 			if (resource != null && resource instanceof IFile) {
+				resource.refreshLocal(IResource.DEPTH_ZERO, null);
 				return (IFile) resource;
 			}
 			IResource[] resources = container.members(IContainer.INCLUDE_HIDDEN);
@@ -239,6 +242,7 @@ public class JtgBuilder extends IncrementalProjectBuilder {
 				if (res instanceof IContainer) {
 					IFile file = findMember((IContainer) res, fileName);
 					if (file != null) {
+						file.refreshLocal(IResource.DEPTH_ZERO, null);
 						return file;
 					}
 				}
