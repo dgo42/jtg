@@ -32,8 +32,12 @@ development up to 40-70%.
 I've used in with my generator [eclipse colorer plugin](http://colorer.sourceforge.net/), which was written by Igor Russkih.
 I've only developed some coloring schema for jtg specifical file formats.
 
-# Update
+# Update 2019-11-21
 The jtg is updated. It is now compatible with eclipse 2019-09 R and works with OpenJDK 9 - 12.
+
+# Update site
+
+Please use https://raw.githubusercontent.com/dgo42/jtg-update/master/site.xml in eclipse as an update site to install JTG
 
 # TBD
 
