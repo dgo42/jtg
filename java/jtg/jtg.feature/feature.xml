@@ -2,7 +2,7 @@
 <feature
       id="org.edgo.jtg"
       label="Java Template Generator Feature"
-      version="1.0.21.qualifier"
+      version="1.0.22.qualifier"
       provider-name="edgo.org">
 
    <description url="http://edgo.org">
