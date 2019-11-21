@@ -17,11 +17,11 @@
 	<classpathentry kind="lib" path="lib/jaxb2-basics-annotate-1.1.0.jar"/>
 	<classpathentry kind="lib" path="lib/jaxb2-basics-ant-0.12.0.jar"/>
 	<classpathentry kind="lib" path="lib/jaxb2-basics-tools-0.12.0.jar"/>
-	<classpathentry kind="lib" path="lib/jtg.core-1.0.20-SNAPSHOT.jar" sourcepath="/jtg.core"/>
 	<classpathentry kind="lib" path="lib/junit-3.8.1.jar"/>
 	<classpathentry kind="lib" path="lib/slf4j-log4j12-1.7.25.jar"/>
 	<classpathentry kind="lib" path="lib/txw2-2.3.2.jar"/>
 	<classpathentry kind="lib" path="lib/xsom-2.3.2.jar"/>
 	<classpathentry kind="lib" path="lib/istack-commons-runtime-3.0.8.jar"/>
+	<classpathentry kind="lib" path="lib/jtg.core-1.0.21-SNAPSHOT.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -3,14 +3,14 @@ Automatic-Module-Name: Java Template Generator Core Bundle
 Bundle-ManifestVersion: 2
 Bundle-Name: Java Template Generator Core Bundle
 Bundle-SymbolicName: org.edgo.jtg.core.bundle
-Bundle-Version: 1.0.20.qualifier
+Bundle-Version: 1.0.21.qualifier
 Bundle-ClassPath: lib/annox-1.0.2.jar,lib/antlr4-runtime-4.7.1.jar,lib/codemodel-2.3.2.jar,
  lib/commons-lang3-3.7.jar,lib/commons-logging-1.2.jar,lib/FastInfoset-1.2.12.jar,lib/jackson-annotations-2.9.2.jar,
  lib/jackson-core-2.9.6.jar,lib/jackson-databind-2.9.6.jar,lib/jackson-module-jaxb-annotations-2.9.6.jar,
  lib/javaparser-1.0.11.jar,lib/jaxb-runtime-2.3.2.jar,lib/jaxb-xjc-2.3.2.jar,lib/jaxb2-basics-annotate-1.1.0.jar,
  lib/jaxb2-basics-ant-0.12.0.jar,lib/jaxb2-basics-tools-0.12.0.jar,lib/junit-3.8.1.jar,lib/slf4j-log4j12-1.7.25.jar,
  lib/txw2-2.3.2.jar,lib/xsom-2.3.2.jar,lib/istack-commons-runtime-3.0.8.jar,lib/rngom-2.3.2.jar,
- lib/relaxng-datatype-2.3.2.jar,lib/jtg.core-1.0.20-SNAPSHOT.jar
+ lib/relaxng-datatype-2.3.2.jar,lib/jtg.core-1.0.21-SNAPSHOT.jar
 Bundle-Vendor: edgo.org
 Export-Package: org.edgo.jtg.core,
  org.edgo.jtg.core.compiler,
@@ -21,4 +21,3 @@ Require-Bundle: org.eclipse.jdt,
  org.eclipse.jdt.apt.core,
  org.eclipse.jdt.core,
  org.edgo.jtg.basics.bundle
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
