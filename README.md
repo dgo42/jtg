@@ -32,6 +32,9 @@ development up to 40-70%.
 I've used in with my generator [eclipse colorer plugin](http://colorer.sourceforge.net/), which was written by Igor Russkih.
 I've only developed some coloring schema for jtg specifical file formats.
 
+# Update
+The jtg is updated. It is now compatible with eclipse 2019-09 R and works with OpenJDK 9 - 12.
+
 # TBD
 
 One template generator is not really usable without template set for some usual software projects. 
