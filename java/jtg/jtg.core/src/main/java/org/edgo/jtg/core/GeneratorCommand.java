@@ -1,5 +1,8 @@
 package org.edgo.jtg.core;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public final class GeneratorCommand {
 
 	public final static GeneratorCommand SCHEMA_ONLY = new GeneratorCommand("JAVA", 0);
@@ -21,25 +24,40 @@ public final class GeneratorCommand {
 
 	private int index;
 
+	private final static Map<Integer, GeneratorCommand> indexMap = new HashMap<Integer, GeneratorCommand>();
+	private final static Map<String, GeneratorCommand> valueMap = new HashMap<String, GeneratorCommand>();
+
+	static {
+		indexMap.put(SCHEMA_ONLY.index, SCHEMA_ONLY);
+		indexMap.put(TEMPLATES_ONLY.index, TEMPLATES_ONLY);
+		indexMap.put(SOURCES_ONLY.index, SOURCES_ONLY);
+		indexMap.put(COMPILE_ONLY.index, COMPILE_ONLY);
+		indexMap.put(JAR_ONLY.index, JAR_ONLY);
+		indexMap.put(COMPLETE.index, COMPLETE);
+
+		valueMap.put(SCHEMA_ONLY.value, SCHEMA_ONLY);
+		valueMap.put(TEMPLATES_ONLY.value, TEMPLATES_ONLY);
+		valueMap.put(SOURCES_ONLY.value, SOURCES_ONLY);
+		valueMap.put(COMPILE_ONLY.value, COMPILE_ONLY);
+		valueMap.put(JAR_ONLY.value, JAR_ONLY);
+		valueMap.put(COMPLETE.value, COMPLETE);
+	}
+
 	private GeneratorCommand(String value, int index) {
 		this.value = value;
 		this.index = index;
 	}
 
 	public static GeneratorCommand parse(String value) {
-		for (GeneratorCommand ind : values) {
-			if (ind.value.equals(value)) {
-				return ind;
-			}
+		if (valueMap.containsKey(value)) {
+			return valueMap.get(value);
 		}
 		return null;
 	}
 
 	public static GeneratorCommand parse(int index) {
-		for (GeneratorCommand ind : values) {
-			if (ind.index == index) {
-				return ind;
-			}
+		if (indexMap.containsKey(index)) {
+			return indexMap.get(index);
 		}
 		return null;
 	}

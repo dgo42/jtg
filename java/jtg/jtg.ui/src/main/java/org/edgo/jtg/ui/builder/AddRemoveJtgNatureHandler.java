@@ -15,6 +15,7 @@ import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.edgo.jtg.core.ProjectType;
 import org.edgo.jtg.ui.Constants;
 import org.edgo.jtg.ui.JtgUIPlugin;
 import org.edgo.jtg.ui.config.PreferenceLoader;
@@ -80,35 +81,69 @@ public class AddRemoveJtgNatureHandler extends AbstractHandler {
 			IScopeContext projectScope = new ProjectScope(project);
 			IEclipsePreferences store = projectScope.getNode(JtgUIPlugin.PLUGIN_ID);
 
-			PreferenceLoader.storeValue(store, Constants.SCHEMA_DIR_PREF, Constants.SCHEMA_DIR_DEFAULT);
-			PreferenceLoader.checkAndCreateFolder(project, Constants.SCHEMA_DIR_DEFAULT);
+			PreferenceLoader.storeValue(store, Constants.PROJECT_TYPE, ProjectType.STANDALONE.getValue());
 
-			PreferenceLoader.storeValue(store, Constants.TEMPLATE_DIR_PREF, Constants.TEMPLATE_DIR_DEFAULT);
-			PreferenceLoader.checkAndCreateFolder(project, Constants.TEMPLATE_DIR_DEFAULT);
+			// store default values for master project
+			PreferenceLoader.storeValue(store, Constants.M_SCHEMA_DIR_PREF, Constants.M_SCHEMA_DIR_DEFAULT);
+			PreferenceLoader.checkAndCreateFolder(project, Constants.M_SCHEMA_DIR_DEFAULT);
 
-			PreferenceLoader.storeValue(store, Constants.SOURCE_OUT_DIR_PREF, Constants.SOURCE_OUT_DIR_DEFAULT);
-			PreferenceLoader.checkAndCreateFolder(project, Constants.SOURCE_OUT_DIR_DEFAULT);
+			PreferenceLoader.storeValue(store, Constants.M_TEMPLATE_DIR_PREF, Constants.M_TEMPLATE_DIR_DEFAULT);
+			PreferenceLoader.checkAndCreateFolder(project, Constants.M_TEMPLATE_DIR_DEFAULT);
 
-			PreferenceLoader.storeValue(store, Constants.JAR_OUTPUT_DIR_PREF, Constants.JAR_OUTPUT_DIR_DEFAULT);
-			PreferenceLoader.checkAndCreateFolder(project, Constants.JAR_OUTPUT_DIR_DEFAULT);
+			PreferenceLoader.storeValue(store, Constants.M_SCHEMA_FILE_PREF, Constants.M_SCHEMA_FILE_DEFAULT);
+			PreferenceLoader.checkAndCreateFile(project,
+					Constants.M_SCHEMA_DIR_DEFAULT + "/" + Constants.M_SCHEMA_FILE_DEFAULT);
 
-			PreferenceLoader.storeValue(store, Constants.SCHEMA_FILE_PREF, Constants.SCHEMA_FILE_DEFAULT);
-			PreferenceLoader.checkAndCreateFile(project, Constants.SCHEMA_DIR_DEFAULT + "/" + Constants.SCHEMA_FILE_DEFAULT);
+			PreferenceLoader.storeValue(store, Constants.M_START_TEMPLATE_FILE_PREF,
+					Constants.M_START_TEMPLATE_FILE_DEFAULT);
+			PreferenceLoader.checkAndCreateFile(project,
+					Constants.M_TEMPLATE_DIR_DEFAULT + "/" + Constants.M_START_TEMPLATE_FILE_DEFAULT);
 
-			PreferenceLoader.storeValue(store, Constants.PROJECT_FILE_PREF, Constants.PROJECT_FILE_DEFAULT);
-			PreferenceLoader
-					.checkAndCreateFile(project, Constants.SCHEMA_DIR_DEFAULT + "/" + Constants.PROJECT_FILE_DEFAULT);
+			PreferenceLoader.storeValue(store, Constants.M_SCHEMA_PACKAGE_PREF, Constants.M_SCHEMA_PACKAGE_DEFAULT);
+			PreferenceLoader.storeValue(store, Constants.M_TEMPLATE_PACKAGE_PREF,
+					Constants.M_TEMPLATE_PACKAGE_DEFAULT);
 
-			PreferenceLoader.storeValue(store, Constants.START_TEMPLATE_FILE_PREF, Constants.START_TEMPLATE_FILE_DEFAULT);
-			PreferenceLoader.checkAndCreateFile(project, Constants.TEMPLATE_DIR_DEFAULT + "/"
-					+ Constants.START_TEMPLATE_FILE_DEFAULT);
+			// store default values for slave project
+			PreferenceLoader.storeValue(store, Constants.S_PROJECT_DIR_PREF, Constants.S_SCHEMA_DIR_DEFAULT);
+			PreferenceLoader.checkAndCreateFolder(project, Constants.S_SCHEMA_DIR_DEFAULT);
 
-			PreferenceLoader.storeValue(store, Constants.SCHEMA_PACKAGE_PREF, Constants.SCHEMA_PACKAGE_DEFAULT);
-			PreferenceLoader.storeValue(store, Constants.TEMPLATE_PACKAGE_PREF, Constants.TEMPLATE_PACKAGE_DEFAULT);
-			PreferenceLoader.storeValue(store, Constants.USING_CACHE_PREF, Constants.USING_CACHE_DEFAULT);
+			PreferenceLoader.storeValue(store, Constants.S_PROJECT_FILE_PREF, Constants.S_PROJECT_FILE_DEFAULT);
+			PreferenceLoader.checkAndCreateFile(project,
+					Constants.S_SCHEMA_DIR_DEFAULT + "/" + Constants.S_PROJECT_FILE_DEFAULT);
 
-			PreferenceLoader.storeValue(store, Constants.GOAL_PREF, Constants.GOAL_DEFAULT.getValue());
-		
+			// store default values for standalone project
+			PreferenceLoader.storeValue(store, Constants.ST_SCHEMA_DIR_PREF, Constants.ST_SCHEMA_DIR_DEFAULT);
+			PreferenceLoader.checkAndCreateFolder(project, Constants.ST_SCHEMA_DIR_DEFAULT);
+
+			PreferenceLoader.storeValue(store, Constants.ST_TEMPLATE_DIR_PREF, Constants.ST_TEMPLATE_DIR_DEFAULT);
+			PreferenceLoader.checkAndCreateFolder(project, Constants.ST_TEMPLATE_DIR_DEFAULT);
+
+			PreferenceLoader.storeValue(store, Constants.ST_SOURCE_OUT_DIR_PREF, Constants.ST_SOURCE_OUT_DIR_DEFAULT);
+			PreferenceLoader.checkAndCreateFolder(project, Constants.ST_SOURCE_OUT_DIR_DEFAULT);
+
+			PreferenceLoader.storeValue(store, Constants.ST_JAR_OUTPUT_DIR_PREF, Constants.ST_JAR_OUTPUT_DIR_DEFAULT);
+			PreferenceLoader.checkAndCreateFolder(project, Constants.ST_JAR_OUTPUT_DIR_DEFAULT);
+
+			PreferenceLoader.storeValue(store, Constants.ST_SCHEMA_FILE_PREF, Constants.ST_SCHEMA_FILE_DEFAULT);
+			PreferenceLoader.checkAndCreateFile(project,
+					Constants.ST_SCHEMA_DIR_DEFAULT + "/" + Constants.ST_SCHEMA_FILE_DEFAULT);
+
+			PreferenceLoader.storeValue(store, Constants.ST_PROJECT_FILE_PREF, Constants.ST_PROJECT_FILE_DEFAULT);
+			PreferenceLoader.checkAndCreateFile(project,
+					Constants.ST_SCHEMA_DIR_DEFAULT + "/" + Constants.ST_PROJECT_FILE_DEFAULT);
+
+			PreferenceLoader.storeValue(store, Constants.ST_START_TEMPLATE_FILE_PREF,
+					Constants.ST_START_TEMPLATE_FILE_DEFAULT);
+			PreferenceLoader.checkAndCreateFile(project,
+					Constants.ST_TEMPLATE_DIR_DEFAULT + "/" + Constants.ST_START_TEMPLATE_FILE_DEFAULT);
+
+			PreferenceLoader.storeValue(store, Constants.ST_SCHEMA_PACKAGE_PREF, Constants.ST_SCHEMA_PACKAGE_DEFAULT);
+			PreferenceLoader.storeValue(store, Constants.ST_TEMPLATE_PACKAGE_PREF,
+					Constants.ST_TEMPLATE_PACKAGE_DEFAULT);
+			PreferenceLoader.storeValue(store, Constants.ST_USING_CACHE_PREF, Constants.ST_USING_CACHE_DEFAULT);
+
+			PreferenceLoader.storeValue(store, Constants.ST_GOAL_PREF, Constants.ST_GOAL_DEFAULT.getValue());
+
 		} catch (Exception e) {
 			JtgUIPlugin.log(e);
 			throw new CoreException(new StatusInfo(4, "Failed to toggle nature: \r\n" + e.toString()));
