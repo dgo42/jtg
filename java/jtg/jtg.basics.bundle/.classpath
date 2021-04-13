@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry exported="true" kind="lib" path="lib/jchardet-1.0.jar"/>
+	<classpathentry kind="lib" path="lib/jchardet-1.0.jar"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
-	<classpathentry kind="lib" path="lib/jtg.basics-1.0.20-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="lib/jtg.basics-1.0.21-SNAPSHOT.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

@@ -22,6 +22,6 @@
 	<classpathentry kind="lib" path="lib/txw2-2.3.2.jar"/>
 	<classpathentry kind="lib" path="lib/xsom-2.3.2.jar"/>
 	<classpathentry kind="lib" path="lib/istack-commons-runtime-3.0.8.jar"/>
-	<classpathentry kind="lib" path="lib/jtg.core-1.0.21-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="lib/jtg.core-1.0.24-SNAPSHOT.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

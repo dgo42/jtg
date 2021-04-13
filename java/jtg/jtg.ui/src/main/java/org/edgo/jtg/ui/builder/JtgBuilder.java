@@ -15,12 +15,15 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.resources.IResourceVisitor;
+import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ProjectScope;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -41,6 +44,7 @@ import org.edgo.jtg.basics.TemplateException;
 import org.edgo.jtg.core.Generator;
 import org.edgo.jtg.core.GeneratorUtils;
 import org.edgo.jtg.core.JarCompiler;
+import org.edgo.jtg.core.ProjectType;
 import org.edgo.jtg.core.config.JtgConfiguration;
 import org.edgo.jtg.ui.Constants;
 import org.edgo.jtg.ui.JtgUIPlugin;
@@ -49,16 +53,17 @@ import org.osgi.service.prefs.Preferences;
 
 public class JtgBuilder extends IncrementalProjectBuilder {
 
-	boolean	alreadyBuilt	= false;
+	boolean alreadyBuilt = false;
 
-	boolean	hasErrors		= false;
+	boolean hasErrors = false;
 
 	class SampleDeltaVisitor implements IResourceDeltaVisitor {
 
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see org.eclipse.core.resources.IResourceDeltaVisitor#visit(org.eclipse.core.resources.IResourceDelta)
+		 * @see org.eclipse.core.resources.IResourceDeltaVisitor#visit(org.eclipse.core.
+		 * resources.IResourceDelta)
 		 */
 		public boolean visit(IResourceDelta delta) throws CoreException {
 			IResource resource = delta.getResource();
@@ -80,7 +85,7 @@ public class JtgBuilder extends IncrementalProjectBuilder {
 				}
 				break;
 			}
-			//return true to continue visiting children.
+			// return true to continue visiting children.
 			return true;
 		}
 	}
@@ -88,14 +93,14 @@ public class JtgBuilder extends IncrementalProjectBuilder {
 	class SampleResourceVisitor implements IResourceVisitor {
 		public boolean visit(IResource resource) throws CoreException {
 			checkResource(resource);
-			//return true to continue visiting children.
+			// return true to continue visiting children.
 			return true;
 		}
 	}
 
-	public static final String	BUILDER_ID		= "org.edgo.jtg.ui.jtgBuilder";
+	public static final String BUILDER_ID = "org.edgo.jtg.ui.jtgBuilder";
 
-	private static final String	JTG_MARKER_TYPE	= "org.edgo.jtg.ui.jtgProblem";
+	private static final String JTG_MARKER_TYPE = "org.edgo.jtg.ui.jtgProblem";
 
 	private void addMarker(IResource file, String message, int lineNumber, int severity) {
 		try {
@@ -114,7 +119,7 @@ public class JtgBuilder extends IncrementalProjectBuilder {
 	 * (non-Javadoc)
 	 * 
 	 * @see org.eclipse.core.internal.events.InternalBuilder#build(int,
-	 *      java.util.Map, org.eclipse.core.runtime.IProgressMonitor)
+	 * java.util.Map, org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	@SuppressWarnings("rawtypes")
 	protected IProject[] build(int kind, Map args, IProgressMonitor monitor) throws CoreException {
@@ -129,15 +134,46 @@ public class JtgBuilder extends IncrementalProjectBuilder {
 					incrementalBuild(delta, monitor);
 				}
 			}
-		} catch(CoreException e) {
+		} catch (CoreException e) {
 			Throwable t = e.getStatus().getException();
 			if (!(t instanceof BuildDoneException) && !(t instanceof BuildFailedException)) {
 				throw e;
 			}
 		}
-		return null;
+
+		return getJtgProjects();
 	}
 
+	private IProject[] getJtgProjects() throws CoreException {
+		IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
+		IProject[] allProjects = workspaceRoot.getProjects();
+
+		ArrayList<IResource> jtgProjects = new ArrayList<IResource>(allProjects.length);
+
+		for (int i = 0; i < allProjects.length; i++) {
+			IProject project = allProjects[i];
+			if (project.isOpen()) {
+				IProjectNature nature = project.getNature(JtgNature.NATURE_ID);
+				if (nature != null) {
+					jtgProjects.add(project);
+				}
+			}
+		}
+		return jtgProjects.toArray(new IProject[jtgProjects.size()]);
+	}
+
+	protected void fullBuild(final IProgressMonitor monitor) throws CoreException {
+		alreadyBuilt = false;
+		getProject().accept(new SampleResourceVisitor());
+	}
+
+	protected void incrementalBuild(IResourceDelta delta, IProgressMonitor monitor) throws CoreException {
+		// the visitor does the work.
+		alreadyBuilt = false;
+		delta.accept(new SampleDeltaVisitor());
+	}
+
+	@Override
 	protected void clean(IProgressMonitor monitor) throws CoreException {
 		// delete markers set and files created
 		getProject().deleteMarkers(JTG_MARKER_TYPE, true, IResource.DEPTH_INFINITE);
@@ -147,31 +183,38 @@ public class JtgBuilder extends IncrementalProjectBuilder {
 		IScopeContext projectScope = new ProjectScope(project);
 		Preferences store = projectScope.getNode(JtgUIPlugin.PLUGIN_ID);
 
+		ProjectType projectType = ProjectType.parse(PreferenceLoader.loadValue(store, Constants.PROJECT_TYPE));
+
 		JtgConfiguration config = new JtgConfiguration();
-		String schemaPath = PreferenceLoader.loadValue(store, Constants.SCHEMA_DIR_PREF);
-		config.setSchemaDir(schemaPath);
+		if (projectType == ProjectType.MASTER) {
 
-		String templPath = PreferenceLoader.loadValue(store, Constants.TEMPLATE_DIR_PREF);
-		config.setTemplateDir(templPath);
+		} else if (projectType == ProjectType.SLAVE) {
+		} else if (projectType == ProjectType.STANDALONE) {
+			String schemaPath = PreferenceLoader.loadValue(store, Constants.ST_SCHEMA_DIR_PREF);
+			config.setSchemaDir(schemaPath);
 
-		config.setSourceOutputDir(PreferenceLoader.loadValue(store, Constants.SOURCE_OUT_DIR_PREF));
+			String templPath = PreferenceLoader.loadValue(store, Constants.ST_TEMPLATE_DIR_PREF);
+			config.setTemplateDir(templPath);
 
-		config.setJarOutputDir(PreferenceLoader.loadValue(store, Constants.JAR_OUTPUT_DIR_PREF));
+			config.setSourceOutputDir(PreferenceLoader.loadValue(store, Constants.ST_SOURCE_OUT_DIR_PREF));
 
-		config.setSchema(PreferenceLoader.loadValue(store, Constants.SCHEMA_FILE_PREF));
+			config.setJarOutputDir(PreferenceLoader.loadValue(store, Constants.ST_JAR_OUTPUT_DIR_PREF));
 
-		config.setProjectFile(schemaPath + "/" + PreferenceLoader.loadValue(store, Constants.PROJECT_FILE_PREF));
+			config.setSchema(PreferenceLoader.loadValue(store, Constants.ST_SCHEMA_FILE_PREF));
 
-		config.setStartTemplate(PreferenceLoader.loadValue(store, Constants.START_TEMPLATE_FILE_PREF));
+			config.setProjectFile(schemaPath + "/" + PreferenceLoader.loadValue(store, Constants.ST_PROJECT_FILE_PREF));
 
-		config.setSchemaPackage(PreferenceLoader.loadValue(store, Constants.SCHEMA_PACKAGE_PREF));
+			config.setStartTemplate(PreferenceLoader.loadValue(store, Constants.ST_START_TEMPLATE_FILE_PREF));
 
-		config.setGeneratedPackage(PreferenceLoader.loadValue(store, Constants.TEMPLATE_PACKAGE_PREF));
+			config.setSchemaPackage(PreferenceLoader.loadValue(store, Constants.ST_SCHEMA_PACKAGE_PREF));
 
-		config.setUsingCache(((Boolean) PreferenceLoader.loadValueBool(store, Constants.USING_CACHE_PREF)).toString());
-		
-		config.setCommand(PreferenceLoader.loadValue(store, Constants.GOAL_PREF));
-		
+			config.setGeneratedPackage(PreferenceLoader.loadValue(store, Constants.ST_TEMPLATE_PACKAGE_PREF));
+
+			config.setUsingCache(
+					((Boolean) PreferenceLoader.loadValueBool(store, Constants.ST_USING_CACHE_PREF)).toString());
+
+			config.setCommand(PreferenceLoader.loadValue(store, Constants.ST_GOAL_PREF));
+		}
 		return config;
 	}
 
@@ -183,17 +226,19 @@ public class JtgBuilder extends IncrementalProjectBuilder {
 			JtgConfiguration config = getConfiguration(project);
 			String projectDir = project.getName();
 			String projectName = config.getProjectFile();
-			//String schemaFile = config.getSchema();
+			// String schemaFile = config.getSchema();
 			String projectFile = "/" + projectDir + "/" + config.getProjectFile();
 			String schemaFile = "/" + projectDir + "/" + config.getSchemaDir() + "/" + config.getSchema();
 			String jarOutDir = config.getJarOutputDir();
 
 			Matcher matcher = Constants.ALL_FILE_MASK.matcher(name);
-			String jarName = GeneratorUtils.Project2JarName(jarOutDir, projectName);
-			if (matcher.find() || fullName.equals(projectFile) || fullName.equals(schemaFile)) {
-				IResource jarResource = findMember(project, jarName);
-				if (jarResource == null || resource.getLocalTimeStamp() > jarResource.getLocalTimeStamp()) {
-					regenarateAll(project);
+			if (projectName != null) {
+				String jarName = GeneratorUtils.Project2JarName(jarOutDir, projectName);
+				if (matcher.find() || fullName.equals(projectFile) || fullName.equals(schemaFile)) {
+					IResource jarResource = findMember(project, jarName);
+					if (jarResource == null || resource.getLocalTimeStamp() > jarResource.getLocalTimeStamp()) {
+						regenarateAll(project);
+					}
 				}
 			}
 		}
@@ -204,10 +249,11 @@ public class JtgBuilder extends IncrementalProjectBuilder {
 		IConsoleManager conMan = plugin.getConsoleManager();
 		IConsole[] existing = conMan.getConsoles();
 		for (int i = 0; i < existing.length; i++)
-			if (name.equals(existing[i].getName())) return (MessageConsole) existing[i];
-		//no console found, so create a new one
+			if (name.equals(existing[i].getName()))
+				return (MessageConsole) existing[i];
+		// no console found, so create a new one
 		MessageConsole myConsole = new MessageConsole(name, null);
-		conMan.addConsoles(new IConsole[] {myConsole});
+		conMan.addConsoles(new IConsole[] { myConsole });
 		return myConsole;
 	}
 
@@ -350,11 +396,11 @@ public class JtgBuilder extends IncrementalProjectBuilder {
 						IFile file = findMember(project, getFileName(fileName));
 						if (file != null) {
 							addMarker(file, message.getErrorMessage(), lineNumber, IMarker.SEVERITY_ERROR);
-							//JtgUIPlugin.log(e);
+							JtgUIPlugin.log(e);
 						}
 					} else {
 						addMarker(project, exceptionBuilder(e), lineNumber, IMarker.SEVERITY_ERROR);
-						//JtgUIPlugin.log(e);
+						JtgUIPlugin.log(e);
 					}
 				}
 			} else {
@@ -379,14 +425,14 @@ public class JtgBuilder extends IncrementalProjectBuilder {
 							message = e.toString();
 						}
 						addMarker(file, message, lineNumber, IMarker.SEVERITY_ERROR);
-						//JtgUIPlugin.log(e);
+						JtgUIPlugin.log(e);
 					} else {
 						addMarker(project, exceptionBuilder(e), lineNumber, IMarker.SEVERITY_ERROR);
-						//JtgUIPlugin.log(e);
+						JtgUIPlugin.log(e);
 					}
 				} else {
 					addMarker(project, exceptionBuilder(e), lineNumber, IMarker.SEVERITY_ERROR);
-					//JtgUIPlugin.log(e);
+					JtgUIPlugin.log(e);
 				}
 			}
 			hasErrors = true;
@@ -394,7 +440,7 @@ public class JtgBuilder extends IncrementalProjectBuilder {
 			if (!(e.getStatus().getException() instanceof BuildDoneException)) {
 				throw e;
 			}
-			//JtgUIPlugin.log(e);
+			// JtgUIPlugin.log(e);
 		} catch (Exception e) {
 			hasErrors = true;
 			JtgUIPlugin.log(e);
@@ -433,14 +479,4 @@ public class JtgBuilder extends IncrementalProjectBuilder {
 		}
 	}
 
-	protected void fullBuild(final IProgressMonitor monitor) throws CoreException {
-		alreadyBuilt = false;
-		getProject().accept(new SampleResourceVisitor());
-	}
-
-	protected void incrementalBuild(IResourceDelta delta, IProgressMonitor monitor) throws CoreException {
-		// the visitor does the work.
-		alreadyBuilt = false;
-		delta.accept(new SampleDeltaVisitor());
-	}
 }

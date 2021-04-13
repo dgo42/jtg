@@ -51,7 +51,9 @@ public class CompilationUnit implements ICompilationUnit {
                 buf.getChars(0, result.length, result, 0);
             }
         } catch (IOException e) {
-            log.error("Compilation error", e);
+            if (log.isErrorEnabled()) {
+            	log.error("Compilation error", e);
+            }
         } finally {
         	if (reader != null) {
         		try {
