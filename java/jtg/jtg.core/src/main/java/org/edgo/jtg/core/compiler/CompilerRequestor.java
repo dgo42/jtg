@@ -29,13 +29,13 @@ import org.edgo.jtg.core.model.Visitor;
 
 public class CompilerRequestor implements ICompilerRequestor {
 
-	private final ArrayList<LogMessage>			problemList	= new ArrayList<LogMessage>();
+	private final ArrayList<LogMessage> problemList = new ArrayList<LogMessage>();
 
-	private final Map<String, CompilationUnit>	sources;
+	private final Map<String, CompilationUnit> sources;
 
-	private final String						outputDir;
+	private final String outputDir;
 
-	private final Logger						log;
+	private final Logger log;
 
 	public CompilerRequestor(Map<String, CompilationUnit> sources, String outputDir, Logger log) {
 		this.sources = sources;
@@ -50,8 +50,13 @@ public class CompilerRequestor implements ICompilerRequestor {
 				for (IProblem problem : problems) {
 					if (problem.isError()) {
 						String name = new String(problem.getOriginatingFileName());
-						problemList.add(createJavacError(name, sources.get(name).getUnit(),
-								new StringBuffer(problem.getMessage()), problem.getSourceLineNumber()));
+						CompilationUnit unit = sources.get(name);
+						ParsedUnit parsedUnit = null;
+						if (unit != null) {
+							parsedUnit = unit.getUnit();
+						}
+						problemList.add(createJavacError(name, parsedUnit, new StringBuffer(problem.getMessage()),
+								problem.getSourceLineNumber()));
 					}
 				}
 			}
@@ -76,8 +81,10 @@ public class CompilerRequestor implements ICompilerRequestor {
 				}
 			}
 		} catch (IOException exc) {
-			log.error("Compilation error", exc);
-		}
+			if (log.isErrorEnabled()) {
+				log.error("Compilation error", exc);
+			}
+}
 	}
 
 	/**
@@ -96,7 +103,7 @@ public class CompilerRequestor implements ICompilerRequestor {
 		if (unit != null) {
 			try {
 				unit.accept(errVisitor);
-			} catch(Exception e) {
+			} catch (Exception e) {
 				// can't happens nothing to do
 			}
 			errNode = errVisitor.getNode();
@@ -106,11 +113,14 @@ public class CompilerRequestor implements ICompilerRequestor {
 					errNode.getSourceLineBegin(), errMsgBuf.toString());
 		} else {
 			/*
-			 * javac error line number cannot be mapped to JSP page line number. For example, this is the case if a scriptlet is
-			 * missing a closing brace, which causes havoc with the try-catch-finally block that the code generator places
-			 * around all generated code: As a result of this, the javac error line numbers will be outside the range of begin
-			 * and end java line numbers that were generated for the scriptlet, and therefore cannot be mapped to the start line
-			 * number of the scriptlet in the JSP page. Include just the javac error info in the error detail.
+			 * javac error line number cannot be mapped to JSP page line number. For
+			 * example, this is the case if a scriptlet is missing a closing brace, which
+			 * causes havoc with the try-catch-finally block that the code generator places
+			 * around all generated code: As a result of this, the javac error line numbers
+			 * will be outside the range of begin and end java line numbers that were
+			 * generated for the scriptlet, and therefore cannot be mapped to the start line
+			 * number of the scriptlet in the JSP page. Include just the javac error info in
+			 * the error detail.
 			 */
 			javacError = new LogMessage(MessageType.ERROR, fname, lineNum, errMsgBuf.toString());
 		}
@@ -125,17 +135,19 @@ public class CompilerRequestor implements ICompilerRequestor {
 	}
 
 	/*
-	 * Visitor responsible for mapping a line number in the generated servlet source code to the corresponding JSP node.
+	 * Visitor responsible for mapping a line number in the generated servlet source
+	 * code to the corresponding JSP node.
 	 */
 	class ErrorVisitor implements Visitor {
 
 		// Java source line number to be mapped
-		private int	lineNum;
+		private int lineNum;
 
 		/*
-		 * JSP node whose Java source code range in the generated servlet contains the Java source line number to be mapped
+		 * JSP node whose Java source code range in the generated servlet contains the
+		 * Java source line number to be mapped
 		 */
-		Node		found;
+		Node found;
 
 		/*
 		 * Constructor.
@@ -148,9 +160,11 @@ public class CompilerRequestor implements ICompilerRequestor {
 		}
 
 		/*
-		 * Gets the JSP node to which the source line number in the generated servlet code was mapped.
+		 * Gets the JSP node to which the source line number in the generated servlet
+		 * code was mapped.
 		 * 
-		 * @return JSP node to which the source line number in the generated servlet code was mapped
+		 * @return JSP node to which the source line number in the generated servlet
+		 * code was mapped
 		 */
 		public Node getNode() {
 			return found;
@@ -159,19 +173,23 @@ public class CompilerRequestor implements ICompilerRequestor {
 		public void visit(ParsedUnit n) throws TemplateException {
 			for (Argument arg : n.getArguments()) {
 				arg.accept(this);
-				if (found != null) return;
+				if (found != null)
+					return;
 			}
 			for (Import imp : n.getImports()) {
 				imp.accept(this);
-				if (found != null) return;
+				if (found != null)
+					return;
 			}
 			for (TemplateNode node : n.getTemplateNodes()) {
 				node.accept(this);
-				if (found != null) return;
+				if (found != null)
+					return;
 			}
 			for (ScriptNode node : n.getScriptNodes()) {
 				node.accept(this);
-				if (found != null) return;
+				if (found != null)
+					return;
 			}
 		}
 

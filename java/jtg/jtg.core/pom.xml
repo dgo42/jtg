@@ -9,7 +9,7 @@
 		<version>1.0.0</version>
 	</parent>
 	<artifactId>jtg.core</artifactId>
-	<version>1.0.23-SNAPSHOT</version>
+	<version>1.0.24-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>jtg.core</name>
@@ -22,7 +22,7 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>3.8.1</version>
+			<version>4.13.1</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

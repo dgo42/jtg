@@ -14,4 +14,9 @@ public class Logger {
         // TODO Auto-generated method stub
     }
 
+	public boolean isErrorEnabled() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

@@ -30,7 +30,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
@@ -153,9 +152,11 @@ public class JtgBuilder extends IncrementalProjectBuilder {
 
 		for (int i = 0; i < allProjects.length; i++) {
 			IProject project = allProjects[i];
-			IProjectNature nature = project.getNature(JtgNature.NATURE_ID);
-			if (nature != null) {
-				jtgProjects.add(project);
+			if (project.isOpen()) {
+				IProjectNature nature = project.getNature(JtgNature.NATURE_ID);
+				if (nature != null) {
+					jtgProjects.add(project);
+				}
 			}
 		}
 		return jtgProjects.toArray(new IProject[jtgProjects.size()]);

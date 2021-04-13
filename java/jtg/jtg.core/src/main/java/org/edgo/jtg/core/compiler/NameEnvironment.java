@@ -77,10 +77,14 @@ public class NameEnvironment implements INameEnvironment {
                 return new NameEnvironmentAnswer(classFileReader, null);
             }
         } catch (IOException exc) {
-            log.error("Compilation error", exc);
-        } catch (org.eclipse.jdt.internal.compiler.classfmt.ClassFormatException exc) {
-            log.error("Compilation error", exc);
-        } finally {
+            if (log.isErrorEnabled()) {
+            	log.error("Compilation error", exc);
+            }
+} catch (org.eclipse.jdt.internal.compiler.classfmt.ClassFormatException exc) {
+            if (log.isErrorEnabled()) {
+            	log.error("Compilation error", exc);
+            }
+} finally {
             if (is != null) {
                 try {
                     is.close();
