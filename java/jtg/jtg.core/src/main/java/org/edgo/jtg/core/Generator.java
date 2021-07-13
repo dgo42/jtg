@@ -413,7 +413,7 @@ public class Generator {
 		cmdArgs.put("StartTemplate", configuration.getStartTemplate());
 		cmdArgs.put("TemplateArg", configuration.getTemplateArg());
 
-		cmd = GeneratorCommand.valueOf(configuration.getCommand());
+		cmd = GeneratorCommand.parse(configuration.getCommand());
 	}
 
 	private SchemaCompiler generateSchemaClasses(JarCompiler jarCompiler) throws TemplateException {
