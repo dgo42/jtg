@@ -541,7 +541,8 @@ public class JtgBuilder extends IncrementalProjectBuilder {
 		}
 
 		JtgConfiguration config = getConfiguration(project);
-		Generator generator = new Generator(config, new EclipseEnvironment(project));
+		EclipseEnvironment env = new EclipseEnvironment(project);
+		Generator generator = new Generator(config, env);
 		MessageConsole myConsole = findConsole(Constants.CONSOLE_NAME);
 		MessageConsoleStream out = myConsole.newMessageStream();
 		generator.setWriter(new PrintStream(out));
@@ -651,6 +652,8 @@ public class JtgBuilder extends IncrementalProjectBuilder {
 		} catch (Exception e) {
 			hasErrors = true;
 			JtgUIPlugin.log(e);
+		} finally {
+			env.bulkSync();
 		}
 		String srcGenPath = config.getSourceOutputDir();
 		IResource res = findFolder(project, srcGenPath);
