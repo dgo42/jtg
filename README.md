@@ -18,7 +18,7 @@ First idea to make own generic text generator I've got in 2005 as I worked for D
 custom framework. 
 I've used http://velocity.apache.org/. But in this engine you should control generation process from you program. It means you need some 
 control code, which starts velocity engine for different output types, for multiple different objects. Futhermore you need to collect 
-different java objects and put it into hashmap deends on what one or other template needs.
+different java objects and put it into hashmap depends on what one or other template needs.
 
 In 2006 we founded with 7 other developer small company. And at start, as we don't have customer projects for all employees, we've decided
 to implement this generator using modern and fast growing .NET framework. This generator was developed between 2006 until now. You can ask
@@ -31,6 +31,16 @@ development up to 40-70%.
 
 I've used in with my generator [eclipse colorer plugin](http://colorer.sourceforge.net/), which was written by Igor Russkih.
 I've only developed some coloring schema for jtg specifical file formats.
+
+# Update 2019-11-21
+The jtg is updated. It is now compatible with eclipse 2019-09 R and works with OpenJDK 9 - 12.
+
+# Update 2021-07-13
+The jtg is updated. Implemented cache to optimize compilation expiriance. Implemented leader -> multi follower project configuration in eclipse. This configuration makes possible to use one shema/template set for different following project and maintain shema/template set separately.
+It is now compatible with eclipse 2021-06.
+
+# Update site
+Please use https://raw.githubusercontent.com/dgo42/jtg-update/master/site.xml in eclipse as an update site to install JTG
 
 # TBD
 
