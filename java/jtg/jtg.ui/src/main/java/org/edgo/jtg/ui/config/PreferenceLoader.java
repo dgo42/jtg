@@ -1,6 +1,8 @@
 package org.edgo.jtg.ui.config;
 
 import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -62,7 +64,7 @@ public final class PreferenceLoader {
 		}
 		return path;
 	}
-	
+
 	public static void checkAndCreateContainer(IProject project, IContainer container) {
 		String path = projectRelativePath(project, container);
 		if (project.findMember(path) == null) {
@@ -72,14 +74,16 @@ public final class PreferenceLoader {
 				checkAndCreateContainer(project, parent);
 			}
 			try {
-				iFolder.create(true, false, null);
+				if (!iFolder.exists()) {
+					iFolder.create(true, false, null);
+				}
 			} catch (CoreException e) {
 				JtgUIPlugin.log(e);
 			}
 		}
 	}
 
-	public static void checkAndCreateFile(IProject project, String file) {
+	public static void checkAndCreateFile(IProject project, String file, String content) {
 		if (project.findMember(file) == null) {
 			IFile iFile = project.getFile(file);
 			IContainer parent = iFile.getParent();
@@ -87,12 +91,20 @@ public final class PreferenceLoader {
 				checkAndCreateContainer(project, parent);
 			}
 			try {
-				ByteArrayInputStream is = new ByteArrayInputStream(new byte[] {});
-				iFile.create(is, false, null);
-			} catch (CoreException e) {
+				if (!iFile.exists()) {
+					InputStream is = null;
+					if (content != null && content.trim().length() > 0 ) {
+						is = new ByteArrayInputStream(content.getBytes("UTF-8"));
+					} else {
+						is = new ByteArrayInputStream(new byte[] {});
+					}
+					iFile.create(is, false, null);
+				}
+			} catch (CoreException | UnsupportedEncodingException e) {
 				JtgUIPlugin.log(e);
 			}
 		}
+
 	}
 
 	public static void checkAndCreateFolder(IProject project, String folder) {
@@ -103,12 +115,13 @@ public final class PreferenceLoader {
 				checkAndCreateContainer(project, parent);
 			}
 			try {
-				iFolder.create(true, false, null);
+				if (!iFolder.exists()) {
+					iFolder.create(true, false, null);
+				}
 			} catch (CoreException e) {
 				JtgUIPlugin.log(e);
 			}
 		}
 	}
-
 
 }

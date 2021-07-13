@@ -4,6 +4,10 @@ import org.edgo.jtg.basics.TemplateException;
 
 public class TargetNode extends TemplateNode {
 
+	public TargetNode() {
+		
+	}
+	
     public TargetNode(String sourceFile, String name, int line) {
         super(sourceFile, name, line);
     }

@@ -2,6 +2,7 @@ package org.edgo.jtg.core;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,13 +25,13 @@ import com.sun.tools.xjc.model.Model;
 
 public class SchemaCompiler {
 
-	private String	schemaPackage;
+	private String schemaPackage;
 
 	public SchemaCompiler(String schemaPackage) {
 		this.schemaPackage = schemaPackage;
 	}
 
-	public void Compile(String schemaDir, String schema, String sourceOutDir, JarCompiler jarCompiler)
+	public void compile(String schemaDir, String schema, String sourceOutDir, JarCompiler jarCompiler)
 			throws TemplateException {
 		FileCodeWriter writer = null;
 		try {
@@ -40,8 +41,23 @@ public class SchemaCompiler {
 			if (!sourceOutFile.exists()) {
 				sourceOutFile.mkdirs();
 			}
+			File schemaSourceFile = new File(GeneratorUtils.Package2OutFullPath(sourceOutDir, schemaPackage));
+			File schemaModels[] = new File[] {};
+			File schemaFile = new File(schemaDir, schema);
+			if (jarCompiler.cacheExists() && schemaSourceFile.exists()) {
+				schemaModels = Files.walk(schemaSourceFile.toPath())
+						.filter(path -> path.toFile().isFile() && path.toString().toLowerCase().endsWith(".java"))
+						.map(path -> path.toFile()).toArray(File[]::new);
+				if (schemaModels.length > 0) {
+					File firstModel = schemaModels[0];
+					if (firstModel.lastModified() > schemaFile.lastModified()) {
+						// generated schema source files are newer as schema file - skip generation
+						return;
+					}
+				}
+			}
 			options.targetDir = sourceOutFile;
-			options.addGrammar(new File(schemaDir, schema));
+			options.addGrammar(schemaFile);
 			options.setSchemaLanguage(Language.XMLSCHEMA);
 			options.strictCheck = false;
 			options.compatibilityMode = Options.EXTENSION;
@@ -50,7 +66,7 @@ public class SchemaCompiler {
 			options.pluginURIs.addAll(plugin.getCustomizationURIs());
 			options.activePlugins.add(plugin);
 			options.activePlugins.add(new XjcPublicPlugin());
-			
+
 			ErrorReceiverImpl errorReceiver = new ErrorReceiverImpl();
 
 			Model model = ModelLoader.load(options, new JCodeModel(), errorReceiver);
@@ -66,7 +82,7 @@ public class SchemaCompiler {
 
 			XjcMapperPlugin hashMapPlugn = new XjcListMapMapperPlugin(model, schema, schemaPackage, sourceOutDir);
 			hashMapPlugn.process();
-			
+
 			if (model.generateCode(options, errorReceiver) == null) {
 				String message = "failed to compile a schema";
 				throw new TemplateException(message, errorReceiver.getMessages());
@@ -83,18 +99,19 @@ public class SchemaCompiler {
 		} catch (Throwable ex) {
 			throw new TemplateException(ex.getMessage(), ex, schema);
 		} finally {
-			if (null != writer) try {
-				writer.close();
-			} catch (IOException e) {
-				throw new TemplateException("unable to close files: " + e.getMessage(), e, schema);
-			}
+			if (null != writer)
+				try {
+					writer.close();
+				} catch (IOException e) {
+					throw new TemplateException("unable to close files: " + e.getMessage(), e, schema);
+				}
 
 		}
 	}
 
 	class ErrorReceiverImpl extends ErrorReceiver {
 
-		private List<LogMessage>	messages;
+		private List<LogMessage> messages;
 
 		public ErrorReceiverImpl() {
 			messages = new ArrayList<LogMessage>();

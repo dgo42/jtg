@@ -4,7 +4,10 @@ import org.edgo.jtg.basics.TemplateException;
 
 public class Import extends TextNode {
 
-    public Import(String sourceFile, String name, int line) {
+	public Import() {
+	}
+
+	public Import(String sourceFile, String name, int line) {
         super(sourceFile, name, line);
     }
 

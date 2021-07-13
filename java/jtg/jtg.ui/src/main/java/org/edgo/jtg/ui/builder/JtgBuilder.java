@@ -5,6 +5,7 @@ import java.io.PrintStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +31,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
@@ -42,6 +44,7 @@ import org.eclipse.ui.console.MessageConsoleStream;
 import org.edgo.jtg.basics.LogMessage;
 import org.edgo.jtg.basics.TemplateException;
 import org.edgo.jtg.core.Generator;
+import org.edgo.jtg.core.GeneratorCommand;
 import org.edgo.jtg.core.GeneratorUtils;
 import org.edgo.jtg.core.JarCompiler;
 import org.edgo.jtg.core.ProjectType;
@@ -77,6 +80,13 @@ public class JtgBuilder extends IncrementalProjectBuilder {
 			case IResourceDelta.REMOVED:
 				// handle removed resource
 				// TODO remove deleted files?
+				String fullName = resource.getFullPath().toString();
+				String message = "Resource \"" + fullName + "\" is removed";
+				IStatus status = new Status(Status.INFO, JtgUIPlugin.getUniqueIdentifier(), 1000, message, null);
+				JtgUIPlugin.log(status);
+				MessageConsole myConsole = findConsole(Constants.CONSOLE_NAME);
+				MessageConsoleStream out = myConsole.newMessageStream();
+				out.println(message);
 				break;
 			case IResourceDelta.CHANGED:
 				// handle changed resource
@@ -121,13 +131,16 @@ public class JtgBuilder extends IncrementalProjectBuilder {
 	 * @see org.eclipse.core.internal.events.InternalBuilder#build(int,
 	 * java.util.Map, org.eclipse.core.runtime.IProgressMonitor)
 	 */
+	@Override
 	@SuppressWarnings("rawtypes")
 	protected IProject[] build(int kind, Map args, IProgressMonitor monitor) throws CoreException {
+		double start = System.nanoTime();
+		IProject project = getProject();
 		try {
 			if (kind == FULL_BUILD) {
 				fullBuild(monitor);
 			} else {
-				IResourceDelta delta = getDelta(getProject());
+				IResourceDelta delta = getDelta(project);
 				if (delta == null) {
 					fullBuild(monitor);
 				} else {
@@ -138,6 +151,17 @@ public class JtgBuilder extends IncrementalProjectBuilder {
 			Throwable t = e.getStatus().getException();
 			if (!(t instanceof BuildDoneException) && !(t instanceof BuildFailedException)) {
 				throw e;
+			}
+		} finally {
+			double end = System.nanoTime();
+			double elapsed = (end - start) / 1000000;
+			if (elapsed > 1D) {
+				String message = "Project \"" + project.getName() + "\" generation took " + new DecimalFormat("#.###").format(elapsed) + "ms";
+				/*IStatus status = new Status(Status.INFO, JtgUIPlugin.getUniqueIdentifier(), 1000, message, null);
+				JtgUIPlugin.log(status);*/
+				MessageConsole myConsole = findConsole(Constants.CONSOLE_NAME);
+				MessageConsoleStream out = myConsole.newMessageStream();
+				out.println(message);
 			}
 		}
 
@@ -179,16 +203,109 @@ public class JtgBuilder extends IncrementalProjectBuilder {
 		getProject().deleteMarkers(JTG_MARKER_TYPE, true, IResource.DEPTH_INFINITE);
 	}
 
-	JtgConfiguration getConfiguration(IProject project) {
+	/*
+		private IPath getFirstSourceFolder(IProject project) {
+			if (project.isOpen()) {
+				try {
+					IJavaProject javaProject = (IJavaProject) project.getNature(JavaCore.NATURE_ID);
+					IPackageFragmentRoot[] roots = javaProject.getAllPackageFragmentRoots();
+					for (IPackageFragmentRoot root : roots) {
+						if (root.getKind() == IPackageFragmentRoot.K_SOURCE) {
+							return root.getResource().getProjectRelativePath();
+						}
+					}
+				} catch (CoreException e) {
+				}
+			}
+			return null;
+		}
+	
+		private IPath getFirstBinaryFolder(IProject project) {
+			if (project.isOpen()) {
+				try {
+					IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
+					IJavaProject javaProject = (IJavaProject) project.getNature(JavaCore.NATURE_ID);
+					IPath path = javaProject.getOutputLocation();
+					IFolder folder = workspaceRoot.getFolder(path);
+					return folder.getProjectRelativePath();
+				} catch (CoreException e) {
+				}
+			}
+			return null;
+		}
+	*/
+	JtgConfiguration getConfiguration(IProject project) throws CoreException {
 		IScopeContext projectScope = new ProjectScope(project);
 		Preferences store = projectScope.getNode(JtgUIPlugin.PLUGIN_ID);
-
-		ProjectType projectType = ProjectType.parse(PreferenceLoader.loadValue(store, Constants.PROJECT_TYPE));
+		ProjectType projectType = ProjectType.valueOf(PreferenceLoader.loadValue(store, Constants.PROJECT_TYPE));
 
 		JtgConfiguration config = new JtgConfiguration();
-		if (projectType == ProjectType.MASTER) {
+		if (projectType == ProjectType.LEADER) {
+			String schemaPath = PreferenceLoader.loadValue(store, Constants.L_SCHEMA_DIR_PREF);
+			config.setSchemaDir(schemaPath);
 
-		} else if (projectType == ProjectType.SLAVE) {
+			String templPath = PreferenceLoader.loadValue(store, Constants.L_TEMPLATE_DIR_PREF);
+			config.setTemplateDir(templPath);
+
+			config.setSourceOutputDir(PreferenceLoader.loadValue(store, Constants.L_SOURCE_OUT_DIR_PREF));
+
+			config.setJarOutputDir(PreferenceLoader.loadValue(store, Constants.L_JAR_OUTPUT_DIR_PREF));
+
+			config.setSchema(PreferenceLoader.loadValue(store, Constants.L_SCHEMA_FILE_PREF));
+
+			config.setStartTemplate(PreferenceLoader.loadValue(store, Constants.L_START_TEMPLATE_FILE_PREF));
+
+			config.setSchemaPackage(PreferenceLoader.loadValue(store, Constants.L_SCHEMA_PACKAGE_PREF));
+
+			config.setGeneratedPackage(PreferenceLoader.loadValue(store, Constants.L_TEMPLATE_PACKAGE_PREF));
+
+			config.setTemplateArg(PreferenceLoader.loadValue(store, Constants.L_MAIN_ARG_NAME));
+
+			config.setCommand(GeneratorCommand.JAR_ONLY.name());
+
+			config.setUsingCache("true");
+		} else if (projectType == ProjectType.FOLLOWER) {
+			// inherit configuration from leader
+			IProject leaderProject = getLeaderProject(project);
+			if (leaderProject == null) {
+				String leaderName = PreferenceLoader.loadValue(store, Constants.F_LEADER_PROJECT);
+				IStatus status = new Status(Status.ERROR, JtgUIPlugin.getUniqueIdentifier(), 1000, "Can't open leader project \"" + leaderName + "\"", null);
+				JtgUIPlugin.log(status);
+				throw new CoreException(status);
+			}
+
+			IScopeContext leaderSrojectScope = new ProjectScope(leaderProject);
+			Preferences leaderStore = leaderSrojectScope.getNode(JtgUIPlugin.PLUGIN_ID);
+
+			String sourceOutputDir = PreferenceLoader.loadValue(leaderStore, Constants.L_SOURCE_OUT_DIR_PREF);
+			IFile sourceOutputDirFile = leaderProject.getFile(sourceOutputDir);
+			config.setSourceOutputDir(sourceOutputDirFile.getRawLocation().toOSString());
+
+			String jarOutputDir = PreferenceLoader.loadValue(leaderStore, Constants.L_JAR_OUTPUT_DIR_PREF);
+			IFile jarOutputDirFile = leaderProject.getFile(jarOutputDir);
+			config.setJarOutputDir(jarOutputDirFile.getRawLocation().toOSString());
+
+			config.setSchema(PreferenceLoader.loadValue(leaderStore, Constants.L_SCHEMA_FILE_PREF));
+
+			config.setStartTemplate(PreferenceLoader.loadValue(leaderStore, Constants.L_START_TEMPLATE_FILE_PREF));
+
+			config.setSchemaPackage(PreferenceLoader.loadValue(leaderStore, Constants.L_SCHEMA_PACKAGE_PREF));
+
+			config.setGeneratedPackage(PreferenceLoader.loadValue(leaderStore, Constants.L_TEMPLATE_PACKAGE_PREF));
+
+			config.setTemplateArg(PreferenceLoader.loadValue(leaderStore, Constants.L_MAIN_ARG_NAME));
+
+			String templPath = PreferenceLoader.loadValue(leaderStore, Constants.L_TEMPLATE_DIR_PREF);
+			config.setTemplateDir(templPath);
+
+			String schemaPath = PreferenceLoader.loadValue(store, Constants.F_PROJECT_DIR_PREF);
+			config.setSchemaDir(schemaPath);
+
+			config.setProjectFile(schemaPath + "/" + PreferenceLoader.loadValue(store, Constants.F_PROJECT_FILE_PREF));
+
+			config.setCommand(GeneratorCommand.GENERATE.name());
+
+			config.setUsingCache("true");
 		} else if (projectType == ProjectType.STANDALONE) {
 			String schemaPath = PreferenceLoader.loadValue(store, Constants.ST_SCHEMA_DIR_PREF);
 			config.setSchemaDir(schemaPath);
@@ -210,12 +327,68 @@ public class JtgBuilder extends IncrementalProjectBuilder {
 
 			config.setGeneratedPackage(PreferenceLoader.loadValue(store, Constants.ST_TEMPLATE_PACKAGE_PREF));
 
-			config.setUsingCache(
-					((Boolean) PreferenceLoader.loadValueBool(store, Constants.ST_USING_CACHE_PREF)).toString());
+			config.setUsingCache(((Boolean) PreferenceLoader.loadValueBool(store, Constants.ST_USING_CACHE_PREF)).toString());
 
 			config.setCommand(PreferenceLoader.loadValue(store, Constants.ST_GOAL_PREF));
 		}
 		return config;
+	}
+
+	private ProjectType getProjectType(IProject project) {
+		IScopeContext projectScope = new ProjectScope(project);
+		IEclipsePreferences store = projectScope.getNode(JtgUIPlugin.PLUGIN_ID);
+
+		ProjectType projectType = ProjectType.valueOf(PreferenceLoader.loadValue(store, Constants.PROJECT_TYPE));
+		return projectType;
+	}
+
+	private List<IProject> getAllFollowers(IProject currProject) {
+		List<IProject> followers = new ArrayList<IProject>();
+		ProjectType currProjectType = getProjectType(currProject);
+		if (currProjectType != ProjectType.LEADER) {
+			return followers;
+		}
+		IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
+		IProject[] allProjects = workspaceRoot.getProjects();
+		String currProjectName = currProject.getName();
+
+		for (int i = 0; i < allProjects.length; i++) {
+			IProject project = allProjects[i];
+			if (project.isOpen() && !project.equals(currProject)) {
+				IScopeContext projectScope = new ProjectScope(project);
+				IEclipsePreferences store = projectScope.getNode(JtgUIPlugin.PLUGIN_ID);
+				ProjectType projectType = ProjectType.valueOf(PreferenceLoader.loadValue(store, Constants.PROJECT_TYPE));
+				String leaderName = PreferenceLoader.loadValue(store, Constants.F_LEADER_PROJECT);
+				if (projectType == ProjectType.FOLLOWER && currProjectName.equals(leaderName)) {
+					followers.add(project);
+				}
+			}
+		}
+		return followers;
+	}
+
+	private IProject getLeaderProject(IProject currProject) {
+		ProjectType currProjectType = getProjectType(currProject);
+		if (currProjectType != ProjectType.FOLLOWER) {
+			return null;
+		}
+
+		IScopeContext projectScope = new ProjectScope(currProject);
+		IEclipsePreferences store = projectScope.getNode(JtgUIPlugin.PLUGIN_ID);
+		String leaderName = PreferenceLoader.loadValue(store, Constants.F_LEADER_PROJECT);
+
+		IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
+		IProject[] allProjects = workspaceRoot.getProjects();
+
+		for (int i = 0; i < allProjects.length; i++) {
+			IProject project = allProjects[i];
+			if (project.isOpen() && !project.equals(currProject)) {
+				if (leaderName != null && leaderName.equals(project.getName()) && getProjectType(project) == ProjectType.LEADER) {
+					return project;
+				}
+			}
+		}
+		return null;
 	}
 
 	void checkResource(IResource resource) throws CoreException {
@@ -223,6 +396,7 @@ public class JtgBuilder extends IncrementalProjectBuilder {
 			String name = resource.getName();
 			String fullName = resource.getFullPath().toString();
 			IProject project = resource.getProject();
+			ProjectType projectType = getProjectType(project);
 			JtgConfiguration config = getConfiguration(project);
 			String projectDir = project.getName();
 			String projectName = config.getProjectFile();
@@ -237,8 +411,20 @@ public class JtgBuilder extends IncrementalProjectBuilder {
 				if (matcher.find() || fullName.equals(projectFile) || fullName.equals(schemaFile)) {
 					IResource jarResource = findMember(project, jarName);
 					if (jarResource == null || resource.getLocalTimeStamp() > jarResource.getLocalTimeStamp()) {
-						regenarateAll(project);
+						regenarateAll(project, projectType);
 					}
+				}
+			} else if (projectType == ProjectType.LEADER) {
+				String jarName = GeneratorUtils.Project2JarName(jarOutDir, "main");
+				if (matcher.find() || fullName.equals(schemaFile)) {
+					IResource jarResource = findMember(project, jarName);
+					if (jarResource == null || resource.getLocalTimeStamp() > jarResource.getLocalTimeStamp()) {
+						regenarateAll(project, projectType);
+					}
+				}
+			} else if (projectType == ProjectType.FOLLOWER) {
+				if (matcher.find() || fullName.equals(projectFile)) {
+					regenarateAll(project, projectType);
 				}
 			}
 		}
@@ -335,14 +521,19 @@ public class JtgBuilder extends IncrementalProjectBuilder {
 			}
 			urlList.add(url);
 		}
-//		ClassLoader parentClassLoader = project.getClass().getClassLoader();
 		ClassLoader parentClassLoader = JarCompiler.class.getClassLoader();
 		URL[] urls = (URL[]) urlList.toArray(new URL[urlList.size()]);
 		URLClassLoader classLoader = new URLClassLoader(urls, parentClassLoader);
 		return classLoader;
 	}
 
-	private void regenarateAll(IProject project) throws CoreException {
+	private void setTemplateArg(IProject project, String templateArg) {
+		IScopeContext projectScope = new ProjectScope(project);
+		IEclipsePreferences store = projectScope.getNode(JtgUIPlugin.PLUGIN_ID);
+		PreferenceLoader.storeValue(store, Constants.L_MAIN_ARG_NAME, templateArg);
+	}
+
+	private void regenarateAll(IProject project, ProjectType projectType) throws CoreException {
 		try {
 			deleteAllMarkers(project);
 		} catch (CoreException e) {
@@ -367,8 +558,15 @@ public class JtgBuilder extends IncrementalProjectBuilder {
 
 		try {
 			hasErrors = false;
-			generator.generate(classLoader);
+			String templateArg = generator.generate(classLoader);
 			alreadyBuilt = true;
+			setTemplateArg(project, templateArg);
+			if (projectType == ProjectType.LEADER) {
+				List<IProject> followers = getAllFollowers(project);
+				for (IProject follower : followers) {
+					regenarateAll(follower, getProjectType(follower));
+				}
+			}
 			Status status = new Status(IStatus.OK, "jtg", "", new BuildDoneException());
 			throw new CoreException(status);
 		} catch (TemplateException e) {
@@ -419,10 +617,19 @@ public class JtgBuilder extends IncrementalProjectBuilder {
 							message = e.getCause().toString();
 						}
 					}
-					IFile file = findMember(project, getFileName(fileName));
+					IFile file = null;
+					if (projectType == ProjectType.FOLLOWER) {
+						IProject leaderProject = getLeaderProject(project);
+						file = findMember(leaderProject, getFileName(fileName));
+					} else {
+						file = findMember(project, getFileName(fileName));
+					}
 					if (file != null) {
 						if (message == null) {
 							message = e.toString();
+						}
+						if (projectType == ProjectType.FOLLOWER) {
+							message += ".\r\n Error occurs in project-follower \"" + project.getName() + "\"";
 						}
 						addMarker(file, message, lineNumber, IMarker.SEVERITY_ERROR);
 						JtgUIPlugin.log(e);

@@ -27,9 +27,12 @@ public class DefaultEnvironment implements IEnvironment {
 	}
 
 	public PrintWriter getOutput(String fileName, String encoding, GeneratorMode mode) throws EnvironmentException {
-		File file = new File(configPath, fileName).getAbsoluteFile();
+		File configFile = new File(configPath);
+		File baseFile = configFile.getParentFile();
+		File file = new File(baseFile, fileName).getAbsoluteFile();
 		if (null != generatorOutputDir && "" != generatorOutputDir) {
-			file = new File(generatorOutputDir, fileName);
+			file = new File(baseFile, generatorOutputDir);
+			file = new File(file, fileName).getAbsoluteFile();
 		}
 		if (file.exists()) {
 			if (mode == GeneratorMode.ONLY_NEW) {

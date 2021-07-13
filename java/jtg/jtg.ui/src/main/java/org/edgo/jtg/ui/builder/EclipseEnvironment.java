@@ -55,7 +55,7 @@ public class EclipseEnvironment implements IEnvironment {
 					file.move(bakfile, true, null);
 				}
 			}
-			PreferenceLoader.checkAndCreateFile(project, fileName);
+			PreferenceLoader.checkAndCreateFile(project, fileName, null);
 			file = project.getFile(fileName);
 			file.setCharset(encoding, null);
 			lastFile = file;

@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry kind="lib" path="/jtg.basics">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/jtg.colorer">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="lib" path="lib/annox-1.0.2.jar"/>
 	<classpathentry kind="lib" path="lib/antlr4-runtime-4.7.1.jar"/>
 	<classpathentry kind="lib" path="lib/codemodel-2.3.2.jar"/>
-	<classpathentry kind="lib" path="lib/commons-lang3-3.7.jar"/>
 	<classpathentry kind="lib" path="lib/commons-logging-1.2.jar"/>
 	<classpathentry kind="lib" path="lib/FastInfoset-1.2.12.jar"/>
-	<classpathentry kind="lib" path="lib/jackson-annotations-2.9.2.jar"/>
-	<classpathentry kind="lib" path="lib/jackson-core-2.9.6.jar"/>
-	<classpathentry kind="lib" path="lib/jackson-databind-2.9.6.jar"/>
-	<classpathentry kind="lib" path="lib/jackson-module-jaxb-annotations-2.9.6.jar"/>
 	<classpathentry kind="lib" path="lib/javaparser-1.0.11.jar"/>
 	<classpathentry kind="lib" path="lib/jaxb-runtime-2.3.2.jar"/>
 	<classpathentry kind="lib" path="lib/jaxb-xjc-2.3.2.jar"/>
@@ -18,10 +23,15 @@
 	<classpathentry kind="lib" path="lib/jaxb2-basics-ant-0.12.0.jar"/>
 	<classpathentry kind="lib" path="lib/jaxb2-basics-tools-0.12.0.jar"/>
 	<classpathentry kind="lib" path="lib/junit-3.8.1.jar"/>
-	<classpathentry kind="lib" path="lib/slf4j-log4j12-1.7.25.jar"/>
 	<classpathentry kind="lib" path="lib/txw2-2.3.2.jar"/>
 	<classpathentry kind="lib" path="lib/xsom-2.3.2.jar"/>
 	<classpathentry kind="lib" path="lib/istack-commons-runtime-3.0.8.jar"/>
-	<classpathentry kind="lib" path="lib/jtg.core-1.0.24-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="lib/jtg.core.jar" sourcepath="/jtg.core"/>
+	<classpathentry kind="lib" path="lib/commons-lang3-3.12.0.jar"/>
+	<classpathentry kind="lib" path="lib/jackson-core-2.12.4.jar"/>
+	<classpathentry kind="lib" path="lib/jackson-databind-2.12.4.jar"/>
+	<classpathentry kind="lib" path="lib/jackson-module-jaxb-annotations-2.12.4.jar"/>
+	<classpathentry kind="lib" path="lib/jakarta.xml.bind-api-2.3.2.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-log4j12-1.7.31.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

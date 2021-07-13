@@ -7,15 +7,19 @@ public class IncludeNode extends PlaceholderNode {
 	private String file;
 	private String arg;
 	private String params;
-	
-    public IncludeNode(String sourceFile, String name, int line) {
-        super(sourceFile, name, line);
-    }
 
-    @Override
-    public void accept(Visitor v) throws TemplateException {
-        v.visit(this);
-    }
+	public IncludeNode() {
+
+	}
+
+	public IncludeNode(String sourceFile, String name, int line) {
+		super(sourceFile, name, line);
+	}
+
+	@Override
+	public void accept(Visitor v) throws TemplateException {
+		v.visit(this);
+	}
 
 	public String getFile() {
 		return file;

@@ -2,7 +2,7 @@
 <feature
       id="org.edgo.jtg"
       label="Java Template Generator Feature"
-      version="1.0.27.qualifier"
+      version="1.0.28.qualifier"
       provider-name="edgo.org">
 
    <description url="http://edgo.org">
@@ -10,11 +10,11 @@
    </description>
 
    <copyright url="http://edgo.org/jtg">
-      Copyright (c) 2003-2019, Dimitrij Goldstein
+      Copyright (c) 2003-2021, Dimitrij Goldstein
    </copyright>
 
    <license url="http://edgo.org/jtg">
-      Copyright (c) 2003-2019, Dimitrij Goldstein
+      Copyright (c) 2003-2021, Dimitrij Goldstein
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -46,6 +46,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
    <url>
       <discovery label="Java Template generator" url="http://edgo.org/jtg"/>
    </url>
+
+   <includes
+         id="org.edgo.jtg.colorer"
+         version="0.0.0"/>
 
    <requires>
       <import plugin="org.edgo.jtg.basics.bundle" version="1.0.0" match="greaterOrEqual"/>

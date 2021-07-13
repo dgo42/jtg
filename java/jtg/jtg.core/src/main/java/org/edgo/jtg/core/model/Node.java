@@ -4,11 +4,15 @@ import org.edgo.jtg.basics.TemplateException;
 
 public abstract class Node {
 
-	private final String	fileName;
-	private final int		sourceLineBegin;
-	private int				targetLineBegin;
-	private int				targetLineEnd;
+	private String fileName;
+	private int sourceLineBegin;
+	private int targetLineBegin;
+	private int targetLineEnd;
 
+	protected Node() {
+		
+	}
+	
 	protected Node(String sourceFile, int sourceLineBegin) {
 		this.fileName = sourceFile;
 		this.sourceLineBegin = sourceLineBegin;

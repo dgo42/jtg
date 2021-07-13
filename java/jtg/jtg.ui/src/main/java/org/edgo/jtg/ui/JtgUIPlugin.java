@@ -10,6 +10,7 @@ import org.eclipse.jface.resource.ResourceLocator;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.console.ConsolePlugin;
 import org.eclipse.ui.console.IConsole;
 import org.eclipse.ui.console.IConsoleManager;
@@ -70,7 +71,11 @@ public class JtgUIPlugin extends AbstractUIPlugin {
 		}
 		MessageConsole console = findConsole("JTK");
 		console.activate();
-		console.newMessageStream().println(status.toString());
+		try {
+			console.newMessageStream().println(status.toString());
+		} catch(Exception e) {
+			// TODO
+		}
 	}
 
 	private static MessageConsole findConsole(String name) {
@@ -101,7 +106,7 @@ public class JtgUIPlugin extends AbstractUIPlugin {
 	}
 
 	public static IWorkbenchWindow getActiveWorkbenchWindow() {
-		return getDefault().getWorkbench().getActiveWorkbenchWindow();
+		return PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 	}
 
 	public static IWorkbenchPage getActivePage() {

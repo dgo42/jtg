@@ -6,7 +6,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 
-import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.edgo.jtg.basics.TemplateException;
 import org.edgo.jtg.core.grammar.JavaTemplateGrammarParser;
@@ -32,6 +33,7 @@ public class TemplateParser {
     }
 
     public ParsedUnit Parse() throws TemplateException {
+		//double start = System.nanoTime();
         try {
             // open a simple stream to the input
             File templFile = new File(templatefile);
@@ -72,7 +74,8 @@ public class TemplateParser {
                 encodedReader = new InputStreamReader(new FileInputStream(templFile), charset);
             }
             // create main lexer - jtgLexer
-            ANTLRInputStream antlrStream = new ANTLRInputStream(encodedReader);
+            CharStream antlrStream = CharStreams.fromReader(encodedReader);
+            //ANTLRInputStream antlrStream = new ANTLRInputStream(encodedReader);
             
             JavaTemplateLexer lexer = new JavaTemplateLexer(antlrStream);
             JavaTemplateGrammarParser parser = new JavaTemplateGrammarParser(new CommonTokenStream(lexer));
@@ -91,7 +94,11 @@ public class TemplateParser {
             return unit;
         } catch (Exception ex) {
             throw new TemplateException(ex.toString(), ex, templatefile);
-        } finally {
+        /*} finally {
+		    double end = System.nanoTime();
+		    double elapsed = (end - start) / 1000000;
+		    String message = "=====> Elapsed time for generate \"" + templatefile + "\" " + new DecimalFormat("#.###").format(elapsed) + "ms";
+        	System.out.println(message);*/
         }
     }
 }
