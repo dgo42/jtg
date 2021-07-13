@@ -378,9 +378,9 @@ public class JavaSourceVisitor extends JavaSourceBaseVisitor {
 		output.append("public class ");
 		output.append(className);
 		output.append(" extends ");
-		Extends extendsClass = n.getExtends();
+		Extends extendsClass = n.getExtendsClass();
 		if (extendsClass != null) {
-			n.getExtends().accept(this);
+			n.getExtendsClass().accept(this);
 		} else {
 			output.append("TemplateClass");
 		}
@@ -583,10 +583,13 @@ public class JavaSourceVisitor extends JavaSourceBaseVisitor {
 		output.append("            if (srcLineNumber >= 0) {");
 		output.append(GeneratorUtils.EOL);
 		lineNumb.increment();
-		output.append("                if (linesMapping.containsKey(srcLineNumber)) {");
+		output.append("                String key = \"").append(className).append(":\" + srcLineNumber;");
 		output.append(GeneratorUtils.EOL);
 		lineNumb.increment();
-		output.append("                    int lineNumber = (Integer) linesMapping.get(srcLineNumber);");
+		output.append("                if (linesMapping.containsKey(key)) {");
+		output.append(GeneratorUtils.EOL);
+		lineNumb.increment();
+		output.append("                    int lineNumber = (Integer) linesMapping.get(key);");
 		output.append(GeneratorUtils.EOL);
 		lineNumb.increment();
 		output.append("                    if (e.getMessage() != null) {");
@@ -686,7 +689,7 @@ public class JavaSourceVisitor extends JavaSourceBaseVisitor {
 			int src = arg.getSourceLineBegin();
 			for (int i = arg.getTargetLineBegin(); i <= arg.getTargetLineEnd(); i++) {
 				sourceLineProcessor.addSourceLines(sourceOutFile, templFileName, 1, src, i);
-				output.append("		linesMapping.put(").append(i).append(", ").append(src).append(");");
+				output.append("		linesMapping.put(\"").append(className).append(":").append(i).append("\", ").append(src).append(");");
 				output.append(GeneratorUtils.EOL);
 				lineNumb.increment();
 				initDebugLinesRows++;
@@ -711,7 +714,7 @@ public class JavaSourceVisitor extends JavaSourceBaseVisitor {
 			int src = imp.getSourceLineBegin();
 			for (int i = imp.getTargetLineBegin(); i <= imp.getTargetLineEnd(); i++) {
 				sourceLineProcessor.addSourceLines(sourceOutFile, templFileName, 1, src, i);
-				output.append("		linesMapping.put(").append(i).append(", ").append(src).append(");");
+				output.append("		linesMapping.put(\"").append(className).append(":").append(i).append("\", ").append(src).append(");");
 				output.append(GeneratorUtils.EOL);
 				lineNumb.increment();
 				initDebugLinesRows++;
@@ -736,7 +739,7 @@ public class JavaSourceVisitor extends JavaSourceBaseVisitor {
 			int src = node.getSourceLineBegin();
 			for (int i = node.getTargetLineBegin(); i <= node.getTargetLineEnd(); i++) {
 				sourceLineProcessor.addSourceLines(sourceOutFile, templFileName, 1, src, i);
-				output.append("		linesMapping.put(").append(i).append(", ").append(src).append(");");
+				output.append("		linesMapping.put(\"").append(className).append(":").append(i).append("\", ").append(src).append(");");
 				output.append(GeneratorUtils.EOL);
 				lineNumb.increment();
 				initDebugLinesRows++;
@@ -761,7 +764,7 @@ public class JavaSourceVisitor extends JavaSourceBaseVisitor {
 			int src = node.getSourceLineBegin();
 			for (int i = node.getTargetLineBegin(); i <= node.getTargetLineEnd(); i++) {
 				sourceLineProcessor.addSourceLines(sourceOutFile, templFileName, 1, src, i);
-				output.append("		linesMapping.put(").append(i).append(", ").append(src).append(");");
+				output.append("		linesMapping.put(\"").append(className).append(":").append(i).append("\", ").append(src).append(");");
 				output.append(GeneratorUtils.EOL);
 				lineNumb.increment(); 
 				initDebugLinesRows++;

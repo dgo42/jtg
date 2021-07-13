@@ -33,12 +33,26 @@ import javax.xml.bind.annotation.XmlType;
  *       &lt;attribute name="SchemaPackage" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       &lt;attribute name="SourceOutputDir" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       &lt;attribute name="StartTemplate" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *       &lt;attribute name="TemplateArg" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       &lt;attribute name="TemplateDir" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       &lt;attribute name="UsingCache" use="required">
  *         &lt;simpleType>
  *           &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
  *             &lt;enumeration value="true"/>
  *             &lt;enumeration value="false"/>
+ *           &lt;/restriction>
+ *         &lt;/simpleType>
+ *       &lt;/attribute>
+ *       &lt;attribute name="Command" use="required">
+ *         &lt;simpleType>
+ *           &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
+ *             &lt;enumeration value="SCHEMA_ONLY" />
+ *             &lt;enumeration value="TEMPLATES_ONLY" />
+ *             &lt;enumeration value="SOURCES_ONLY" />
+ *             &lt;enumeration value="COMPILE_ONLY" />
+ *             &lt;enumeration value="JAR_ONLY" />
+ *             &lt;enumeration value="COMPLETE" />
+ *             &lt;enumeration value="GENERATE" />
  *           &lt;/restriction>
  *         &lt;/simpleType>
  *       &lt;/attribute>
@@ -72,11 +86,13 @@ public class JtgConfiguration {
     protected String sourceOutputDir;
     @XmlAttribute(name = "StartTemplate", required = true)
     protected String startTemplate;
+    @XmlAttribute(name = "TemplateArg", required = true)
+    protected String templateArg;
     @XmlAttribute(name = "TemplateDir", required = true)
     protected String templateDir;
     @XmlAttribute(name = "UsingCache", required = true)
     protected String usingCache;
-    @XmlAttribute(name = "Command", required = false)
+    @XmlAttribute(name = "Command", required = true)
     protected String command;
 
     /**
@@ -293,6 +309,30 @@ public class JtgConfiguration {
      */
     public void setStartTemplate(String value) {
         this.startTemplate = value;
+    }
+
+    /**
+     * Gets the value of the templateArg property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getTemplateArg() {
+        return templateArg;
+    }
+
+    /**
+     * Sets the value of the startTemplate property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setTemplateArg(String value) {
+        this.templateArg = value;
     }
 
     /**

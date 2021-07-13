@@ -22,7 +22,7 @@ public abstract class TemplateClass {
 	protected final String							encoding;
 	protected final IEnvironment					env;
 
-	protected final static Map<Integer, Integer>	linesMapping			= new HashMap<Integer, Integer>();
+	protected final static Map<String, Integer>	linesMapping			= new HashMap<String, Integer>();
 
 	protected final static Pattern					TEMPLATE_CLASS_PATTERN	= Pattern.compile("([^\\.]*_jtg)GeneratorClass");
 
@@ -65,7 +65,6 @@ public abstract class TemplateClass {
 	public void Generate(String filename) throws TemplateException {
 		PrintWriter writer = null;
 		try {
-			//writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(filename), encoding));
 			writer = env.getOutput(filename, encoding, GeneratorMode.MAKE_COPY);
 			Generate(writer);
 		} catch (TemplateException e) {
@@ -125,15 +124,18 @@ public abstract class TemplateClass {
 		} catch (Throwable ex) {
 			StackTraceElement[] stackTraces = ex.getStackTrace();
 			int srcLineNumber = -1;
+            String className = null;
 			for (StackTraceElement stackTrace : stackTraces) {
 				if (stackTrace.getClassName().contains(this.getClass().getName())) {
 					srcLineNumber = stackTrace.getLineNumber();
+                    className = stackTrace.getClassName();
 					break;
 				}
 			}
 			if (srcLineNumber >= 0) {
-				if (linesMapping.containsKey(srcLineNumber)) {
-					int lineNumber = (Integer) linesMapping.get(srcLineNumber);
+				String key = className + ":" + srcLineNumber;
+				if (linesMapping.containsKey(key)) {
+					int lineNumber = (Integer) linesMapping.get(key);
 					Matcher matcher = TEMPLATE_CLASS_PATTERN.matcher(ex.getMessage());
 					String message = ex.toString();
 					if (ClassNotFoundException.class.isInstance(ex) && matcher.find()) {
@@ -224,15 +226,18 @@ public abstract class TemplateClass {
 		} catch (Throwable ex) {
 			StackTraceElement[] stackTraces = ex.getStackTrace();
 			int srcLineNumber = -1;
+            String className = null;
 			for (StackTraceElement stackTrace : stackTraces) {
 				if (stackTrace.getClassName().contains(this.getClass().getName())) {
 					srcLineNumber = stackTrace.getLineNumber();
+                    className = stackTrace.getClassName();
 					break;
 				}
 			}
 			if (srcLineNumber >= 0) {
-				if (linesMapping.containsKey(srcLineNumber)) {
-					int lineNumber = (Integer) linesMapping.get(srcLineNumber);
+				String key = className + ":" + srcLineNumber;
+				if (linesMapping.containsKey(key)) {
+					int lineNumber = (Integer) linesMapping.get(key);
 					Matcher matcher = TEMPLATE_CLASS_PATTERN.matcher(ex.getMessage());
 					String message = ex.toString();
 					if (ClassNotFoundException.class.isInstance(ex) && matcher.find()) {
@@ -292,9 +297,9 @@ public abstract class TemplateClass {
 	}
 
 	private static String buildClassName(String generatedNamespace, String templateName) {
-		return generatedNamespace + "."
-				+ templateName.replace(' ', '_').replace('.', '_').replace('-', '_').replace('/', '_').replace('\\', '_')
-				+ "GeneratorClass";
+		StringBuilder sb = new StringBuilder(generatedNamespace);
+		sb.append('.').append(templateName.replaceAll("[\\s\\.\\-/\\\\]", "_")).append("GeneratorClass");
+		return sb.toString();
 	}
 
 }

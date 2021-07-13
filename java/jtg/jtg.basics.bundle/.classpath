@@ -2,6 +2,6 @@
 <classpath>
 	<classpathentry kind="lib" path="lib/jchardet-1.0.jar"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
-	<classpathentry kind="lib" path="lib/jtg.basics-1.0.21-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="lib/jtg.basics.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

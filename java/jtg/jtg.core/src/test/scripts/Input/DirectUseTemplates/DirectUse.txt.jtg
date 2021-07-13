@@ -2,7 +2,6 @@
 <#@import name="java.lang.Thread"#>
 <#@import name="java.lang.Runnable"#>
 <#@import name="java.lang.Override"#>
-<#@import name="java.text.DecimalFormat"#>
 <#@import name="java.util.ArrayList"#>
 <#@import name="java.util.Date"#>
 <#@import name="java.util.List"#>
@@ -22,8 +21,8 @@
 	edgo.org Code Generator (c) 2005-2014.
 #>
 <#
-/*	List<Thread> threads = new ArrayList<Thread>();
-    
+	List<Thread> threads = new ArrayList<Thread>();
+/*
     final TemplateClass me = this;
     final EmployeeElement emp = mainElement.employeeElements.employeeElements.get(0);
     
@@ -50,10 +49,10 @@
     	t.join();
     }
 */
+	double start = System.nanoTime();
     // 3. Variante
     for (EmployeeElement employee : mainElement.employeeElements.employeeElements) {
-#>
-	Next employee...
+#>	Next employee...
 <#
         RunTemplate ("Details\\Message.txt.jtg", "Output\\" + employee.lastName + ".txt", new Object[] { employee });
         RunTemplate ("Details\\TestHugeTemplate.txt.jtg", "Output\\Huge_" + employee.lastName + ".txt", new Object[] { employee });

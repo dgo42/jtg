@@ -4,13 +4,17 @@ import org.edgo.jtg.basics.TemplateException;
 
 public class Extends extends TextNode {
 
-    public Extends(String sourceFile, String name, int line) {
-        super(sourceFile, name, line);
-    }
+	public Extends() {
 
-    @Override
-    public void accept(Visitor v) throws TemplateException {
-        v.visit(this);
-    }
+	}
+
+	public Extends(String sourceFile, String name, int line) {
+		super(sourceFile, name, line);
+	}
+
+	@Override
+	public void accept(Visitor v) throws TemplateException {
+		v.visit(this);
+	}
 
 }

@@ -16,6 +16,8 @@ Sehr geehrte(r) <#= employee.firstName #> <#= employee.lastName #>,
 Ihre ID ist <#= employee.id #>.
 
 Mit freundlichen Grüßen
+
+------------------------
 йцукенгшщзх
 ЙЦУКЕНГШЩЗХ
-------------------------
+<#@include file="Details\\Include.txt.jtg" arg="employee" #>

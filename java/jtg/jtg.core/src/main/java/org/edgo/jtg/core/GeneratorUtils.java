@@ -1,10 +1,8 @@
 package org.edgo.jtg.core;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Date;
 import java.util.Locale;
 
 public final class GeneratorUtils {
@@ -63,6 +61,14 @@ public final class GeneratorUtils {
 		return path;
 	}
 
+	public static String Package2OutFullPath(String dirname, String generatedPackage) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(dirname);
+		sb.append(dirname != "" ? File.separator : "");
+		sb.append(generatedPackage.replace('.', '\\'));
+		return new File(sb.toString()).getPath();
+	}
+
 	public static String SourceOutFullPath(String dirname, String generatedPackage, String className) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(dirname);
@@ -109,11 +115,11 @@ public final class GeneratorUtils {
 	    }
 	    return Assembly.LoadFile(assembly);
 	}
-	*/
+
 	public static Date TemplatesChangeTime(String template_dir) {
 		String[] templates = new File(template_dir).list(new FilenameFilter() {
 			public boolean accept(File dir, String name) {
-				return name.endsWith(".cgt");
+				return name.endsWith(".jtg");
 			}
 		});
 		Date last_change = new Date(0);
@@ -129,7 +135,7 @@ public final class GeneratorUtils {
 		}
 		return last_change;
 	}
-
+	*/
 	public static String Project2JarName(String jarOutputDir, String projectName) {
 		String jarName = new File(projectName).getName();
 		if (jarName.lastIndexOf('.') > 0) {

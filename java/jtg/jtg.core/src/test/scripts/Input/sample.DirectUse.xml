@@ -8,16 +8,37 @@
 			<firstName>Jackie</firstName>
 			<lastName>Chan</lastName>
 			<title>Herr</title>
+			<addresses>
+				<address id="1">
+					<country>China</country>
+					<city>Beijin</city>
+					<zip>123456</zip>
+				</address>
+			</addresses>
 		</employeeElement>
 		<employeeElement id="1">
 			<firstName>Bruce</firstName>
 			<lastName>Lee</lastName>
 			<title>Herr</title>
+			<addresses>
+				<address id="1">
+					<country>Hong Kong</country>
+					<city>Kowloon Tong</city>
+					<zip>1234</zip>
+				</address>
+			</addresses>
 		</employeeElement>
 		<employeeElement id="2">
 			<firstName>Chuck</firstName>
 			<lastName>Norris</lastName>
 			<title>Herr</title>
+			<addresses>
+				<address id="1">
+					<country>USA</country>
+					<city>Ryan</city>
+					<zip>AW123</zip>
+				</address>
+			</addresses>
 		</employeeElement>
 	</employeeElements>
 </ds:DirectUseElement>

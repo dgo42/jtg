@@ -11,15 +11,18 @@ import org.edgo.jtg.core.GeneratorUtils;
 public class ParsedUnit extends Node {
 
 	private MacroLang language;
-	private final String templateFile;
-	private final String encoding;
-	private final List<Import> imports = new ArrayList<Import>();
-	private final List<String> jars = new ArrayList<String>();
-	private final List<Argument> arguments = new ArrayList<Argument>();
-	private final List<TemplateNode> templateNodes = new ArrayList<TemplateNode>();
-	private final List<ScriptNode> scriptNodes = new ArrayList<ScriptNode>();
+	private String templateFile;
+	private String encoding;
+	private List<Import> imports = new ArrayList<Import>();
+	private List<String> jars = new ArrayList<String>();
+	private List<Argument> arguments = new ArrayList<Argument>();
+	private List<TemplateNode> templateNodes = new ArrayList<TemplateNode>();
+	private List<ScriptNode> scriptNodes = new ArrayList<ScriptNode>();
 	private Extends extendsClass = null;
 
+	public ParsedUnit() {
+	}
+	
 	public ParsedUnit(String templateFile, String encoding) {
 		super(templateFile, 1);
 		this.templateFile = templateFile;
@@ -139,7 +142,7 @@ public class ParsedUnit extends Node {
 	}
 
 	public void setMacroLang(String lang) {
-		language = MacroLang.parse(lang);
+		language = MacroLang.valueOf(lang.toUpperCase());
 	}
 
 	@Override
@@ -171,7 +174,7 @@ public class ParsedUnit extends Node {
 	/**
 	 * @return the extends
 	 */
-	public Extends getExtends() {
+	public Extends getExtendsClass() {
 		return extendsClass;
 	}
 

@@ -1,5 +1,7 @@
 package org.edgo.jtg.core;
 
+import java.io.File;
+
 import org.edgo.jtg.basics.TemplateException;
 import org.edgo.jtg.core.model.ParsedUnit;
 import org.edgo.jtg.core.model.Visitor;
@@ -35,17 +37,26 @@ public class TemplateCompiler {
 		return firstArgument;
 	}
 
-	public void Compile(String templatefile, String template, JarCompiler compiler) throws TemplateException {
-		ParsedUnit unit = parse(templatefile);
-		//source_out_file = GeneratorUtils.SourceOutFullPath(source_out_dir, templatefile, unit.getMacroLang());
-		StringBuilder source_code = compile(unit, templatefile);
-		String className = GeneratorUtils.Template2ClassName(templateDir, templatefile);
-		compiler.AddSource(source_code.toString(), className, unit.getMacroLang(), template, generatedPackage,
-				unit.getEncoding(), unit);
+	public String compile(String templateFileName, long templateLastModified, String template, JarCompiler compiler) throws TemplateException {
+		String className = GeneratorUtils.Template2ClassName(templateDir, templateFileName);
+		String sourceOutName = GeneratorUtils.SourceOutFullPath(sourceOutDir, generatedPackage, className);
+		File templateFile = new File(templateFileName);
+		File sourceOutFile = new File(sourceOutName);
+		if (compiler.cacheExists() && sourceOutFile.exists() && sourceOutFile.isFile() && sourceOutFile.lastModified() > templateFile.lastModified()) {
+			// Skip template compilation if generated java file is newer as template file
+			return sourceOutName;
+		}
+		
+		ParsedUnit unit = parse(templateFileName);
+
+		StringBuilder sourceCode = compile(unit, templateFileName);
+		compiler.addSource(sourceCode.toString(), className, unit.getMacroLang(), template, generatedPackage,
+				unit.getEncoding(), unit, templateLastModified, firstArgument);
 
 		for (String jar : unit.getJars()) {
-			compiler.AddJar(jar + ".jar", templatefile);
+			compiler.addJar(jar + ".jar", templateFileName);
 		}
+		return sourceOutName;
 	}
 
 	private ParsedUnit parse(String templatefile) throws TemplateException {

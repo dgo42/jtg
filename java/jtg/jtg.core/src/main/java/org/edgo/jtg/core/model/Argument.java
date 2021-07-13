@@ -4,10 +4,14 @@ import org.edgo.jtg.basics.TemplateException;
 
 public class Argument extends TextNode {
 
-    private final String type;
+    private String type;
 
-    private final int num;
+    private int num;
 
+    public Argument() {
+    	
+    }
+    
     public Argument(String sourceFile, String name, String type, int num, int line) {
         super(sourceFile, name, line);
         this.type = type;

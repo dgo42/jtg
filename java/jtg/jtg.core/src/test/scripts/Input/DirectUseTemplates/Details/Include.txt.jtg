@@ -1,0 +1,9 @@
+﻿<#@codeTemplate language="java" targetLanguage="java"#>
+<#@property name="employee" type="EmployeeElement"#>
+
+Include file for <#= employee.lastName #>
+<#
+	for (Address address : employee.addresses.addresses) {
+#>	Country: <#=address.country#><#
+	}
+#>

@@ -59,18 +59,20 @@ public class ConfigPropertyPage extends PropertyPage {
 
 	private CTabFolder tabFolder;
 
-	// master project
-	private Text m_txtSchemaDir;
-	private Text m_txtTemplateDir;
-	private Text m_txtSchemaFile;
-	private Text m_txtStartTemplFile;
-	private Text m_txtSchemaPackage;
-	private Text m_txtTemplatePackage;
+	// leader project
+	private Text l_txtSchemaDir;
+	private Text l_txtTemplateDir;
+	private Text l_txtSrcOutDir;
+	private Text l_txtJarOutDir;
+	private Text l_txtSchemaFile;
+	private Text l_txtStartTemplFile;
+	private Text l_txtSchemaPackage;
+	private Text l_txtTemplatePackage;
 
-	// slave project
-	private Text s_masterProject;
-	private Text s_txtProjectDir;
-	private Text s_txtProjectFile;
+	// follower project
+	private Text f_leaderProject;
+	private Text f_txtProjectDir;
+	private Text f_txtProjectFile;
 
 	// standalone project
 	private Text st_txtSchemaDir;
@@ -102,8 +104,8 @@ public class ConfigPropertyPage extends PropertyPage {
 		mainComp.setLayout(gl_mainComp);
 
 		cmbProjectType = new Combo(mainComp, SWT.READ_ONLY);
-		cmbProjectType.add("Master template project", 0);
-		cmbProjectType.add("Slave project", 1);
+		cmbProjectType.add("Leader template project", 0);
+		cmbProjectType.add("Follower project", 1);
 		cmbProjectType.add("Standalone template project", 2);
 		cmbProjectType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		cmbProjectType.addSelectionListener(new SelectionAdapter() {
@@ -121,17 +123,17 @@ public class ConfigPropertyPage extends PropertyPage {
 		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		tabFolder.setHighlightEnabled(false);
 
-		// master project
+		// leader project
 		CTabItem ti1 = new CTabItem(tabFolder, SWT.NONE);
-		Composite masterComp = new Composite(tabFolder, SWT.NONE);
-		ti1.setControl(masterComp);
-		masterComp.setLayout(new FormLayout());
+		Composite leaderComp = new Composite(tabFolder, SWT.NONE);
+		ti1.setControl(leaderComp);
+		leaderComp.setLayout(new FormLayout());
 		{
-			Group grpDirectories = new Group(masterComp, SWT.NONE);
+			Group grpDirectories = new Group(leaderComp, SWT.NONE);
 			FormData fd_grpDirectories = new FormData();
 			fd_grpDirectories.top = new FormAttachment(0, 5);
 			fd_grpDirectories.left = new FormAttachment(0, 5);
-			fd_grpDirectories.bottom = new FormAttachment(0, 82);
+			fd_grpDirectories.bottom = new FormAttachment(0, 138);
 			fd_grpDirectories.right = new FormAttachment(1, 1, -5);
 			grpDirectories.setLayoutData(fd_grpDirectories);
 			grpDirectories.setText("Directories");
@@ -145,8 +147,8 @@ public class ConfigPropertyPage extends PropertyPage {
 			Label lblSchemaDir = new Label(grpDirectories, SWT.NONE);
 			lblSchemaDir.setText("Schema directory");
 
-			m_txtSchemaDir = new Text(grpDirectories, SWT.BORDER);
-			m_txtSchemaDir.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+			l_txtSchemaDir = new Text(grpDirectories, SWT.BORDER);
+			l_txtSchemaDir.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 			Button btnSchemaDirBrowse = new Button(grpDirectories, SWT.NONE);
 			btnSchemaDirBrowse.addSelectionListener(new SelectionAdapter() {
@@ -154,7 +156,7 @@ public class ConfigPropertyPage extends PropertyPage {
 				public void widgetSelected(SelectionEvent e) {
 					ElementTreeSelectionDialog dialog = createFolderSelectionDialog("Select schema directory",
 							"Select schema directory", Constants.SCHEMA_FILE_MASK);
-					IResource initSelection = getProject().findMember(m_txtSchemaDir.getText());
+					IResource initSelection = getProject().findMember(l_txtSchemaDir.getText());
 					dialog.setInput(getProject());
 					if (initSelection != null) {
 						dialog.setInitialSelections((Object[]) new IResource[] { initSelection });
@@ -162,7 +164,7 @@ public class ConfigPropertyPage extends PropertyPage {
 
 					if (dialog.open() == ElementTreeSelectionDialog.OK) {
 						IResource selected = (IResource) dialog.getFirstResult();
-						m_txtSchemaDir.setText(selected.getProjectRelativePath().toString());
+						l_txtSchemaDir.setText(selected.getProjectRelativePath().toString());
 					}
 				}
 			});
@@ -171,8 +173,8 @@ public class ConfigPropertyPage extends PropertyPage {
 			Label lblTemplateDir = new Label(grpDirectories, SWT.NONE);
 			lblTemplateDir.setText("Template directory");
 
-			m_txtTemplateDir = new Text(grpDirectories, SWT.BORDER);
-			m_txtTemplateDir.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+			l_txtTemplateDir = new Text(grpDirectories, SWT.BORDER);
+			l_txtTemplateDir.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 			Button btnTemplateDirBrowse = new Button(grpDirectories, SWT.NONE);
 			btnTemplateDirBrowse.addSelectionListener(new SelectionAdapter() {
@@ -180,7 +182,7 @@ public class ConfigPropertyPage extends PropertyPage {
 				public void widgetSelected(SelectionEvent e) {
 					ElementTreeSelectionDialog dialog = createFolderSelectionDialog("Select template directory",
 							"Select template directory", Constants.TEMPLATE_FILE_MASK);
-					IResource initSelection = getProject().findMember(m_txtTemplateDir.getText());
+					IResource initSelection = getProject().findMember(l_txtTemplateDir.getText());
 					dialog.setInput(getProject());
 					if (initSelection != null) {
 						dialog.setInitialSelections((Object[]) new IResource[] { initSelection });
@@ -188,13 +190,68 @@ public class ConfigPropertyPage extends PropertyPage {
 
 					if (dialog.open() == ElementTreeSelectionDialog.OK) {
 						IResource selected = (IResource) dialog.getFirstResult();
-						m_txtTemplateDir.setText(selected.getProjectRelativePath().toString());
+						l_txtTemplateDir.setText(selected.getProjectRelativePath().toString());
 					}
 				}
 			});
 			btnTemplateDirBrowse.setText("Browse...");
 
-			Group grpFiles = new Group(masterComp, SWT.NONE);
+			Label lblSrcOutDir = new Label(grpDirectories, SWT.NONE);
+			GridData gd_lblSrcOutDir = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+			gd_lblSrcOutDir.widthHint = 150;
+			lblSrcOutDir.setLayoutData(gd_lblSrcOutDir);
+			lblSrcOutDir.setText("Source output directory");
+
+			l_txtSrcOutDir = new Text(grpDirectories, SWT.BORDER);
+			l_txtSrcOutDir.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+
+			Button btnSrcOutDirBrowse = new Button(grpDirectories, SWT.NONE);
+			btnSrcOutDirBrowse.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					ElementTreeSelectionDialog dialog = createFolderSelectionDialog("Select source output directory",
+							"Select source output directory", null);
+					dialog.setInput(getProject());
+					IResource initSelection = getProject().findMember(l_txtSrcOutDir.getText());
+					if (initSelection != null) {
+						dialog.setInitialSelections((Object[]) new IResource[] { initSelection });
+					}
+
+					if (dialog.open() == ElementTreeSelectionDialog.OK) {
+						IResource selected = (IResource) dialog.getFirstResult();
+						l_txtSrcOutDir.setText(selected.getProjectRelativePath().toString());
+					}
+				}
+			});
+			btnSrcOutDirBrowse.setText("Browse...");
+
+			Label lblJarOutDir = new Label(grpDirectories, SWT.NONE);
+			lblJarOutDir.setText("Jar output directory");
+
+			l_txtJarOutDir = new Text(grpDirectories, SWT.BORDER);
+			l_txtJarOutDir.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+
+			Button btnJarOutDirBrowse = new Button(grpDirectories, SWT.NONE);
+			btnJarOutDirBrowse.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					ElementTreeSelectionDialog dialog = createFolderSelectionDialog("Select JAR output directory",
+							"Select JAR output directory", null);
+					dialog.setInput(getProject());
+					IResource initSelection = getProject().findMember(l_txtJarOutDir.getText());
+					if (initSelection != null) {
+						dialog.setInitialSelections((Object[]) new IResource[] { initSelection });
+					}
+
+					if (dialog.open() == ElementTreeSelectionDialog.OK) {
+						IResource selected = (IResource) dialog.getFirstResult();
+						l_txtJarOutDir.setText(selected.getProjectRelativePath().toString());
+					}
+				}
+			});
+			btnJarOutDirBrowse.setText("Browse...");
+
+			Group grpFiles = new Group(leaderComp, SWT.NONE);
 			grpFiles.setText("Files");
 			GridLayout gl_grpFiles = new GridLayout(3, false);
 			gl_grpFiles.verticalSpacing = 3;
@@ -215,8 +272,8 @@ public class ConfigPropertyPage extends PropertyPage {
 			lblSchemaFile.setLayoutData(gd_lblSchemaFile);
 			lblSchemaFile.setText("Schema file");
 
-			m_txtSchemaFile = new Text(grpFiles, SWT.BORDER);
-			m_txtSchemaFile.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+			l_txtSchemaFile = new Text(grpFiles, SWT.BORDER);
+			l_txtSchemaFile.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 			Button btnSchemaFileBrowse = new Button(grpFiles, SWT.NONE);
 			btnSchemaFileBrowse.addSelectionListener(new SelectionAdapter() {
@@ -228,14 +285,14 @@ public class ConfigPropertyPage extends PropertyPage {
 					if (input != null) {
 						dialog.setInput(input);
 					}
-					IResource initSelection = getProject().findMember(m_txtSchemaFile.getText());
+					IResource initSelection = getProject().findMember(l_txtSchemaFile.getText());
 					if (initSelection != null) {
 						dialog.setInitialSelections((Object[]) new IResource[] { initSelection });
 					}
 
 					if (dialog.open() == ElementTreeSelectionDialog.OK) {
 						IResource selected = (IResource) dialog.getFirstResult();
-						m_txtSchemaFile.setText(selected.getName());
+						l_txtSchemaFile.setText(selected.getName());
 					}
 				}
 			});
@@ -244,8 +301,8 @@ public class ConfigPropertyPage extends PropertyPage {
 			Label lblStartTemplFile = new Label(grpFiles, SWT.NONE);
 			lblStartTemplFile.setText("Start template");
 
-			m_txtStartTemplFile = new Text(grpFiles, SWT.BORDER);
-			m_txtStartTemplFile.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+			l_txtStartTemplFile = new Text(grpFiles, SWT.BORDER);
+			l_txtStartTemplFile.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 			Button btnStartTemplFileBrowse = new Button(grpFiles, SWT.NONE);
 			btnStartTemplFileBrowse.addSelectionListener(new SelectionAdapter() {
@@ -257,20 +314,20 @@ public class ConfigPropertyPage extends PropertyPage {
 					if (input != null) {
 						dialog.setInput(input);
 					}
-					IResource initSelection = getProject().findMember(m_txtStartTemplFile.getText());
+					IResource initSelection = getProject().findMember(l_txtStartTemplFile.getText());
 					if (initSelection != null) {
 						dialog.setInitialSelections((Object[]) new IResource[] { initSelection });
 					}
 
 					if (dialog.open() == ElementTreeSelectionDialog.OK) {
 						IResource selected = (IResource) dialog.getFirstResult();
-						m_txtStartTemplFile.setText(selected.getName());
+						l_txtStartTemplFile.setText(selected.getName());
 					}
 				}
 			});
 			btnStartTemplFileBrowse.setText("Browse...");
 
-			Group grpPackages = new Group(masterComp, SWT.NONE);
+			Group grpPackages = new Group(leaderComp, SWT.NONE);
 			grpPackages.setText("Packages");
 			GridLayout gl_grpPackages = new GridLayout(2, false);
 			gl_grpPackages.verticalSpacing = 7;
@@ -292,49 +349,49 @@ public class ConfigPropertyPage extends PropertyPage {
 			lblSchemapackage.setLayoutData(gd_lblSchemapackage);
 			lblSchemapackage.setText("SchemaPackage");
 
-			m_txtSchemaPackage = new Text(grpPackages, SWT.BORDER);
-			m_txtSchemaPackage.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+			l_txtSchemaPackage = new Text(grpPackages, SWT.BORDER);
+			l_txtSchemaPackage.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 			Label lblTemplatePackage = new Label(grpPackages, SWT.NONE);
 			lblTemplatePackage.setText("Template Package");
 
-			m_txtTemplatePackage = new Text(grpPackages, SWT.BORDER);
-			m_txtTemplatePackage.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+			l_txtTemplatePackage = new Text(grpPackages, SWT.BORDER);
+			l_txtTemplatePackage.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		}
 
-		// slave project
+		// follower project
 		CTabItem ti2 = new CTabItem(tabFolder, SWT.NONE);
-		Composite slaveComp = new Composite(tabFolder, SWT.NONE);
-		ti2.setControl(slaveComp);
-		slaveComp.setLayout(new FormLayout());
+		Composite followerComp = new Composite(tabFolder, SWT.NONE);
+		ti2.setControl(followerComp);
+		followerComp.setLayout(new FormLayout());
 		{
-			Group grpMaster = new Group(slaveComp, SWT.NONE);
-			FormData fd_grpMaster = new FormData();
-			fd_grpMaster.top = new FormAttachment(0, 5);
-			fd_grpMaster.left = new FormAttachment(0, 5);
-			fd_grpMaster.bottom = new FormAttachment(0, 52);
-			fd_grpMaster.right = new FormAttachment(1, 1, -5);
-			grpMaster.setLayoutData(fd_grpMaster);
-			grpMaster.setText("Master");
-			GridLayout gl_grpMaster = new GridLayout(3, false);
-			gl_grpMaster.marginHeight = 3;
-			gl_grpMaster.marginWidth = 3;
-			gl_grpMaster.verticalSpacing = 3;
-			gl_grpMaster.horizontalSpacing = 3;
-			grpMaster.setLayout(gl_grpMaster);
+			Group grpLeader = new Group(followerComp, SWT.NONE);
+			FormData fd_grpLeader = new FormData();
+			fd_grpLeader.top = new FormAttachment(0, 5);
+			fd_grpLeader.left = new FormAttachment(0, 5);
+			fd_grpLeader.bottom = new FormAttachment(0, 52);
+			fd_grpLeader.right = new FormAttachment(1, 1, -5);
+			grpLeader.setLayoutData(fd_grpLeader);
+			grpLeader.setText("Leader");
+			GridLayout gl_grpLeader = new GridLayout(3, false);
+			gl_grpLeader.marginHeight = 3;
+			gl_grpLeader.marginWidth = 3;
+			gl_grpLeader.verticalSpacing = 3;
+			gl_grpLeader.horizontalSpacing = 3;
+			grpLeader.setLayout(gl_grpLeader);
 
-			Label lblMasterPrj = new Label(grpMaster, SWT.NONE);
-			lblMasterPrj.setText("Master project");
+			Label lblLeaderPrj = new Label(grpLeader, SWT.NONE);
+			lblLeaderPrj.setText("Leader project");
 
-			s_masterProject = new Text(grpMaster, SWT.BORDER);
-			s_masterProject.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+			f_leaderProject = new Text(grpLeader, SWT.BORDER);
+			f_leaderProject.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
-			Button btnMasterPrjBrowse = new Button(grpMaster, SWT.NONE);
-			btnMasterPrjBrowse.addSelectionListener(new SelectionAdapter() {
+			Button btnLeaderPrjBrowse = new Button(grpLeader, SWT.NONE);
+			btnLeaderPrjBrowse.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					ElementTreeSelectionDialog dialog = createMasterPrjSelectionDialog("Select master project",
-							"Select master project");
+					ElementTreeSelectionDialog dialog = createLeaderPrjSelectionDialog("Select leader project",
+							"Select leader project");
 					IResource initSelection = workspaceRoot.findMember("/");
 					if (initSelection != null) {
 						dialog.setInitialSelections((Object[]) new IResource[] { workspaceRoot });
@@ -342,16 +399,16 @@ public class ConfigPropertyPage extends PropertyPage {
 
 					if (dialog.open() == ElementTreeSelectionDialog.OK) {
 						IResource selected = (IResource) dialog.getFirstResult();
-						s_masterProject.setText(selected.getProject().getName());
+						f_leaderProject.setText(selected.getProject().getName());
 					}
 				}
 			});
-			btnMasterPrjBrowse.setText("Browse...");
+			btnLeaderPrjBrowse.setText("Browse...");
 
-			Group grpDirectories = new Group(slaveComp, SWT.NONE);
+			Group grpDirectories = new Group(followerComp, SWT.NONE);
 			FormData fd_grpDirectories = new FormData();
-			fd_grpDirectories.bottom = new FormAttachment(grpMaster, 52, SWT.BOTTOM);
-			fd_grpDirectories.top = new FormAttachment(grpMaster, 5);
+			fd_grpDirectories.bottom = new FormAttachment(grpLeader, 52, SWT.BOTTOM);
+			fd_grpDirectories.top = new FormAttachment(grpLeader, 5);
 			fd_grpDirectories.left = new FormAttachment(0, 5);
 			fd_grpDirectories.right = new FormAttachment(1, 1, -5);
 			grpDirectories.setLayoutData(fd_grpDirectories);
@@ -366,8 +423,8 @@ public class ConfigPropertyPage extends PropertyPage {
 			Label lblSchemaDir = new Label(grpDirectories, SWT.NONE);
 			lblSchemaDir.setText("Schema directory");
 
-			s_txtProjectDir = new Text(grpDirectories, SWT.BORDER);
-			s_txtProjectDir.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+			f_txtProjectDir = new Text(grpDirectories, SWT.BORDER);
+			f_txtProjectDir.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 			Button btnSchemaDirBrowse = new Button(grpDirectories, SWT.NONE);
 			btnSchemaDirBrowse.addSelectionListener(new SelectionAdapter() {
@@ -375,7 +432,7 @@ public class ConfigPropertyPage extends PropertyPage {
 				public void widgetSelected(SelectionEvent e) {
 					ElementTreeSelectionDialog dialog = createFolderSelectionDialog("Select schema directory",
 							"Select schema directory", Constants.SCHEMA_FILE_MASK);
-					IResource initSelection = getProject().findMember(s_txtProjectDir.getText());
+					IResource initSelection = getProject().findMember(f_txtProjectDir.getText());
 					dialog.setInput(getProject());
 					if (initSelection != null) {
 						dialog.setInitialSelections((Object[]) new IResource[] { initSelection });
@@ -383,13 +440,13 @@ public class ConfigPropertyPage extends PropertyPage {
 
 					if (dialog.open() == ElementTreeSelectionDialog.OK) {
 						IResource selected = (IResource) dialog.getFirstResult();
-						s_txtProjectDir.setText(selected.getProjectRelativePath().toString());
+						f_txtProjectDir.setText(selected.getProjectRelativePath().toString());
 					}
 				}
 			});
 			btnSchemaDirBrowse.setText("Browse...");
 
-			Group grpFiles = new Group(slaveComp, SWT.NONE);
+			Group grpFiles = new Group(followerComp, SWT.NONE);
 			grpFiles.setText("Files");
 			GridLayout gl_grpFiles = new GridLayout(3, false);
 			gl_grpFiles.verticalSpacing = 3;
@@ -407,8 +464,8 @@ public class ConfigPropertyPage extends PropertyPage {
 			Label lblProjectFile = new Label(grpFiles, SWT.NONE);
 			lblProjectFile.setText("Project file");
 
-			s_txtProjectFile = new Text(grpFiles, SWT.BORDER);
-			s_txtProjectFile.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+			f_txtProjectFile = new Text(grpFiles, SWT.BORDER);
+			f_txtProjectFile.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 			Button btnProjectFileBrowse = new Button(grpFiles, SWT.NONE);
 			btnProjectFileBrowse.addSelectionListener(new SelectionAdapter() {
@@ -420,14 +477,14 @@ public class ConfigPropertyPage extends PropertyPage {
 					if (input != null) {
 						dialog.setInput(input);
 					}
-					IResource initSelection = getProject().findMember(s_txtProjectFile.getText());
+					IResource initSelection = getProject().findMember(f_txtProjectFile.getText());
 					if (initSelection != null) {
 						dialog.setInitialSelections((Object[]) new IResource[] { initSelection });
 					}
 
 					if (dialog.open() == ElementTreeSelectionDialog.OK) {
 						IResource selected = (IResource) dialog.getFirstResult();
-						s_txtProjectFile.setText(selected.getName());
+						f_txtProjectFile.setText(selected.getName());
 					}
 				}
 			});
@@ -809,7 +866,7 @@ public class ConfigPropertyPage extends PropertyPage {
 		return dialog;
 	}
 
-	protected FolderSelectionDialog createMasterPrjSelectionDialog(String title, String message) {
+	protected FolderSelectionDialog createLeaderPrjSelectionDialog(String title, String message) {
 		ILabelProvider lp = new WorkbenchLabelProvider();
 		ITreeContentProvider cp = new WorkbenchContentProvider();
 		Class<?>[] acceptedSelectedClasses = { IProject.class };
@@ -823,14 +880,14 @@ public class ConfigPropertyPage extends PropertyPage {
 		IProject currProject = getProject();
 		for (int i = 0; i < allProjects.length; i++) {
 			IProject project = allProjects[i];
-			if (allProjects[i].equals(currProject)) {
+			if (project.equals(currProject)) {
 				rejectedElements.add(project);
 			} else {
 				IScopeContext projectScope = new ProjectScope(project);
 				IEclipsePreferences store = projectScope.getNode(JtgUIPlugin.PLUGIN_ID);
 
-				ProjectType projectType = ProjectType.parse(PreferenceLoader.loadValue(store, Constants.PROJECT_TYPE));
-				if (projectType != ProjectType.MASTER) {
+				ProjectType projectType = ProjectType.valueOf(PreferenceLoader.loadValue(store, Constants.PROJECT_TYPE));
+				if (projectType != ProjectType.LEADER) {
 					rejectedElements.add(project);
 				}
 			}
@@ -860,20 +917,22 @@ public class ConfigPropertyPage extends PropertyPage {
 
 		
 		ProjectType projectType = ProjectType.parse(cmbProjectType.getSelectionIndex());
-		PreferenceLoader.storeValue(store, Constants.PROJECT_TYPE, projectType.getValue());
+		PreferenceLoader.storeValue(store, Constants.PROJECT_TYPE, projectType.name());
 
-		// store master settings
-		PreferenceLoader.storeValue(store, Constants.M_SCHEMA_DIR_PREF, m_txtSchemaDir.getText());
-		PreferenceLoader.storeValue(store, Constants.M_TEMPLATE_DIR_PREF, m_txtTemplateDir.getText());
-		PreferenceLoader.storeValue(store, Constants.M_SCHEMA_FILE_PREF, m_txtSchemaFile.getText());
-		PreferenceLoader.storeValue(store, Constants.M_START_TEMPLATE_FILE_PREF, m_txtStartTemplFile.getText());
-		PreferenceLoader.storeValue(store, Constants.M_SCHEMA_PACKAGE_PREF, m_txtSchemaPackage.getText());
-		PreferenceLoader.storeValue(store, Constants.M_TEMPLATE_PACKAGE_PREF, m_txtTemplatePackage.getText());
-
-		// store slave settings
-		PreferenceLoader.storeValue(store, Constants.S_MASTER_PROJECT, s_masterProject.getText());
-		PreferenceLoader.storeValue(store, Constants.S_PROJECT_DIR_PREF, s_txtProjectDir.getText());
-		PreferenceLoader.storeValue(store, Constants.S_PROJECT_FILE_PREF, s_txtProjectFile.getText());
+		// store leader settings
+		PreferenceLoader.storeValue(store, Constants.L_SCHEMA_DIR_PREF, l_txtSchemaDir.getText());
+		PreferenceLoader.storeValue(store, Constants.L_TEMPLATE_DIR_PREF, l_txtTemplateDir.getText());
+		PreferenceLoader.storeValue(store, Constants.L_SOURCE_OUT_DIR_PREF, l_txtSrcOutDir.getText());
+		PreferenceLoader.storeValue(store, Constants.L_JAR_OUTPUT_DIR_PREF, l_txtJarOutDir.getText());
+		PreferenceLoader.storeValue(store, Constants.L_SCHEMA_FILE_PREF, l_txtSchemaFile.getText());
+		PreferenceLoader.storeValue(store, Constants.L_START_TEMPLATE_FILE_PREF, l_txtStartTemplFile.getText());
+		PreferenceLoader.storeValue(store, Constants.L_SCHEMA_PACKAGE_PREF, l_txtSchemaPackage.getText());
+		PreferenceLoader.storeValue(store, Constants.L_TEMPLATE_PACKAGE_PREF, l_txtTemplatePackage.getText());
+		
+		// store follower settings
+		PreferenceLoader.storeValue(store, Constants.F_LEADER_PROJECT, f_leaderProject.getText());
+		PreferenceLoader.storeValue(store, Constants.F_PROJECT_DIR_PREF, f_txtProjectDir.getText());
+		PreferenceLoader.storeValue(store, Constants.F_PROJECT_FILE_PREF, f_txtProjectFile.getText());
 
 		// store standalone settings
 		PreferenceLoader.storeValue(store, Constants.ST_SCHEMA_DIR_PREF, st_txtSchemaDir.getText());
@@ -886,8 +945,8 @@ public class ConfigPropertyPage extends PropertyPage {
 		PreferenceLoader.storeValue(store, Constants.ST_SCHEMA_PACKAGE_PREF, st_txtSchemaPackage.getText());
 		PreferenceLoader.storeValue(store, Constants.ST_TEMPLATE_PACKAGE_PREF, st_txtTemplatePackage.getText());
 		PreferenceLoader.storeValue(store, Constants.ST_USING_CACHE_PREF, st_chkUsingCache.getSelection());
-		GeneratorCommand cmd = GeneratorCommand.parse(st_cmbGoal.getSelectionIndex());
-		PreferenceLoader.storeValue(store, Constants.ST_GOAL_PREF, cmd.getValue());
+		GeneratorCommand cmd = GeneratorCommand.valueOfIndex(st_cmbGoal.getSelectionIndex());
+		PreferenceLoader.storeValue(store, Constants.ST_GOAL_PREF, cmd != null ? cmd.name() : GeneratorCommand.COMPLETE.name());
 	}
 
 	private Preferences getPreferences() {
@@ -906,7 +965,7 @@ public class ConfigPropertyPage extends PropertyPage {
 			JtgUIPlugin.log(e);
 		}
 
-		ProjectType projectType = ProjectType.parse(PreferenceLoader.loadValue(store, Constants.PROJECT_TYPE));
+		ProjectType projectType = ProjectType.valueOf(PreferenceLoader.loadValue(store, Constants.PROJECT_TYPE));
 		int index = ProjectType.STANDALONE.getIndex();
 		if (projectType != null) {
 			index = projectType.getIndex();
@@ -914,18 +973,22 @@ public class ConfigPropertyPage extends PropertyPage {
 		cmbProjectType.select(index);
 		tabFolder.setSelection(index);
 
-		// store master settings
-		m_txtSchemaDir.setText(PreferenceLoader.loadValue(store, Constants.M_SCHEMA_DIR_PREF));
-		m_txtTemplateDir.setText(PreferenceLoader.loadValue(store, Constants.M_TEMPLATE_DIR_PREF));
-		m_txtSchemaFile.setText(PreferenceLoader.loadValue(store, Constants.M_SCHEMA_FILE_PREF));
-		m_txtStartTemplFile.setText(PreferenceLoader.loadValue(store, Constants.M_START_TEMPLATE_FILE_PREF));
-		m_txtSchemaPackage.setText(PreferenceLoader.loadValue(store, Constants.M_SCHEMA_PACKAGE_PREF));
-		m_txtTemplatePackage.setText(PreferenceLoader.loadValue(store, Constants.M_TEMPLATE_PACKAGE_PREF));
+		// store leader settings
+		l_txtSchemaDir.setText(PreferenceLoader.loadValue(store, Constants.L_SCHEMA_DIR_PREF));
+		l_txtTemplateDir.setText(PreferenceLoader.loadValue(store, Constants.L_TEMPLATE_DIR_PREF));
+		l_txtSrcOutDir.setText(PreferenceLoader.loadValue(store, Constants.L_SOURCE_OUT_DIR_PREF));
+		l_txtJarOutDir.setText(PreferenceLoader.loadValue(store, Constants.L_JAR_OUTPUT_DIR_PREF));
+		l_txtSrcOutDir.setText(PreferenceLoader.loadValue(store, Constants.L_SOURCE_OUT_DIR_PREF));
+		l_txtJarOutDir.setText(PreferenceLoader.loadValue(store, Constants.L_JAR_OUTPUT_DIR_PREF));
+		l_txtSchemaFile.setText(PreferenceLoader.loadValue(store, Constants.L_SCHEMA_FILE_PREF));
+		l_txtStartTemplFile.setText(PreferenceLoader.loadValue(store, Constants.L_START_TEMPLATE_FILE_PREF));
+		l_txtSchemaPackage.setText(PreferenceLoader.loadValue(store, Constants.L_SCHEMA_PACKAGE_PREF));
+		l_txtTemplatePackage.setText(PreferenceLoader.loadValue(store, Constants.L_TEMPLATE_PACKAGE_PREF));
 
-		// store slave settings
-		s_masterProject.setText(PreferenceLoader.loadValue(store, Constants.S_MASTER_PROJECT));
-		s_txtProjectDir.setText(PreferenceLoader.loadValue(store, Constants.S_PROJECT_DIR_PREF));
-		s_txtProjectFile.setText(PreferenceLoader.loadValue(store, Constants.S_PROJECT_FILE_PREF));
+		// store follower settings
+		f_leaderProject.setText(PreferenceLoader.loadValue(store, Constants.F_LEADER_PROJECT));
+		f_txtProjectDir.setText(PreferenceLoader.loadValue(store, Constants.F_PROJECT_DIR_PREF));
+		f_txtProjectFile.setText(PreferenceLoader.loadValue(store, Constants.F_PROJECT_FILE_PREF));
 
 		// store standalone settings
 		st_txtSchemaDir.setText(PreferenceLoader.loadValue(store, Constants.ST_SCHEMA_DIR_PREF));
@@ -938,7 +1001,7 @@ public class ConfigPropertyPage extends PropertyPage {
 		st_txtSchemaPackage.setText(PreferenceLoader.loadValue(store, Constants.ST_SCHEMA_PACKAGE_PREF));
 		st_txtTemplatePackage.setText(PreferenceLoader.loadValue(store, Constants.ST_TEMPLATE_PACKAGE_PREF));
 		st_chkUsingCache.setSelection(PreferenceLoader.loadValueBool(store, Constants.ST_USING_CACHE_PREF));
-		GeneratorCommand cmd = GeneratorCommand.parse(PreferenceLoader.loadValue(store, Constants.ST_GOAL_PREF));
+		GeneratorCommand cmd = GeneratorCommand.valueOf(PreferenceLoader.loadValue(store, Constants.ST_GOAL_PREF));
 		if (cmd != null) {
 			st_cmbGoal.select(cmd.getIndex());
 		} else {
