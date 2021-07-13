@@ -35,8 +35,11 @@ I've only developed some coloring schema for jtg specifical file formats.
 # Update 2019-11-21
 The jtg is updated. It is now compatible with eclipse 2019-09 R and works with OpenJDK 9 - 12.
 
-# Update site
+# Update 2021-07-13
+The jtg is updated. Implemented cache to optimize compilation expiriance. Implemented leader -> multi follower project configuration in eclipse. This configuration makes possible to use one shema/template set for different following project and maintain shema/template set separately.
+It is now compatible with eclipse 2021-06.
 
+# Update site
 Please use https://raw.githubusercontent.com/dgo42/jtg-update/master/site.xml in eclipse as an update site to install JTG
 
 # TBD
