@@ -1,4 +1,3 @@
-
 package org.edgo.jtg.ui.dialogs;
 
 import java.util.ArrayList;
@@ -886,7 +885,7 @@ public class ConfigPropertyPage extends PropertyPage {
 				IScopeContext projectScope = new ProjectScope(project);
 				IEclipsePreferences store = projectScope.getNode(JtgUIPlugin.PLUGIN_ID);
 
-				ProjectType projectType = ProjectType.valueOf(PreferenceLoader.loadValue(store, Constants.PROJECT_TYPE));
+				ProjectType projectType = ProjectType.parse(PreferenceLoader.loadValue(store, Constants.PROJECT_TYPE));
 				if (projectType != ProjectType.LEADER) {
 					rejectedElements.add(project);
 				}
@@ -945,7 +944,7 @@ public class ConfigPropertyPage extends PropertyPage {
 		PreferenceLoader.storeValue(store, Constants.ST_SCHEMA_PACKAGE_PREF, st_txtSchemaPackage.getText());
 		PreferenceLoader.storeValue(store, Constants.ST_TEMPLATE_PACKAGE_PREF, st_txtTemplatePackage.getText());
 		PreferenceLoader.storeValue(store, Constants.ST_USING_CACHE_PREF, st_chkUsingCache.getSelection());
-		GeneratorCommand cmd = GeneratorCommand.valueOfIndex(st_cmbGoal.getSelectionIndex());
+		GeneratorCommand cmd = GeneratorCommand.parse(st_cmbGoal.getSelectionIndex());
 		PreferenceLoader.storeValue(store, Constants.ST_GOAL_PREF, cmd != null ? cmd.name() : GeneratorCommand.COMPLETE.name());
 	}
 
@@ -965,7 +964,7 @@ public class ConfigPropertyPage extends PropertyPage {
 			JtgUIPlugin.log(e);
 		}
 
-		ProjectType projectType = ProjectType.valueOf(PreferenceLoader.loadValue(store, Constants.PROJECT_TYPE));
+		ProjectType projectType = ProjectType.parse(PreferenceLoader.loadValue(store, Constants.PROJECT_TYPE));
 		int index = ProjectType.STANDALONE.getIndex();
 		if (projectType != null) {
 			index = projectType.getIndex();
@@ -1001,7 +1000,7 @@ public class ConfigPropertyPage extends PropertyPage {
 		st_txtSchemaPackage.setText(PreferenceLoader.loadValue(store, Constants.ST_SCHEMA_PACKAGE_PREF));
 		st_txtTemplatePackage.setText(PreferenceLoader.loadValue(store, Constants.ST_TEMPLATE_PACKAGE_PREF));
 		st_chkUsingCache.setSelection(PreferenceLoader.loadValueBool(store, Constants.ST_USING_CACHE_PREF));
-		GeneratorCommand cmd = GeneratorCommand.valueOf(PreferenceLoader.loadValue(store, Constants.ST_GOAL_PREF));
+		GeneratorCommand cmd = GeneratorCommand.parse(PreferenceLoader.loadValue(store, Constants.ST_GOAL_PREF));
 		if (cmd != null) {
 			st_cmbGoal.select(cmd.getIndex());
 		} else {

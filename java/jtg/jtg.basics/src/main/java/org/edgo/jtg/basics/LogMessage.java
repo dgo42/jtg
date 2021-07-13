@@ -2,68 +2,68 @@ package org.edgo.jtg.basics;
 
 public class LogMessage {
 
-    public static enum MessageType {
-    	// @formatter:on
+	public static enum MessageType {
+		// @formatter:off
         ERROR,
         FATAL_ERROR,
         WARNING,
         INFO;
-    	// @formatter:off
-    }
-    
-    private MessageType type;
-    private String javaFileName;
-    private int javaLineNum;
-    private String templateFileName;
-    private int templateBeginLineNum;
-    private String errMsg;
+    	// @formatter:on
+	}
 
-    public LogMessage(MessageType type, String javaFileName, int javaLineNum, String errMsg) {
-        this.type = type;
-        this.javaFileName = javaFileName;
-        this.javaLineNum = javaLineNum;
-        this.errMsg = errMsg;
-        this.templateBeginLineNum = -1;
-    }
+	private MessageType type;
+	private String javaFileName;
+	private int javaLineNum;
+	private String templateFileName;
+	private int templateBeginLineNum;
+	private String errMsg;
 
-    public LogMessage(MessageType type, String javaFileName, int javaLineNum, String templateFileName, int templateBeginLineNum, String errMsg) {
+	public LogMessage(MessageType type, String javaFileName, int javaLineNum, String errMsg) {
+		this.type = type;
+		this.javaFileName = javaFileName;
+		this.javaLineNum = javaLineNum;
+		this.errMsg = errMsg;
+		this.templateBeginLineNum = -1;
+	}
 
-        this(type, javaFileName, javaLineNum, errMsg);
-        this.templateFileName = templateFileName;
-        this.templateBeginLineNum = templateBeginLineNum;
-    }
+	public LogMessage(MessageType type, String javaFileName, int javaLineNum, String templateFileName, int templateBeginLineNum, String errMsg) {
 
-    public String getJavaFileName() {
-        return this.javaFileName;
-    }
+		this(type, javaFileName, javaLineNum, errMsg);
+		this.templateFileName = templateFileName;
+		this.templateBeginLineNum = templateBeginLineNum;
+	}
 
-    public int getJavaLineNumber() {
-        return this.javaLineNum;
-    }
+	public String getJavaFileName() {
+		return this.javaFileName;
+	}
 
-    public String getTemplateFileName() {
-        return this.templateFileName;
-    }
+	public int getJavaLineNumber() {
+		return this.javaLineNum;
+	}
 
-    public int getTemplateBeginLineNumber() {
-        return this.templateBeginLineNum;
-    }
+	public String getTemplateFileName() {
+		return this.templateFileName;
+	}
 
-    public String getErrorMessage() {
-        return this.errMsg.toString();
-    }
-    
-    public MessageType getType() {
-        return type;
-    }
+	public int getTemplateBeginLineNumber() {
+		return this.templateBeginLineNum;
+	}
 
-    public String getFile() {
-        return (templateBeginLineNum > 0 ? templateFileName : javaFileName);
-    }
+	public String getErrorMessage() {
+		return this.errMsg.toString();
+	}
 
-    public int getLine() {
-        return (templateBeginLineNum > 0 ? templateBeginLineNum : javaLineNum);
-    }
+	public MessageType getType() {
+		return type;
+	}
+
+	public String getFile() {
+		return (templateBeginLineNum > 0 ? templateFileName : javaFileName);
+	}
+
+	public int getLine() {
+		return (templateBeginLineNum > 0 ? templateBeginLineNum : javaLineNum);
+	}
 
 	public void setTemplateFileName(String templateFileName) {
 		this.templateFileName = templateFileName;
@@ -72,6 +72,5 @@ public class LogMessage {
 	public void setTemplateBeginLineNum(int templateBeginLineNum) {
 		this.templateBeginLineNum = templateBeginLineNum;
 	}
-    
-    
+
 }

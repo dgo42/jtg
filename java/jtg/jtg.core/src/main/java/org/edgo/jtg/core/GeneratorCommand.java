@@ -29,11 +29,19 @@ public enum GeneratorCommand {
 		this.index = index;
 	}
 
-	public static GeneratorCommand valueOfIndex(int index) {
+	public static GeneratorCommand parse(int index) {
 		if (index >= 0 && index < values.length) {
 			return values[index];
 		}
-		return null;
+		return COMPLETE;
+	}
+
+	public static GeneratorCommand parse(String value) {
+		try {
+			return valueOf(value);
+		} catch(IllegalArgumentException e) {
+			return COMPLETE;
+		}
 	}
 
 	public int getIndex() {

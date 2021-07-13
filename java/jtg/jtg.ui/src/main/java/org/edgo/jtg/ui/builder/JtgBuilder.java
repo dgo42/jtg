@@ -237,7 +237,7 @@ public class JtgBuilder extends IncrementalProjectBuilder {
 	JtgConfiguration getConfiguration(IProject project) throws CoreException {
 		IScopeContext projectScope = new ProjectScope(project);
 		Preferences store = projectScope.getNode(JtgUIPlugin.PLUGIN_ID);
-		ProjectType projectType = ProjectType.valueOf(PreferenceLoader.loadValue(store, Constants.PROJECT_TYPE));
+		ProjectType projectType = ProjectType.parse(PreferenceLoader.loadValue(store, Constants.PROJECT_TYPE));
 
 		JtgConfiguration config = new JtgConfiguration();
 		if (projectType == ProjectType.LEADER) {
@@ -338,7 +338,7 @@ public class JtgBuilder extends IncrementalProjectBuilder {
 		IScopeContext projectScope = new ProjectScope(project);
 		IEclipsePreferences store = projectScope.getNode(JtgUIPlugin.PLUGIN_ID);
 
-		ProjectType projectType = ProjectType.valueOf(PreferenceLoader.loadValue(store, Constants.PROJECT_TYPE));
+		ProjectType projectType = ProjectType.parse(PreferenceLoader.loadValue(store, Constants.PROJECT_TYPE));
 		return projectType;
 	}
 
@@ -357,7 +357,7 @@ public class JtgBuilder extends IncrementalProjectBuilder {
 			if (project.isOpen() && !project.equals(currProject)) {
 				IScopeContext projectScope = new ProjectScope(project);
 				IEclipsePreferences store = projectScope.getNode(JtgUIPlugin.PLUGIN_ID);
-				ProjectType projectType = ProjectType.valueOf(PreferenceLoader.loadValue(store, Constants.PROJECT_TYPE));
+				ProjectType projectType = ProjectType.parse(PreferenceLoader.loadValue(store, Constants.PROJECT_TYPE));
 				String leaderName = PreferenceLoader.loadValue(store, Constants.F_LEADER_PROJECT);
 				if (projectType == ProjectType.FOLLOWER && currProjectName.equals(leaderName)) {
 					followers.add(project);
