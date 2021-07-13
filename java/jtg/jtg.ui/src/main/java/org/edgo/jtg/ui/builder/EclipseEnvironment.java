@@ -10,6 +10,8 @@ import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -29,8 +31,11 @@ public class EclipseEnvironment implements IEnvironment {
 
 	private IFile lastFile = null;
 
+	private List<IFile> toSync;
+
 	public EclipseEnvironment(IProject project) {
 		this.project = project;
+		toSync = new LinkedList<IFile>();
 	}
 
 	public PrintWriter getOutput(String fileName, String encoding, GeneratorMode mode) throws EnvironmentException {
@@ -49,8 +54,7 @@ public class EclipseEnvironment implements IEnvironment {
 						name = filenameStr.substring(0, dot);
 					}
 
-					IPath bakfile = path.getFullPath()
-							.append(name + (new SimpleDateFormat(".yyyy_MM_dd_HHmmss.")).format(new Date()) + ext);
+					IPath bakfile = path.getFullPath().append(name + (new SimpleDateFormat(".yyyy_MM_dd_HHmmss.")).format(new Date()) + ext);
 
 					file.move(bakfile, true, null);
 				}
@@ -59,8 +63,7 @@ public class EclipseEnvironment implements IEnvironment {
 			file = project.getFile(fileName);
 			file.setCharset(encoding, null);
 			lastFile = file;
-			return new PrintWriter(new OutputStreamWriter(new FileOutputStream(file.getLocation().toOSString()),
-					StandardCharsets.UTF_8));
+			return new PrintWriter(new OutputStreamWriter(new FileOutputStream(file.getLocation().toOSString()), StandardCharsets.UTF_8));
 		} catch (CoreException e) {
 			throw new EnvironmentException("File not found");
 		} catch (FileNotFoundException e) {
@@ -70,8 +73,14 @@ public class EclipseEnvironment implements IEnvironment {
 
 	public void sync() {
 		if (lastFile != null) {
+			toSync.add(lastFile);
+		}
+	}
+
+	public void bulkSync() {
+		for (IFile file : toSync) {
 			try {
-				lastFile.refreshLocal(IResource.DEPTH_ZERO, null);
+				file.refreshLocal(IResource.DEPTH_ZERO, null);
 			} catch (CoreException e) {
 				JtgUIPlugin.log(e);
 			}
