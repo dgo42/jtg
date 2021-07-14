@@ -26,8 +26,12 @@ public final class PreferenceLoader {
 		return "";
 	}
 
-	public static boolean loadValueBool(Preferences store, String prefName) {
+	public static boolean loadBool(Preferences store, String prefName) {
 		return store.getBoolean(prefName, false);
+	}
+
+	public static long loadLong(Preferences store, String prefName) {
+		return store.getLong(prefName, -1);
 	}
 
 	public static void storeValue(Preferences store, String prefName, String newValue) {
@@ -47,6 +51,19 @@ public final class PreferenceLoader {
 		try {
 			if (newValue) {
 				store.putBoolean(prefName, newValue);
+			} else {
+				store.remove(prefName);
+			}
+			store.flush();
+		} catch (Exception e) {
+			JtgUIPlugin.log(e);
+		}
+	}
+
+	public static void storeValue(Preferences store, String prefName, long newValue) {
+		try {
+			if (newValue > 0) {
+				store.putLong(prefName, newValue);
 			} else {
 				store.remove(prefName);
 			}

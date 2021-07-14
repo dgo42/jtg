@@ -265,7 +265,7 @@ M4 = Platform-specific fourth key -->
    </extension>
 
 <!-- Context menu for Navigator and Package-Explorer -->
-   <extension
+   <!-- extension
          point="org.eclipse.ui.popupMenus">
       <objectContribution
             objectClass="org.eclipse.core.resources.IResource"
@@ -286,7 +286,7 @@ M4 = Platform-specific fourth key -->
                id="net.sf.colorer.eclipse.HTMLGeneratorAction">
          </action>
       </objectContribution>
-   </extension>
+   </extension -->
    
    <extension
          point="org.eclipse.ui.themes">

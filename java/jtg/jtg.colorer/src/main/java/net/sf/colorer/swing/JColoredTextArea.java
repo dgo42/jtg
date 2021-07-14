@@ -161,10 +161,10 @@ public class JColoredTextArea extends JTextArea {
 		if (!has) {
 			return null;
 		}
-		Color color = (Color) colorsHash.get(new Integer(rgb));
+		Color color = (Color) colorsHash.get(Integer.valueOf(rgb));
 		if (color == null) {
 			color = new Color(rgb >> 16, (rgb >> 8) & 0xFF, rgb & 0xFF);
-			colorsHash.put(new Integer(rgb), color);
+			colorsHash.put(Integer.valueOf(rgb), color);
 		}
 		return color;
 	};

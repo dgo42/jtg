@@ -51,7 +51,7 @@ public class ColorerAnnotationProvider {
 		IAnnotationModel model = getModel();
 		if (model == null) return;
 
-		@SuppressWarnings("unchecked") Iterator<Annotation> iter = (Iterator<Annotation>) model.getAnnotationIterator();
+		Iterator<Annotation> iter = (Iterator<Annotation>) model.getAnnotationIterator();
 		while (iter.hasNext()) {
 			Annotation ann = iter.next();
 			if (ann instanceof ColorerAnnotation) {

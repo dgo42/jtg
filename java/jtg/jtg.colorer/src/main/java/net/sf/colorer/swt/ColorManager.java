@@ -18,7 +18,7 @@ public class ColorManager {
 		if (!has) {
 			return null;
 		}
-		Color color = colorsHash.get(String.valueOf(rgb));
+		Color color = colorsHash.get(rgb);
 		if (color == null) {
 			color = new Color(Display.getCurrent(), rgb >> 16, (rgb >> 8) & 0xFF, rgb & 0xFF);
 			colorsHash.put(rgb, color);

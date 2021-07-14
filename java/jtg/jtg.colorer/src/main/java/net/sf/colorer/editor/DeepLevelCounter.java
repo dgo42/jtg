@@ -98,9 +98,9 @@ public class DeepLevelCounter {
 			if (oldSize <= lno) {
 				Integer lastValue;
 				if (oldSize > 0) {
-					lastValue = (Integer) lineVector.lastElement();
+					lastValue = lineVector.lastElement();
 				} else {
-					lastValue = new Integer(0);
+					lastValue = 0;
 				}
 				lineVector.setSize(lno + 1);
 				for (int idx = oldSize; idx < lineVector.size(); idx++) {

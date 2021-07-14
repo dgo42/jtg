@@ -1,4 +1,5 @@
 Manifest-Version: 1.0
+Automatic-Module-Name: org.edgo.jtg.basics
 Bundle-ManifestVersion: 2
 Bundle-Name: Java Template Generator Basics Bundle
 Bundle-SymbolicName: org.edgo.jtg.basics.bundle

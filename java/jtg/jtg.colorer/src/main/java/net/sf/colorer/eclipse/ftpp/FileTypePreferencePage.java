@@ -52,15 +52,15 @@ public class FileTypePreferencePage extends PreferencePage implements IWorkbench
 
 			if (element.equals(ColorerPlugin.HRD_SIGNATURE)) {
 				String hrd = ColorerPlugin.getDefault().getPropertyHRD(currentType);
-				return new Integer(hrdList.indexOf(hrd) + 1);
+				return Integer.valueOf(hrdList.indexOf(hrd) + 1);
 			}
 			if (element.equals(ColorerPlugin.WORD_WRAP_SIGNATURE)) {
-				return new Integer(ColorerPlugin.getDefault().getPropertyWordWrap(currentType) + 1);
+				return Integer.valueOf(ColorerPlugin.getDefault().getPropertyWordWrap(currentType) + 1);
 			}
 			// Default choice - list of parameters
 			{
 				int val = ColorerPlugin.getDefault().getPropertyParameter(currentType, element.toString());
-				return new Integer(val);
+				return Integer.valueOf(val);
 			}
 		}
 
@@ -203,7 +203,7 @@ public class FileTypePreferencePage extends PreferencePage implements IWorkbench
 		{
 			PatternFilter patternFilter = new PatternFilter();
 			final FilteredTree filter = new FilteredTree(composite, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL
-					| SWT.FULL_SELECTION, patternFilter, true);
+					| SWT.FULL_SELECTION, patternFilter, true, true); // TODO is it correct?
 			GridData gd = new GridData(GridData.FILL_BOTH);
 			gd.minimumHeight = 100;
 			gd.grabExcessVerticalSpace = true;

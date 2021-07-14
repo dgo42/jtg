@@ -57,7 +57,7 @@ public class StubTextEditor implements IColorerEditorAdapter {
 		return fTextColorer;
 	}
 
-	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
+	public <T> T getAdapter(Class<T> adapter) {
 		// TODO Auto-generated method stub
 		return null;
 	}

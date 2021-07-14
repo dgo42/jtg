@@ -999,7 +999,7 @@ public class ConfigPropertyPage extends PropertyPage {
 		st_txtStartTemplFile.setText(PreferenceLoader.loadValue(store, Constants.ST_START_TEMPLATE_FILE_PREF));
 		st_txtSchemaPackage.setText(PreferenceLoader.loadValue(store, Constants.ST_SCHEMA_PACKAGE_PREF));
 		st_txtTemplatePackage.setText(PreferenceLoader.loadValue(store, Constants.ST_TEMPLATE_PACKAGE_PREF));
-		st_chkUsingCache.setSelection(PreferenceLoader.loadValueBool(store, Constants.ST_USING_CACHE_PREF));
+		st_chkUsingCache.setSelection(PreferenceLoader.loadBool(store, Constants.ST_USING_CACHE_PREF));
 		GeneratorCommand cmd = GeneratorCommand.parse(PreferenceLoader.loadValue(store, Constants.ST_GOAL_PREF));
 		if (cmd != null) {
 			st_cmbGoal.select(cmd.getIndex());

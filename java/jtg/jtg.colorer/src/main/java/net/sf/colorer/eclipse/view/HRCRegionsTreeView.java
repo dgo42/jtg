@@ -141,7 +141,7 @@ public class HRCRegionsTreeView extends ViewPart implements IPropertyChangeListe
 
 			PatternFilter patternFilter = new PatternFilter();
 			final FilteredTree filter = new FilteredTree(composite_1, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER,
-					patternFilter, true);
+					patternFilter, true, true); // TODO does it work
 			filter.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 			treeViewer = filter.getViewer();
@@ -295,7 +295,6 @@ public class HRCRegionsTreeView extends ViewPart implements IPropertyChangeListe
 		loadAllAction = new Action("Load All", ImageStore.getID("regions-tree-loadall")) {
 			public void run() {
 				BusyIndicator.showWhile(treeViewer.getTree().getDisplay(), new Runnable() {
-					@SuppressWarnings("unchecked")
 					public void run() {
 						for (Enumeration<FileType> e = hrcParser.enumerateFileTypes(); e.hasMoreElements();) {
 							FileType ft = (FileType) e.nextElement();

@@ -31,7 +31,7 @@ import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 
 class EscapedWriter extends Writer {
-	Writer	writer;
+	Writer writer;
 
 	EscapedWriter(Writer corewriter) {
 		writer = corewriter;
@@ -57,7 +57,7 @@ class EscapedWriter extends Writer {
 
 public class HTMLGeneratorAction implements IObjectActionDelegate {
 
-	IWorkbenchPart	workbenchPart;
+	IWorkbenchPart workbenchPart;
 
 	public void setActivePart(IAction action, IWorkbenchPart part) {
 		workbenchPart = part;
@@ -82,7 +82,8 @@ public class HTMLGeneratorAction implements IObjectActionDelegate {
 		GeneratorDialog gd = new GeneratorDialog();
 
 		Vector<String> fileList = new Vector<String>();
-		@SuppressWarnings("unchecked") Iterator<Object> iterator = selection.iterator();
+		@SuppressWarnings("unchecked")
+		Iterator<Object> iterator = selection.iterator();
 		while (iterator.hasNext()) {
 			Object obj = iterator.next();
 			IResource adapted = null;
@@ -90,7 +91,8 @@ public class HTMLGeneratorAction implements IObjectActionDelegate {
 			if (obj instanceof IAdaptable) {
 				adapted = (IResource) ((IAdaptable) obj).getAdapter(IResource.class);
 			}
-			if (adapted == null) continue;
+			if (adapted == null)
+				continue;
 
 			addElement(adapted, fileList);
 
@@ -99,8 +101,7 @@ public class HTMLGeneratorAction implements IObjectActionDelegate {
 
 		final ParserFactory pf = ColorerPlugin.getDefaultPF();
 		Vector<String> hrdSchemas = new Vector<String>();
-		for (@SuppressWarnings("unchecked") Enumeration<String> hrds = pf.enumerateHRDInstances("rgb"); hrds
-				.hasMoreElements();) {
+		for (Enumeration<String> hrds = pf.enumerateHRDInstances("rgb"); hrds.hasMoreElements();) {
 			final String hrd_name = hrds.nextElement();
 			final String hrd_descr = pf.getHRDescription("rgb", hrd_name);
 			hrdSchemas.addElement(hrd_descr);
@@ -195,21 +196,16 @@ public class HTMLGeneratorAction implements IObjectActionDelegate {
 						ParserFactory pf = ColorerPlugin.getDefaultPF();
 						HTMLGenerator hg = new HTMLGenerator(pf, rls, gd.getHRDSchema());
 
-						hg.generate(commonWriter, escapedWriter, file.getName(), gd.isUseLineNumbers(), gd.isHtmlSubst(),
-								gd.isInfoHeader(), gd.isHtmlHeaderFooter());
+						hg.generate(commonWriter, escapedWriter, file.getName(), gd.isUseLineNumbers(), gd.isHtmlSubst(), gd.isInfoHeader(),
+								gd.isHtmlHeaderFooter());
 						num++;
-					};
-					MessageDialog.openInformation(
-							null,
-							Messages.get("htmlgen.done"),
-							Messages.format("htmlgen.done.msg",
-									new Object[] {String.valueOf(num), filePath, fileNames.toString()}));
+					}
+					;
+					MessageDialog.openInformation(null, Messages.get("htmlgen.done"),
+							Messages.format("htmlgen.done.msg", new Object[] { String.valueOf(num), filePath, fileNames.toString() }));
 				} catch (Exception e) {
-					MessageDialog.openError(
-							null,
-							Messages.get("htmlgen.fault"),
-							Messages.format("htmlgen.fault.msg", new Object[] {String.valueOf(num), filePath, e,
-									lastFileName}));
+					MessageDialog.openError(null, Messages.get("htmlgen.fault"),
+							Messages.format("htmlgen.fault.msg", new Object[] { String.valueOf(num), filePath, e, lastFileName }));
 
 				}
 

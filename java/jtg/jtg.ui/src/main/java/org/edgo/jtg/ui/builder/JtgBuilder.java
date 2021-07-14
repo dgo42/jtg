@@ -1,6 +1,7 @@
 package org.edgo.jtg.ui.builder;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.PrintStream;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -70,9 +71,14 @@ public class JtgBuilder extends IncrementalProjectBuilder {
 		 */
 		public boolean visit(IResourceDelta delta) throws CoreException {
 			IResource resource = delta.getResource();
+			//String fullName = resource.getFullPath().toString();
+			//String message = "";
+			//MessageConsole myConsole = findConsole(Constants.CONSOLE_NAME);
+			//MessageConsoleStream out = myConsole.newMessageStream();
 			switch (delta.getKind()) {
 			case IResourceDelta.ADDED:
 				// handle added resource
+				//out.println("+++++++++++++++++> Resource \"" + fullName + "\" is added");
 				if (!alreadyBuilt) {
 					checkResource(resource);
 				}
@@ -80,16 +86,14 @@ public class JtgBuilder extends IncrementalProjectBuilder {
 			case IResourceDelta.REMOVED:
 				// handle removed resource
 				// TODO remove deleted files?
-				String fullName = resource.getFullPath().toString();
-				String message = "Resource \"" + fullName + "\" is removed";
-				IStatus status = new Status(Status.INFO, JtgUIPlugin.getUniqueIdentifier(), 1000, message, null);
-				JtgUIPlugin.log(status);
-				MessageConsole myConsole = findConsole(Constants.CONSOLE_NAME);
-				MessageConsoleStream out = myConsole.newMessageStream();
-				out.println(message);
+				//message = "-----------------> Resource \"" + fullName + "\" is removed";
+				//IStatus status = new Status(Status.INFO, JtgUIPlugin.getUniqueIdentifier(), 1000, message, null);
+				//JtgUIPlugin.log(status);
+				//out.println(message);
 				break;
 			case IResourceDelta.CHANGED:
 				// handle changed resource
+				//out.println("*****************> Resource \"" + fullName + "\" is changed");
 				if (!alreadyBuilt) {
 					checkResource(resource);
 				}
@@ -134,7 +138,6 @@ public class JtgBuilder extends IncrementalProjectBuilder {
 	@Override
 	@SuppressWarnings("rawtypes")
 	protected IProject[] build(int kind, Map args, IProgressMonitor monitor) throws CoreException {
-		double start = System.nanoTime();
 		IProject project = getProject();
 		try {
 			if (kind == FULL_BUILD) {
@@ -151,17 +154,6 @@ public class JtgBuilder extends IncrementalProjectBuilder {
 			Throwable t = e.getStatus().getException();
 			if (!(t instanceof BuildDoneException) && !(t instanceof BuildFailedException)) {
 				throw e;
-			}
-		} finally {
-			double end = System.nanoTime();
-			double elapsed = (end - start) / 1000000;
-			if (elapsed > 1D) {
-				String message = "Project \"" + project.getName() + "\" generation took " + new DecimalFormat("#.###").format(elapsed) + "ms";
-				/*IStatus status = new Status(Status.INFO, JtgUIPlugin.getUniqueIdentifier(), 1000, message, null);
-				JtgUIPlugin.log(status);*/
-				MessageConsole myConsole = findConsole(Constants.CONSOLE_NAME);
-				MessageConsoleStream out = myConsole.newMessageStream();
-				out.println(message);
 			}
 		}
 
@@ -203,37 +195,6 @@ public class JtgBuilder extends IncrementalProjectBuilder {
 		getProject().deleteMarkers(JTG_MARKER_TYPE, true, IResource.DEPTH_INFINITE);
 	}
 
-	/*
-		private IPath getFirstSourceFolder(IProject project) {
-			if (project.isOpen()) {
-				try {
-					IJavaProject javaProject = (IJavaProject) project.getNature(JavaCore.NATURE_ID);
-					IPackageFragmentRoot[] roots = javaProject.getAllPackageFragmentRoots();
-					for (IPackageFragmentRoot root : roots) {
-						if (root.getKind() == IPackageFragmentRoot.K_SOURCE) {
-							return root.getResource().getProjectRelativePath();
-						}
-					}
-				} catch (CoreException e) {
-				}
-			}
-			return null;
-		}
-	
-		private IPath getFirstBinaryFolder(IProject project) {
-			if (project.isOpen()) {
-				try {
-					IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
-					IJavaProject javaProject = (IJavaProject) project.getNature(JavaCore.NATURE_ID);
-					IPath path = javaProject.getOutputLocation();
-					IFolder folder = workspaceRoot.getFolder(path);
-					return folder.getProjectRelativePath();
-				} catch (CoreException e) {
-				}
-			}
-			return null;
-		}
-	*/
 	JtgConfiguration getConfiguration(IProject project) throws CoreException {
 		IScopeContext projectScope = new ProjectScope(project);
 		Preferences store = projectScope.getNode(JtgUIPlugin.PLUGIN_ID);
@@ -327,7 +288,7 @@ public class JtgBuilder extends IncrementalProjectBuilder {
 
 			config.setGeneratedPackage(PreferenceLoader.loadValue(store, Constants.ST_TEMPLATE_PACKAGE_PREF));
 
-			config.setUsingCache(((Boolean) PreferenceLoader.loadValueBool(store, Constants.ST_USING_CACHE_PREF)).toString());
+			config.setUsingCache(((Boolean) PreferenceLoader.loadBool(store, Constants.ST_USING_CACHE_PREF)).toString());
 
 			config.setCommand(PreferenceLoader.loadValue(store, Constants.ST_GOAL_PREF));
 		}
@@ -396,6 +357,7 @@ public class JtgBuilder extends IncrementalProjectBuilder {
 			String name = resource.getName();
 			String fullName = resource.getFullPath().toString();
 			IProject project = resource.getProject();
+			File resourceFile = resource.getLocation().toFile();
 			ProjectType projectType = getProjectType(project);
 			JtgConfiguration config = getConfiguration(project);
 			String projectDir = project.getName();
@@ -406,11 +368,15 @@ public class JtgBuilder extends IncrementalProjectBuilder {
 			String jarOutDir = config.getJarOutputDir();
 
 			Matcher matcher = Constants.ALL_FILE_MASK.matcher(name);
-			if (projectName != null) {
-				String jarName = GeneratorUtils.Project2JarName(jarOutDir, projectName);
+			if (projectName != null && projectType != ProjectType.FOLLOWER) {
 				if (matcher.find() || fullName.equals(projectFile) || fullName.equals(schemaFile)) {
+					String jarName = GeneratorUtils.Project2JarName(jarOutDir, projectName);
 					IResource jarResource = findMember(project, jarName);
-					if (jarResource == null || resource.getLocalTimeStamp() > jarResource.getLocalTimeStamp()) {
+					File jarFile = null;
+					if (jarResource != null) {
+						jarFile = jarResource.getLocation().toFile();
+					}
+					if (jarResource == null || resourceFile.lastModified() > jarFile.lastModified()) {
 						regenarateAll(project, projectType);
 					}
 				}
@@ -418,13 +384,23 @@ public class JtgBuilder extends IncrementalProjectBuilder {
 				String jarName = GeneratorUtils.Project2JarName(jarOutDir, "main");
 				if (matcher.find() || fullName.equals(schemaFile)) {
 					IResource jarResource = findMember(project, jarName);
-					if (jarResource == null || resource.getLocalTimeStamp() > jarResource.getLocalTimeStamp()) {
+					File jarFile = jarResource.getLocation().toFile();
+					if (jarResource != null) {
+						jarFile = jarResource.getLocation().toFile();
+					}
+					if (jarResource == null || resourceFile.lastModified() > jarFile.lastModified()) {
 						regenarateAll(project, projectType);
 					}
 				}
 			} else if (projectType == ProjectType.FOLLOWER) {
 				if (matcher.find() || fullName.equals(projectFile)) {
-					regenarateAll(project, projectType);
+					IScopeContext projectScope = new ProjectScope(project);
+					Preferences store = projectScope.getNode(JtgUIPlugin.PLUGIN_ID);
+					long lastBuild = PreferenceLoader.loadLong(store, Constants.F_LAST_BUILD);
+					if (lastBuild < 0 || resourceFile.lastModified() > lastBuild) {
+						regenarateAll(project, projectType);
+						PreferenceLoader.storeValue(store, Constants.F_LAST_BUILD, resourceFile.lastModified());
+					}
 				}
 			}
 		}
@@ -462,6 +438,32 @@ public class JtgBuilder extends IncrementalProjectBuilder {
 		return fileName;
 	}
 
+	private IResource refresh(IContainer container, IPath filePath) {
+		try {
+			IResource resource = container.findMember(filePath, true);
+			if (resource == null) {
+				IResource[] resources = container.members(IContainer.INCLUDE_HIDDEN);
+				for (IResource res : resources) {
+					if (res instanceof IContainer && res.getName().equals(filePath.segment(0))) {
+						res.refreshLocal(IResource.DEPTH_ONE, null);
+						resource = container.findMember(filePath, true);
+						if (resource != null) {
+							return resource;
+						}
+						IPath childPath = filePath.removeFirstSegments(1);
+						resource = refresh((IContainer) res, childPath);
+						if (resource != null) {
+							return resource;
+						}
+					}
+				}
+			}
+		} catch (CoreException e) {
+			JtgUIPlugin.log(e);
+		}
+		return null;
+	}
+
 	private IFile findMember(IContainer container, String fileName) {
 		try {
 			IResource resource = container.findMember(fileName, true);
@@ -469,14 +471,12 @@ public class JtgBuilder extends IncrementalProjectBuilder {
 				resource.refreshLocal(IResource.DEPTH_ZERO, null);
 				return (IFile) resource;
 			}
-			IResource[] resources = container.members(IContainer.INCLUDE_HIDDEN);
-			for (IResource res : resources) {
-				if (res instanceof IContainer) {
-					IFile file = findMember((IContainer) res, fileName);
-					if (file != null) {
-						file.refreshLocal(IResource.DEPTH_ZERO, null);
-						return file;
-					}
+			IPath filePath = Path.fromOSString(fileName);
+			if (resource == null) {
+				resource = refresh(container, filePath);
+				if (resource != null && resource instanceof IFile) {
+					resource.refreshLocal(IResource.DEPTH_ZERO, null);
+					return (IFile) resource;
 				}
 			}
 		} catch (CoreException e) {
@@ -491,13 +491,12 @@ public class JtgBuilder extends IncrementalProjectBuilder {
 			if (resource != null && resource instanceof IFolder) {
 				return (IFolder) resource;
 			}
-			IResource[] resources = container.members();
-			for (IResource res : resources) {
-				if (res instanceof IContainer) {
-					IFolder file = findFolder((IContainer) res, folderName);
-					if (file != null) {
-						return file;
-					}
+			IPath filePath = Path.fromOSString(folderName);
+			if (resource == null) {
+				resource = refresh(container, filePath);
+				if (resource != null && resource instanceof IFolder) {
+					resource.refreshLocal(IResource.DEPTH_ZERO, null);
+					return (IFolder) resource;
 				}
 			}
 		} catch (CoreException e) {
@@ -559,7 +558,29 @@ public class JtgBuilder extends IncrementalProjectBuilder {
 
 		try {
 			hasErrors = false;
-			String templateArg = generator.generate(classLoader);
+			double start = System.nanoTime();
+			String templateArg = "";
+			try {
+				templateArg = generator.generate(classLoader);
+			} finally {
+				double end = System.nanoTime();
+				double elapsed = (end - start) / 1000000;
+				if (elapsed > 1D) {
+					String message = "";
+					switch(projectType) {
+					case STANDALONE:
+						message = "==> Generation of the standalone project \"" + project.getName() + "\" took " + new DecimalFormat("#.###").format(elapsed) + "ms";
+						break;
+					case LEADER:
+						message = "==> Generation of the leader project \"" + project.getName() + "\" took " + new DecimalFormat("#.###").format(elapsed) + "ms";
+						break;
+					case FOLLOWER:
+						message = "==> Generation of the follower project \"" + project.getName() + "\" took " + new DecimalFormat("#.###").format(elapsed) + "ms";
+						break;
+					}
+					out.println(message);
+				}
+			}
 			alreadyBuilt = true;
 			setTemplateArg(project, templateArg);
 			if (projectType == ProjectType.LEADER) {
