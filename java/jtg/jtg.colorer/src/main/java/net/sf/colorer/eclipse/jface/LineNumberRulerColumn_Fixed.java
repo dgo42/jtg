@@ -45,8 +45,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 
 /**
- * A vertical ruler column displaying line numbers.
- * Clients usually instantiate and configure object of this class.
+ * A vertical ruler column displaying line numbers. Clients usually instantiate and configure object of this class.
  *
  * @since 2.0
  */
@@ -60,13 +59,14 @@ public class LineNumberRulerColumn_Fixed implements IVerticalRulerColumn {
 		/**
 		 * @since 3.1
 		 */
-		private boolean	fCachedRedrawState	= true;
+		private boolean fCachedRedrawState = true;
 
 		/*
 		 * @see IViewportListener#viewportChanged(int)
 		 */
 		public void viewportChanged(int verticalPosition) {
-			if (fCachedRedrawState && verticalPosition != fScrollPos) redraw();
+			if (fCachedRedrawState && verticalPosition != fScrollPos)
+				redraw();
 		}
 
 		/*
@@ -75,7 +75,8 @@ public class LineNumberRulerColumn_Fixed implements IVerticalRulerColumn {
 		public void textChanged(TextEvent event) {
 
 			fCachedRedrawState = event.getViewerRedrawState();
-			if (!fCachedRedrawState) return;
+			if (!fCachedRedrawState)
+				return;
 
 			if (updateNumberOfDigits()) {
 				computeIndentations();
@@ -83,7 +84,8 @@ public class LineNumberRulerColumn_Fixed implements IVerticalRulerColumn {
 				return;
 			}
 
-			if (fSensitiveToTextChanges || event.getDocumentEvent() == null) postRedraw_fixed();
+			if (fSensitiveToTextChanges || event.getDocumentEvent() == null)
+				postRedraw_fixed();
 		}
 	}
 
@@ -93,15 +95,15 @@ public class LineNumberRulerColumn_Fixed implements IVerticalRulerColumn {
 	class MouseHandler implements MouseListener, MouseMoveListener {
 
 		/** The cached view port size */
-		private int		fCachedViewportSize;
+		private int fCachedViewportSize;
 		/** The area of the line at which line selection started */
-		private IRegion	fStartLine;
+		private IRegion fStartLine;
 		/** The number of the line at which line selection started */
-		private int		fStartLineNumber;
+		private int fStartLineNumber;
 		/** The auto scroll direction */
-		private int		fAutoScrollDirection;
+		private int fAutoScrollDirection;
 		/* @since 3.2 */
-		private boolean	fIsListeningForMove	= false;
+		private boolean fIsListeningForMove = false;
 
 		/*
 		 * @see org.eclipse.swt.events.MouseListener#mouseUp(org.eclipse.swt.events.MouseEvent)
@@ -146,8 +148,7 @@ public class LineNumberRulerColumn_Fixed implements IVerticalRulerColumn {
 		}
 
 		/**
-		 * Called when line drag selection started. Adds mouse move and track
-		 * listeners to this column's control.
+		 * Called when line drag selection started. Adds mouse move and track listeners to this column's control.
 		 */
 		private void startSelecting() {
 			try {
@@ -167,8 +168,7 @@ public class LineNumberRulerColumn_Fixed implements IVerticalRulerColumn {
 		}
 
 		/**
-		 * Called when line drag selection stopped. Removes all previously
-		 * installed listeners from this column's control.
+		 * Called when line drag selection stopped. Removes all previously installed listeners from this column's control.
 		 */
 		private void stopSelecting() {
 			// drag selection stopped
@@ -176,8 +176,7 @@ public class LineNumberRulerColumn_Fixed implements IVerticalRulerColumn {
 		}
 
 		/**
-		 * Expands the line selection from the remembered start line to the
-		 * given line.
+		 * Expands the line selection from the remembered start line to the given line.
 		 *
 		 * @param lineNumber the line to which to expand the selection
 		 */
@@ -188,8 +187,7 @@ public class LineNumberRulerColumn_Fixed implements IVerticalRulerColumn {
 				IRegion lineInfo = document.getLineInformation(lineNumber);
 
 				int start = Math.min(fStartLine.getOffset(), lineInfo.getOffset());
-				int end = Math.max(fStartLine.getOffset() + fStartLine.getLength(),
-						lineInfo.getOffset() + lineInfo.getLength());
+				int end = Math.max(fStartLine.getOffset() + fStartLine.getLength(), lineInfo.getOffset() + lineInfo.getLength());
 
 				if (lineNumber < fStartLineNumber)
 					fCachedTextViewer.setSelectedRange(end, start - end);
@@ -237,7 +235,8 @@ public class LineNumberRulerColumn_Fixed implements IVerticalRulerColumn {
 		 */
 		private void autoScroll(int direction) {
 
-			if (fAutoScrollDirection == direction) return;
+			if (fAutoScrollDirection == direction)
+				return;
 
 			final int TIMER_INTERVAL = 5;
 			final Display display = fCanvas.getDisplay();
@@ -291,57 +290,60 @@ public class LineNumberRulerColumn_Fixed implements IVerticalRulerColumn {
 	}
 
 	/** This column's parent ruler */
-	private CompositeRuler		fParentRuler;
+	private CompositeRuler fParentRuler;
 	/** Cached text viewer */
-	private ITextViewer			fCachedTextViewer;
+	private ITextViewer fCachedTextViewer;
 	/** Cached text widget */
-	private StyledText			fCachedTextWidget;
+	private StyledText fCachedTextWidget;
 	/** The columns canvas */
-	private Canvas				fCanvas;
+	private Canvas fCanvas;
 	/** Cache for the actual scroll position in pixels */
-	private int					fScrollPos;
+	private int fScrollPos;
 	/** The drawable for double buffering */
-	private Image				fBuffer;
+	private Image fBuffer;
 	/** The internal listener */
-	private InternalListener	fInternalListener		= new InternalListener();
+	private InternalListener fInternalListener = new InternalListener();
 	/** The font of this column */
-	private Font				fFont;
+	private Font fFont;
 	/** The indentation cache */
-	private int[]				fIndentation;
+	private int[] fIndentation;
 	/** Indicates whether this column reacts on text change events */
-	private boolean				fSensitiveToTextChanges	= false;
+	private boolean fSensitiveToTextChanges = false;
 	/** The foreground color */
-	private Color				fForeground;
+	private Color fForeground;
 	/** The background color */
-	private Color				fBackground;
+	private Color fBackground;
 	/** Cached number of displayed digits */
-	private int					fCachedNumberOfDigits	= -1;
+	private int fCachedNumberOfDigits = -1;
 	/** Flag indicating whether a relayout is required */
-	private boolean				fRelayoutRequired		= false;
+	private boolean fRelayoutRequired = false;
 	/**
 	 * Redraw runnable lock
+	 * 
 	 * @since 3.0
 	 */
-	private Object				fRunnableLock			= new Object();
+	private Object fRunnableLock = new Object();
 	/**
 	 * Redraw runnable state
+	 * 
 	 * @since 3.0
 	 */
-	private boolean				fIsRunnablePosted		= false;
+	private boolean fIsRunnablePosted = false;
 	/**
 	 * Redraw runnable
+	 * 
 	 * @since 3.0
 	 */
-	private Runnable			fRunnable				= new Runnable() {
-															public void run() {
-																synchronized (fRunnableLock) {
-																	fIsRunnablePosted = false;
-																}
-																redraw();
-															}
-														};
+	private Runnable fRunnable = new Runnable() {
+		public void run() {
+			synchronized (fRunnableLock) {
+				fIsRunnablePosted = false;
+			}
+			redraw();
+		}
+	};
 	/* @since 3.2 */
-	private MouseHandler		fMouseHandler;
+	private MouseHandler fMouseHandler;
 
 	/**
 	 * Constructs a new vertical ruler column.
@@ -376,7 +378,8 @@ public class LineNumberRulerColumn_Fixed implements IVerticalRulerColumn {
 	 */
 	public void setBackground(Color background) {
 		fBackground = background;
-		if (fCanvas != null && !fCanvas.isDisposed()) fCanvas.setBackground(getBackground(fCanvas.getDisplay()));
+		if (fCanvas != null && !fCanvas.isDisposed())
+			fCanvas.setBackground(getBackground(fCanvas.getDisplay()));
 	}
 
 	/**
@@ -386,7 +389,8 @@ public class LineNumberRulerColumn_Fixed implements IVerticalRulerColumn {
 	 * @return the System background color for list widgets
 	 */
 	protected Color getBackground(Display display) {
-		if (fBackground == null) return display.getSystemColor(SWT.COLOR_LIST_BACKGROUND);
+		if (fBackground == null)
+			return display.getSystemColor(SWT.COLOR_LIST_BACKGROUND);
 		return fBackground;
 	}
 
@@ -405,16 +409,15 @@ public class LineNumberRulerColumn_Fixed implements IVerticalRulerColumn {
 	}
 
 	/**
-	 * Computes the number of digits to be displayed. Returns
-	 * <code>true</code> if the number of digits changed compared
-	 * to the previous call of this method. If the method is called
-	 * for the first time, the return value is also <code>true</code>.
+	 * Computes the number of digits to be displayed. Returns <code>true</code> if the number of digits changed compared to the previous call of this method. If
+	 * the method is called for the first time, the return value is also <code>true</code>.
 	 *
 	 * @return whether the number of digits has been changed
 	 * @since 3.0
 	 */
 	protected boolean updateNumberOfDigits() {
-		if (fCachedTextViewer == null) return false;
+		if (fCachedTextViewer == null)
+			return false;
 
 		int digits = computeNumberOfDigits();
 
@@ -427,8 +430,7 @@ public class LineNumberRulerColumn_Fixed implements IVerticalRulerColumn {
 	}
 
 	/**
-	 * Does the real computation of the number of digits. Subclasses may override this method if
-	 * they need extra space on the line number ruler.
+	 * Does the real computation of the number of digits. Subclasses may override this method if they need extra space on the line number ruler.
 	 *
 	 * @return the number of digits to be displayed on the line number ruler.
 	 */
@@ -444,8 +446,7 @@ public class LineNumberRulerColumn_Fixed implements IVerticalRulerColumn {
 	}
 
 	/**
-	 * Layouts the enclosing viewer to adapt the layout to changes of the
-	 * size of the individual components.
+	 * Layouts the enclosing viewer to adapt the layout to changes of the size of the individual components.
 	 *
 	 * @param redraw <code>true</code> if this column can be redrawn
 	 */
@@ -467,11 +468,11 @@ public class LineNumberRulerColumn_Fixed implements IVerticalRulerColumn {
 	}
 
 	/**
-	 * Computes the indentations for the given font and stores them in
-	 * <code>fIndentation</code>.
+	 * Computes the indentations for the given font and stores them in <code>fIndentation</code>.
 	 */
 	protected void computeIndentations() {
-		if (fCanvas == null || fCanvas.isDisposed()) return;
+		if (fCanvas == null || fCanvas.isDisposed())
+			return;
 
 		GC gc = new GC(fCanvas);
 		try {
@@ -480,12 +481,12 @@ public class LineNumberRulerColumn_Fixed implements IVerticalRulerColumn {
 
 			fIndentation = new int[fCachedNumberOfDigits + 1];
 
-			Float number = new Float(Math.pow(10, fCachedNumberOfDigits) - 1);
+			Float number = Float.valueOf((float) Math.pow(10, fCachedNumberOfDigits) - 1);
 			Point p = gc.stringExtent(Integer.toString(number.intValue()));
 			fIndentation[0] = p.x;
 
 			for (int i = 1; i <= fCachedNumberOfDigits; i++) {
-				number = new Float(Math.pow(10, i) - 1);
+				number = Float.valueOf((float)Math.pow(10, i) - 1);
 				p = gc.stringExtent(Integer.toString(number.intValue()));
 				fIndentation[i] = fIndentation[0] - p.x;
 			}
@@ -510,7 +511,8 @@ public class LineNumberRulerColumn_Fixed implements IVerticalRulerColumn {
 
 		fCanvas.addPaintListener(new PaintListener() {
 			public void paintControl(PaintEvent event) {
-				if (fCachedTextViewer != null) doubleBufferPaint(event.gc);
+				if (fCachedTextViewer != null)
+					doubleBufferPaint(event.gc);
 			}
 		});
 
@@ -532,11 +534,13 @@ public class LineNumberRulerColumn_Fixed implements IVerticalRulerColumn {
 			fCachedTextViewer.addTextListener(fInternalListener);
 
 			if (fFont == null) {
-				if (fCachedTextWidget != null && !fCachedTextWidget.isDisposed()) fFont = fCachedTextWidget.getFont();
+				if (fCachedTextWidget != null && !fCachedTextWidget.isDisposed())
+					fFont = fCachedTextWidget.getFont();
 			}
 		}
 
-		if (fFont != null) fCanvas.setFont(fFont);
+		if (fFont != null)
+			fCanvas.setFont(fFont);
 
 		updateNumberOfDigits();
 		computeIndentations();
@@ -568,7 +572,8 @@ public class LineNumberRulerColumn_Fixed implements IVerticalRulerColumn {
 
 		Point size = fCanvas.getSize();
 
-		if (size.x <= 0 || size.y <= 0) return;
+		if (size.x <= 0 || size.y <= 0)
+			return;
 
 		if (fBuffer != null) {
 			Rectangle r = fBuffer.getBounds();
@@ -577,18 +582,21 @@ public class LineNumberRulerColumn_Fixed implements IVerticalRulerColumn {
 				fBuffer = null;
 			}
 		}
-		if (fBuffer == null) fBuffer = new Image(fCanvas.getDisplay(), size.x, size.y);
+		if (fBuffer == null)
+			fBuffer = new Image(fCanvas.getDisplay(), size.x, size.y);
 
 		GC gc = new GC(fBuffer);
 		gc.setFont(fCanvas.getFont());
-		if (fForeground != null) gc.setForeground(fForeground);
+		if (fForeground != null)
+			gc.setForeground(fForeground);
 
 		try {
 			gc.setBackground(getBackground(fCanvas.getDisplay()));
 			gc.fillRectangle(0, 0, size.x, size.y);
 
 			ILineRange visibleLines = JFaceTextUtil.getVisibleModelLines(fCachedTextViewer);
-			if (visibleLines == null) return;
+			if (visibleLines == null)
+				return;
 			doPaint(gc, visibleLines);
 		} finally {
 			gc.dispose();
@@ -601,16 +609,14 @@ public class LineNumberRulerColumn_Fixed implements IVerticalRulerColumn {
 	 * Returns the view port height in lines.
 	 * 
 	 * @return the view port height in lines
-	 * @deprecated as of 3.2 the number of lines in the viewport cannot be computed because
-	 *             StyledText supports variable line heights
+	 * @deprecated as of 3.2 the number of lines in the viewport cannot be computed because StyledText supports variable line heights
 	 */
 	protected int getVisibleLinesInViewport() {
 		return JFaceTextUtil.getVisibleLinesInViewport(fCachedTextWidget);
 	}
 
 	/**
-	 * Returns <code>true</code> if the viewport displays the entire viewer contents, i.e. the
-	 * viewer is not vertically scrollable.
+	 * Returns <code>true</code> if the viewport displays the entire viewer contents, i.e. the viewer is not vertically scrollable.
 	 * 
 	 * @return <code>true</code> if the viewport displays the entire contents, <code>false</code> otherwise
 	 * @since 3.2
@@ -622,7 +628,7 @@ public class LineNumberRulerColumn_Fixed implements IVerticalRulerColumn {
 	/**
 	 * Draws the ruler column.
 	 *
-	 * @param gc the GC to draw into
+	 * @param gc           the GC to draw into
 	 * @param visibleLines the visible model lines
 	 * @since 3.2
 	 */
@@ -638,7 +644,8 @@ public class LineNumberRulerColumn_Fixed implements IVerticalRulerColumn {
 		int lastLine = end(visibleLines);
 		for (int line = visibleLines.getStartLine(); line < lastLine; line++) {
 			int widgetLine = JFaceTextUtil.modelLineToWidgetLine(fCachedTextViewer, line);
-			if (widgetLine == -1) continue;
+			if (widgetLine == -1)
+				continue;
 
 			// FIXED: For wrapped text widgets
 			int lineHeight = fCachedTextWidget.getLinePixel(widgetLine + 1) - fCachedTextWidget.getLinePixel(widgetLine);
@@ -654,8 +661,7 @@ public class LineNumberRulerColumn_Fixed implements IVerticalRulerColumn {
 	}
 
 	/**
-	 * Computes the string to be printed for <code>line</code>. The default implementation returns
-	 * <code>Integer.toString(line + 1)</code>.
+	 * Computes the string to be printed for <code>line</code>. The default implementation returns <code>Integer.toString(line + 1)</code>.
 	 *
 	 * @param line the line number for which the line number string is generated
 	 * @return the string to be printed on the line number bar for <code>line</code>
@@ -666,15 +672,12 @@ public class LineNumberRulerColumn_Fixed implements IVerticalRulerColumn {
 	}
 
 	/**
-	 * Returns the difference between the baseline of the widget and the
-	 * baseline as specified by the font for <code>gc</code>. When drawing
-	 * line numbers, the returned bias should be added to obtain text lined up
-	 * on the correct base line of the text widget.
+	 * Returns the difference between the baseline of the widget and the baseline as specified by the font for <code>gc</code>. When drawing line numbers, the
+	 * returned bias should be added to obtain text lined up on the correct base line of the text widget.
 	 *
-	 * @param gc the <code>GC</code> to get the font metrics from
+	 * @param gc         the <code>GC</code> to get the font metrics from
 	 * @param widgetLine the widget line
-	 * @return the baseline bias to use when drawing text that is lined up with
-	 *         <code>fCachedTextWidget</code>
+	 * @return the baseline bias to use when drawing text that is lined up with <code>fCachedTextWidget</code>
 	 * @since 3.2
 	 */
 	private int getBaselineBias(GC gc, int widgetLine) {
@@ -694,14 +697,13 @@ public class LineNumberRulerColumn_Fixed implements IVerticalRulerColumn {
 	}
 
 	/**
-	 * Paints the line. After this method is called the line numbers are painted on top
-	 * of the result of this method.
+	 * Paints the line. After this method is called the line numbers are painted on top of the result of this method.
 	 *
-	 * @param line the line of the document which the ruler is painted for
-	 * @param y the y-coordinate of the box being painted for <code>line</code>, relative to <code>gc</code>
+	 * @param line       the line of the document which the ruler is painted for
+	 * @param y          the y-coordinate of the box being painted for <code>line</code>, relative to <code>gc</code>
 	 * @param lineheight the height of one line (and therefore of the box being painted)
-	 * @param gc the drawing context the client may choose to draw on.
-	 * @param display the display the drawing occurs on
+	 * @param gc         the drawing context the client may choose to draw on.
+	 * @param display    the display the drawing occurs on
 	 * @since 3.0
 	 */
 	protected void paintLine(int line, int y, int lineheight, GC gc, Display display) {
@@ -723,7 +725,8 @@ public class LineNumberRulerColumn_Fixed implements IVerticalRulerColumn {
 			Display d = fCanvas.getDisplay();
 			if (d != null) {
 				synchronized (fRunnableLock) {
-					if (fIsRunnablePosted) return;
+					if (fIsRunnablePosted)
+						return;
 					fIsRunnablePosted = true;
 				}
 				d.asyncExec(fRunnable);

@@ -26,18 +26,18 @@ import org.osgi.framework.BundleContext;
  */
 public class ColorerPlugin extends AbstractUIPlugin {
 	//The shared instance.
-	private static ColorerPlugin			plugin;
-	private ResourceBundle					resourceBundle;
+	private static ColorerPlugin plugin;
+	private ResourceBundle resourceBundle;
 
-	private String							catalogPath;
-	private ParserFactory					parserFactory;
-	private ColorManager					colorManager		= new ColorManager();
-	private Vector<IColorerReloadListener>	reloadListeners		= new Vector<IColorerReloadListener>();
-	private Vector<String>					hrdSetsList;
-	private IPreferenceStore				fCombinedPreferenceStore;
+	private String catalogPath;
+	private ParserFactory parserFactory;
+	private ColorManager colorManager = new ColorManager();
+	private Vector<IColorerReloadListener> reloadListeners = new Vector<IColorerReloadListener>();
+	private Vector<String> hrdSetsList;
+	private IPreferenceStore fCombinedPreferenceStore;
 
-	public final static String				WORD_WRAP_SIGNATURE	= "@@WORD_WRAP@@";
-	public final static String				HRD_SIGNATURE		= "@@HRD@@";
+	public final static String WORD_WRAP_SIGNATURE = "@@WORD_WRAP@@";
+	public final static String HRD_SIGNATURE = "@@HRD@@";
 
 	/**
 	 * The constructor.
@@ -132,14 +132,12 @@ public class ColorerPlugin extends AbstractUIPlugin {
 				exc = e1;
 			}
 			if (error) {
-				MessageDialog.openError(null, Messages.get("init.error.title"),
-						Messages.get("init.error.pf") + "\n" + exc.getMessage());
+				MessageDialog.openError(null, Messages.get("init.error.title"), Messages.get("init.error.pf") + "\n" + exc.getMessage());
 			}
 		}
 		if (parserFactory != null) {
 			hrdSetsList = new Vector<String>();
-			for (@SuppressWarnings("unchecked") Enumeration<String> hrds = parserFactory.enumerateHRDInstances("rgb"); hrds
-					.hasMoreElements();) {
+			for (Enumeration<String> hrds = parserFactory.enumerateHRDInstances("rgb"); hrds.hasMoreElements();) {
 				String hrd_name = hrds.nextElement();
 				//String hrd_descr = parserFactory.getHRDescription("rgb", hrd_name);
 				hrdSetsList.add(hrd_name);
@@ -151,11 +149,10 @@ public class ColorerPlugin extends AbstractUIPlugin {
 	}
 
 	/**
-	 * Makes initial HRC base initialization with parameters from the
-	 * preference store.
+	 * Makes initial HRC base initialization with parameters from the preference store.
 	 */
 	void initHRCParameters() {
-		@SuppressWarnings("unchecked") Enumeration<FileType> fte = parserFactory.getHRCParser().enumerateFileTypes();
+		Enumeration<FileType> fte = parserFactory.getHRCParser().enumerateFileTypes();
 		while (fte.hasMoreElements()) {
 			FileType type = fte.nextElement();
 
@@ -182,11 +179,10 @@ public class ColorerPlugin extends AbstractUIPlugin {
 	}
 
 	/**
-	 * Resets all the settings for the filetype-specific attributes and
-	 * HRC parameters to the default values
+	 * Resets all the settings for the filetype-specific attributes and HRC parameters to the default values
 	 */
 	public void resetHRCParameters() {
-		@SuppressWarnings("unchecked") Enumeration<FileType> fte = parserFactory.getHRCParser().enumerateFileTypes();
+		Enumeration<FileType> fte = parserFactory.getHRCParser().enumerateFileTypes();
 		while (fte.hasMoreElements()) {
 			FileType type = fte.nextElement();
 
@@ -205,16 +201,19 @@ public class ColorerPlugin extends AbstractUIPlugin {
 
 	/**
 	 * Returns HRD scheme, assigned with this file type
+	 * 
 	 * @return HRD for this type, null if no specific HRD selected for this type
 	 */
 	public String getPropertyHRD(FileType type) {
 		String hrd = getPreferenceStore().getString(HRD_SIGNATURE + type.getName());
-		if (hrd.equals("")) hrd = null;
+		if (hrd.equals(""))
+			hrd = null;
 		return hrd;
 	}
 
 	/**
 	 * Changes specific HRD settings for the type
+	 * 
 	 * @param type
 	 * @param value
 	 */
@@ -224,6 +223,7 @@ public class ColorerPlugin extends AbstractUIPlugin {
 
 	/**
 	 * Returns word wrap property within this file type
+	 * 
 	 * @return word wrap on (1), off (0) or default (-1)
 	 */
 	public int getPropertyWordWrap(FileType type) {
@@ -236,12 +236,15 @@ public class ColorerPlugin extends AbstractUIPlugin {
 
 	/**
 	 * Returns parameter value for this type
+	 * 
 	 * @return TRUE (1), FALSE (0) or DEFAULT (-1)
 	 */
 	public int getPropertyParameter(FileType type, String param) {
 		String paramValue = getPreferenceStore().getString(getParameterPropertyName(type, param.toString()));
-		if ("true".equals(paramValue)) return 1;
-		if ("false".equals(paramValue)) return 0;
+		if ("true".equals(paramValue))
+			return 1;
+		if ("false".equals(paramValue))
+			return 0;
 		return -1;
 	}
 
@@ -254,9 +257,8 @@ public class ColorerPlugin extends AbstractUIPlugin {
 	}
 
 	/**
-	 * Reloads whole colorer native part.
-	 * All Java mapped objects become invalid after this operation
-	 * and will cause segfault since refer to the destructed native objects
+	 * Reloads whole colorer native part. All Java mapped objects become invalid after this operation and will cause segfault since refer to the destructed
+	 * native objects
 	 */
 	public synchronized void reloadParserFactory() {
 		// informs all the editors about ParserFactory reloading
@@ -270,6 +272,7 @@ public class ColorerPlugin extends AbstractUIPlugin {
 
 	/**
 	 * Returns list of available HRD names in "RGB" class
+	 * 
 	 * @return Vector of String's
 	 */
 	public Vector<String> getHRDList() {
@@ -330,8 +333,7 @@ public class ColorerPlugin extends AbstractUIPlugin {
 	public IPreferenceStore getCombinedPreferenceStore() {
 		if (fCombinedPreferenceStore == null) {
 			IPreferenceStore generalTextStore = EditorsUI.getPreferenceStore();
-			fCombinedPreferenceStore = new ChainedPreferenceStore(new IPreferenceStore[] {getPreferenceStore(),
-					generalTextStore});
+			fCombinedPreferenceStore = new ChainedPreferenceStore(new IPreferenceStore[] { getPreferenceStore(), generalTextStore });
 		}
 		return fCombinedPreferenceStore;
 	}

@@ -1,10 +1,16 @@
 Manifest-Version: 1.0
+Automatic-Module-Name: org.edgo.jtg.ui
 Bundle-ManifestVersion: 2
 Bundle-Name: Java Template Generator UI
 Bundle-SymbolicName: org.edgo.jtg.ui;singleton:=true
 Bundle-Version: 1.0.28.qualifier
+Bundle-ClassPath: library.jar
 Bundle-Activator: org.edgo.jtg.ui.JtgUIPlugin
-Bundle-Vendor: edgo.org
+Export-Package: org.edgo.jtg.ui,
+ org.edgo.jtg.ui.builder,
+ org.edgo.jtg.ui.config,
+ org.edgo.jtg.ui.dialogs,
+ org.edgo.jtg.ui.swt
 Require-Bundle: org.edgo.jtg.basics.bundle,
  org.edgo.jtg.core.bundle,
  org.eclipse.ui,
@@ -15,10 +21,5 @@ Require-Bundle: org.edgo.jtg.basics.bundle,
  org.eclipse.ui.ide,
  org.eclipse.ui.console,
  org.eclipse.jdt.launching
-Export-Package: org.edgo.jtg.ui,
- org.edgo.jtg.ui.builder,
- org.edgo.jtg.ui.config,
- org.edgo.jtg.ui.dialogs,
- org.edgo.jtg.ui.swt
-Bundle-ClassPath: library.jar
+Bundle-Vendor: edgo.org
 Bundle-ActivationPolicy: lazy

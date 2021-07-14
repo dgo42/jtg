@@ -42,7 +42,7 @@ public class ColorerFoldingProvider {
 
 			if (model == null) return;
 
-			@SuppressWarnings("unchecked") Iterator<Annotation> iter = (Iterator<Annotation>) model.getAnnotationIterator();
+			Iterator<Annotation> iter = (Iterator<Annotation>) model.getAnnotationIterator();
 			while (iter.hasNext()) {
 				Annotation ann = iter.next();
 				if (!(ann instanceof ProjectionAnnotation)) continue;

@@ -25,6 +25,7 @@ public final class Constants {
 
 	// follower settings
 	public static final String F_LEADER_PROJECT = "org.edgo.jtg.follower.leaderProject";
+	public static final String F_LAST_BUILD = "org.edgo.jtg.follower.lastBuild";
 	public static final String F_PROJECT_DIR_PREF = "org.edgo.jtg.follower.project.dir";
 	public static final String F_PROJECT_FILE_PREF = "org.edgo.jtg.follower.project.file";
 

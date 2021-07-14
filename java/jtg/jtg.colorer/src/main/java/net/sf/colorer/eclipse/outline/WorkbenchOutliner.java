@@ -4,18 +4,20 @@ import java.io.File;
 import java.util.Hashtable;
 import java.util.Vector;
 
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.graphics.ImageDataProvider;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.model.IWorkbenchAdapter;
+
 import net.sf.colorer.Region;
 import net.sf.colorer.eclipse.ColorerPlugin;
 import net.sf.colorer.eclipse.ImageStore;
 import net.sf.colorer.editor.OutlineItem;
 import net.sf.colorer.editor.Outliner;
-
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.model.IWorkbenchAdapter;
 
 /**
  * Default outliner, used to filter parse stream for the specified
@@ -44,6 +46,7 @@ public class WorkbenchOutliner extends Outliner implements IWorkbenchAdapter, IW
 	}
 
 	// represents root of Outline structure
+	@SuppressWarnings("unchecked")
 	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
 		if (adapter == IWorkbenchAdapter.class) {
 			return this;
@@ -105,7 +108,7 @@ public class WorkbenchOutliner extends Outliner implements IWorkbenchAdapter, IW
 					Image i = new Image(Display.getCurrent(), 16, 16);
 					GC gc = new GC(i);
 					Image def = ImageStore.getID(defaultIconName).createImage();
-					int cw = gc.getFontMetrics().getAverageCharWidth();
+					int cw = (int) gc.getFontMetrics().getAverageCharacterWidth();
 					int ch = gc.getFontMetrics().getHeight();
 					gc.drawImage(def, 0, 0);
 					gc.setAlpha(220);
@@ -114,7 +117,13 @@ public class WorkbenchOutliner extends Outliner implements IWorkbenchAdapter, IW
 					gc.drawText(text, 16 - cw - 2, 16 - ch - 2, SWT.DRAW_TRANSPARENT);
 					gc.setForeground(ColorerPlugin.getDefault().getColorManager().getColor(true, 0x106010));
 					gc.drawText(text, 16 - cw - 1, 16 - ch - 1, SWT.DRAW_TRANSPARENT);
-					id = ImageDescriptor.createFromImageData(i.getImageData());
+					id = ImageDescriptor.createFromImageDataProvider(new ImageDataProvider() {
+						
+						@Override
+						public ImageData getImageData(int zoom) {
+							return i.getImageData();
+						}
+					});
 					def.dispose();
 					gc.dispose();
 				} else {

@@ -15,6 +15,8 @@ public class OutlineElement extends OutlineItem implements IAdaptable {
 		this.ad = ad;
 	}
 
+	
+	@SuppressWarnings("unchecked")
 	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
 		if (adapter == IWorkbenchAdapter.class) return ad;
 		//	if (adapter == IPropertySource.class)

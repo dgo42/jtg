@@ -371,6 +371,7 @@ public class ColorerEditor extends TextEditor implements IPropertyChangeListener
 
 	}
 
+	@SuppressWarnings("unchecked")
 	public Object getAdapter(@SuppressWarnings("rawtypes") Class key) {
 		if (key.equals(ISourceViewer.class)) {
 			Assert.isNotNull(getSourceViewer());

@@ -48,7 +48,8 @@ public class ColorerSourceViewerInformationControl implements IInformationContro
 
 		Composite composite = fShell;
 		layout = new GridLayout(1, false);
-		int border = ((SWT.NO_TRIM & SWT.NO_TRIM) == 0) ? 0 : BORDER; // TODO dgo???
+		//int border = ((SWT.NO_TRIM & SWT.NO_TRIM) == 0) ? 0 : BORDER; // TODO dgo???
+		int border = BORDER; // TODO dgo???
 		layout.marginHeight = border;
 		layout.marginWidth = border;
 		composite.setLayout(layout);

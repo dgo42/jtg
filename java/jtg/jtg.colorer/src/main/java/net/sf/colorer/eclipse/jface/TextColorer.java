@@ -1026,7 +1026,6 @@ public class TextColorer {
 		fBaseEditor.visibleTextEvent(visibleStart, visibleEnd - visibleStart + 1);
 	}
 
-	@SuppressWarnings("deprecation")
 	void pairDraw(GC gc, StyledRegion sr, int start, int end) {
 		if (start > text.getCharCount() || end > text.getCharCount()) return;
 		if (gc != null) {

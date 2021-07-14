@@ -143,6 +143,7 @@ public class ParseTreeOutliner implements IWorkbenchOutlineSource, RegionHandler
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
 	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
 		if (adapter == IWorkbenchAdapter.class) {
 			return this;
