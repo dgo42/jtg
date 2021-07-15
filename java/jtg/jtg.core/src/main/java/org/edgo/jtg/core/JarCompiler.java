@@ -58,17 +58,15 @@ public class JarCompiler {
 	final Logger log = new Logger();
 
 	/**
-	 * <summary> Konstruktor, uebergeben wird die . Mit out_dir wird das Ausgabe
-	 * Verzeichnisangegeben. Ist kein Verzeichnis (out_dir == null) angegeben so
+	 * <summary> Konstruktor, uebergeben wird die . Mit out_dir wird das Ausgabe Verzeichnisangegeben. Ist kein Verzeichnis (out_dir == null) angegeben so
 	 * werden die SourceFiles nicht geschrieben.
 	 * 
 	 * @param jarOutDir
 	 * @param sourceOutDir
 	 * @param projectName
 	 */
-	public JarCompiler(SourceLineProcessor sourceLineProcessor, String jarOutDir, String sourceOutDir,
-			String projectName, String schemaPackage, String temlatePackage, boolean useCache,
-			ClassLoader parentClassLoader) {
+	public JarCompiler(SourceLineProcessor sourceLineProcessor, String jarOutDir, String sourceOutDir, String projectName, String schemaPackage,
+			String temlatePackage, boolean useCache, ClassLoader parentClassLoader) {
 		this.sourceLineProcessor = sourceLineProcessor;
 		sources = new HashMap<String, Source>();
 		jars = new HashSet<String>();
@@ -123,9 +121,8 @@ public class JarCompiler {
 		return cacheExists;
 	}
 
-	public void addSource(String raw_source, String className, MacroLang language, String filename,
-			String generatedPackage, String encoding, ParsedUnit unit, long templateLastModified, String mainArg)
-			throws TemplateException {
+	public void addSource(String raw_source, String className, MacroLang language, String filename, String generatedPackage, String encoding, ParsedUnit unit,
+			long templateLastModified, String mainArg) throws TemplateException {
 		try {
 			if (language == MacroLang.NONE) {
 				String message = "Unknown macro language in template '" + filename + "'";
@@ -241,10 +238,11 @@ public class JarCompiler {
 				jarLastModified = jarFile.lastModified();
 			}
 			Map<String, CompilationUnit> sourcesCompiledUnits = new HashMap<String, CompilationUnit>();
-			String startDir = sourceOutDir + "/" + schemaPackage.replace(".", "/");
-			boolean needCompile = collectCompiledUnits(sourcesCompiledUnits, startDir, schemaPackage, 0/*jarLastModified*/);
-			startDir = sourceOutDir + "/" + templatePackage.replace(".", "/");
-			needCompile |= collectCompiledUnits(sourcesCompiledUnits, startDir, templatePackage, jarLastModified);
+			Map<String, CompilationUnit> pathCompiledUnits = new HashMap<String, CompilationUnit>();
+			String startDir = sourceOutDir + File.separator + schemaPackage.replace(".", File.separator);
+			boolean needCompile = collectCompiledUnits(sourcesCompiledUnits, pathCompiledUnits, startDir, schemaPackage, 0/*jarLastModified*/);
+			startDir = sourceOutDir + File.separator + templatePackage.replace(".", File.separator);
+			needCompile |= collectCompiledUnits(sourcesCompiledUnits, pathCompiledUnits, startDir, templatePackage, jarLastModified);
 
 			if (needCompile) {
 				getClassLoader(templatefile, sourceOutDir);
@@ -287,12 +285,11 @@ public class JarCompiler {
 
 				final IProblemFactory problemFactory = new DefaultProblemFactory(Locale.getDefault());
 
-				final CompilerRequestor requestor = new CompilerRequestor(sourcesCompiledUnits, sourceOutDir, log);
-				CompilationUnit[] compilationUnits = sourcesCompiledUnits.values()
-						.toArray(new CompilationUnit[sourcesCompiledUnits.size()]);
+				final CompilerRequestor requestor = new CompilerRequestor(pathCompiledUnits, sourceOutDir, log);
+				CompilationUnit[] compilationUnits = sourcesCompiledUnits.values().toArray(new CompilationUnit[sourcesCompiledUnits.size()]);
 
 				Compiler compiler = new Compiler(env, policy, options, requestor, problemFactory);
-				compiler.compile (compilationUnits);
+				compiler.compile(compilationUnits);
 				if (!requestor.getProblemList().isEmpty()) {
 					List<LogMessage> errors = requestor.getProblemList();
 					for (LogMessage error : errors) {
@@ -311,8 +308,7 @@ public class JarCompiler {
 					Manifest manifest = new Manifest();
 					Attributes attributes = manifest.getMainAttributes();
 					attributes.putValue(Attributes.Name.MANIFEST_VERSION.toString(), "1.0");
-					attributes.putValue("Created-By",
-							System.getProperty("java.version") + " (" + System.getProperty("java.vendor") + ") + jtg");
+					attributes.putValue("Created-By", System.getProperty("java.version") + " (" + System.getProperty("java.vendor") + ") + jtg");
 					manifest.write(jarStream);
 					packJar(jarStream, sourceOutDir, "");
 					jarStream.close();
@@ -372,7 +368,7 @@ public class JarCompiler {
 		}
 	}
 
-	private boolean collectCompiledUnits(Map<String, CompilationUnit> sourcesCompiledUnits, String startDir,
+	private boolean collectCompiledUnits(Map<String, CompilationUnit> sourcesCompiledUnits, Map<String, CompilationUnit> pathCompiledUnits, String startDir,
 			String packageName, long jarLastModified) {
 		File startFile = new File(startDir);
 		String[] files = startFile.list();
@@ -381,7 +377,7 @@ public class JarCompiler {
 			String fullPath = new File(startDir, file).getPath();
 			File f = new File(fullPath);
 			if (f.isDirectory()) {
-				needCompile |= collectCompiledUnits(sourcesCompiledUnits, fullPath,
+				needCompile |= collectCompiledUnits(sourcesCompiledUnits, pathCompiledUnits, fullPath,
 						("".equals(packageName) ? file : packageName + "." + file), jarLastModified);
 			} else if (f.isFile() && file.endsWith(".java")) {
 				boolean fileIsNew = f.lastModified() > jarLastModified;
@@ -396,9 +392,10 @@ public class JarCompiler {
 					if (!fqcn.contains(".") && !"".equals(packageName)) {
 						fqcn = packageName + "." + className;
 					}
-					CompilationUnit compilationUnit = new CompilationUnit(fullPath, fqcn,
-							(src != null ? src.Encoding : "UTF-8"), (src != null ? src.Unit : null), log);
+					CompilationUnit compilationUnit = new CompilationUnit(fullPath, fqcn, (src != null ? src.Encoding : "UTF-8"),
+							(src != null ? src.Unit : null), log);
 					sourcesCompiledUnits.put(fqcn, compilationUnit);
+					pathCompiledUnits.put(fullPath, compilationUnit);
 				}
 			}
 		}
