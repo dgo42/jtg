@@ -381,10 +381,10 @@ public class JtgBuilder extends IncrementalProjectBuilder {
 					}
 				}
 			} else if (projectType == ProjectType.LEADER) {
-				String jarName = GeneratorUtils.Project2JarName(jarOutDir, "main");
 				if (matcher.find() || fullName.equals(schemaFile)) {
+					String jarName = GeneratorUtils.Project2JarName(jarOutDir, "main");
 					IResource jarResource = findMember(project, jarName);
-					File jarFile = jarResource.getLocation().toFile();
+					File jarFile = null;
 					if (jarResource != null) {
 						jarFile = jarResource.getLocation().toFile();
 					}
@@ -394,12 +394,25 @@ public class JtgBuilder extends IncrementalProjectBuilder {
 				}
 			} else if (projectType == ProjectType.FOLLOWER) {
 				if (matcher.find() || fullName.equals(projectFile)) {
+					String jarName = GeneratorUtils.Project2JarName(jarOutDir, "main");
+					IProject leaderProject = getLeaderProject(project);
+					IResource jarResource = findMember(leaderProject, jarName);
+					File jarFile = null;
+					if (jarResource != null) {
+						jarFile = jarResource.getLocation().toFile();
+					}
+
 					IScopeContext projectScope = new ProjectScope(project);
 					Preferences store = projectScope.getNode(JtgUIPlugin.PLUGIN_ID);
 					long lastBuild = PreferenceLoader.loadLong(store, Constants.F_LAST_BUILD);
-					if (lastBuild < 0 || resourceFile.lastModified() > lastBuild) {
+					
+					long lastModified = resourceFile.lastModified();
+					if (jarFile != null) {
+						lastModified = Math.max(lastModified, jarFile.lastModified());
+					}
+					if (lastBuild < 0 || lastModified > lastBuild) {
 						regenarateAll(project, projectType);
-						PreferenceLoader.storeValue(store, Constants.F_LAST_BUILD, resourceFile.lastModified());
+						PreferenceLoader.storeValue(store, Constants.F_LAST_BUILD, lastModified);
 					}
 				}
 			}
@@ -613,14 +626,13 @@ public class JtgBuilder extends IncrementalProjectBuilder {
 						if (fileName.startsWith("file:/" + projectLocationSchema)) {
 							fileName = fileName.substring(("file:/" + projectLocationSchema).length() + 1);
 						}
-						IFile file = findMember(project, getFileName(fileName));
+						//IFile file = findMember(project, getFileName(fileName));
+						IFile file = findMember(project, fileName);
 						if (file != null) {
 							addMarker(file, message.getErrorMessage(), lineNumber, IMarker.SEVERITY_ERROR);
-							JtgUIPlugin.log(e);
 						}
 					} else {
 						addMarker(project, exceptionBuilder(e), lineNumber, IMarker.SEVERITY_ERROR);
-						JtgUIPlugin.log(e);
 					}
 				}
 			} else {
@@ -654,16 +666,14 @@ public class JtgBuilder extends IncrementalProjectBuilder {
 							message += ".\r\n Error occurs in project-follower \"" + project.getName() + "\"";
 						}
 						addMarker(file, message, lineNumber, IMarker.SEVERITY_ERROR);
-						JtgUIPlugin.log(e);
 					} else {
 						addMarker(project, exceptionBuilder(e), lineNumber, IMarker.SEVERITY_ERROR);
-						JtgUIPlugin.log(e);
 					}
 				} else {
 					addMarker(project, exceptionBuilder(e), lineNumber, IMarker.SEVERITY_ERROR);
-					JtgUIPlugin.log(e);
 				}
 			}
+			JtgUIPlugin.log(e);
 			hasErrors = true;
 		} catch (CoreException e) {
 			if (!(e.getStatus().getException() instanceof BuildDoneException)) {
