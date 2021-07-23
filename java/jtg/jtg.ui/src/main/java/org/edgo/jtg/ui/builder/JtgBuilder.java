@@ -463,7 +463,21 @@ public class JtgBuilder extends IncrementalProjectBuilder {
 						if (resource != null) {
 							return resource;
 						}
-						IPath childPath = filePath.removeFirstSegments(1);
+						IPath childPath = filePath.segmentCount() > 1 ? filePath.removeFirstSegments(1) : filePath;
+						resource = refresh((IContainer) res, childPath);
+						if (resource != null) {
+							return resource;
+						}
+					}
+				}
+				for (IResource res : resources) {
+					if (res instanceof IContainer) {
+						res.refreshLocal(IResource.DEPTH_ONE, null);
+						resource = container.findMember(filePath, true);
+						if (resource != null) {
+							return resource;
+						}
+						IPath childPath = filePath.segmentCount() > 1 ? filePath.removeFirstSegments(1) : filePath;
 						resource = refresh((IContainer) res, childPath);
 						if (resource != null) {
 							return resource;
@@ -471,6 +485,7 @@ public class JtgBuilder extends IncrementalProjectBuilder {
 					}
 				}
 			}
+			return resource;
 		} catch (CoreException e) {
 			JtgUIPlugin.log(e);
 		}
