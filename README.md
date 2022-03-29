@@ -36,7 +36,7 @@ I've only developed some coloring schema for jtg specifical file formats.
 The jtg is updated. It is now compatible with eclipse 2019-09 R and works with OpenJDK 9 - 12.
 
 # Update 2021-07-13
-The jtg is updated. Implemented cache to optimize compilation expiriance. Implemented leader -> multi follower project configuration in eclipse. This configuration makes possible to use one shema/template set for different following project and maintain shema/template set separately.
+The jtg is updated. Implemented cache to optimize compilation experience. Implemented leader -> multi follower project configuration in eclipse. This configuration makes possible to use one shema/template set for different following project and maintain shema/template set separately.
 It is now compatible with eclipse 2021-06.
 
 # Update site
